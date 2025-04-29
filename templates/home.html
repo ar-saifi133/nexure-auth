@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to SSO System{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center py-12">
+    <div class="text-center max-w-3xl">
+        <h1 class="text-4xl md:text-5xl font-bold text-primary-500 mb-6">
+            Secure Single Sign-On Solution
+        </h1>
+        <p class="text-xl text-gray-600 mb-8">
+            Welcome to our modern, secure authentication system that provides a seamless login experience for your applications.
+        </p>
+        
+        <div class="flex flex-col md:flex-row justify-center gap-4 mb-12">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:profile' %}" 
+                   class="bg-primary-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    View Your Profile
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:signup' %}" 
+                   class="bg-primary-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-primary-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    Create an Account
+                </a>
+                <a href="{% url 'accounts:login' %}" 
+                   class="bg-white text-primary-500 border border-primary-500 px-6 py-3 rounded-lg text-lg font-medium hover:bg-primary-50 transition-all duration-300">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8 text-left">
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Secure Authentication</h2>
+                <p class="text-gray-600">Industry-standard security practices with password hashing and JWT tokens.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Easy Integration</h2>
+                <p class="text-gray-600">Simple API endpoints for client applications with comprehensive documentation.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-2">Complete User Management</h2>
+                <p class="text-gray-600">Handle registration, login, password reset, and user profiles with ease.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
