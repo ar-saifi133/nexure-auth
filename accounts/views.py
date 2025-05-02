@@ -3,7 +3,6 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -12,7 +11,10 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.http import require_POST
-
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .forms import (
     CustomUserCreationForm,
     CustomAuthenticationForm,
@@ -20,6 +22,10 @@ from .forms import (
     CustomSetPasswordForm
 )
 from .models import PasswordResetToken
+from .serializers import CustomTokenObtainPairSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -41,24 +47,63 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 def login_view(request):
-    """View for user login"""
-    if request.user.is_authenticated:
+    """Modified login view that returns tokens to client"""
+    redirect_uri = request.GET.get('redirect_uri')
+    
+    # Only redirect to profile if no redirect_uri is provided
+    if request.user.is_authenticated and not redirect_uri:
+        logger.debug("User already authenticated, redirecting to profile")
         return redirect('accounts:profile')
         
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
+            logger.debug("Form is valid")
             user = form.get_user()
-            login(request, user)
-            messages.success(request, 'Login successful!')
+            login(request, user)  # Traditional session login
             
-            # Redirect to next parameter if provided, otherwise to profile
-            next_page = request.GET.get('next', reverse('accounts:profile'))
-            return redirect(next_page)
+            # Generate tokens using custom serializer
+            serializer = CustomTokenObtainPairSerializer()
+            token_data = serializer.get_token(user)
+            access_token = str(token_data.access_token)
+            refresh_token = str(token_data)
+            
+            if not redirect_uri:
+                logger.debug("No redirect_uri, redirecting to profile")
+                messages.success(request, 'Login successful!')
+                return redirect('accounts:profile')
+            
+            # Redirect back to client with tokens
+            logger.debug(f"Redirecting to {redirect_uri} with tokens")
+            logger.debug(f"Access Token: {access_token}")
+            logger.debug(f"Refresh Token: {refresh_token}")
+            messages.success(request, 'Login successful! Redirecting to client application.')
+            return redirect(
+                f"{redirect_uri}?"
+                f"access_token={access_token}&"
+                f"refresh_token={refresh_token}&"
+                f"user_id={user.id}"
+            )
     else:
         form = CustomAuthenticationForm()
     
+    logger.debug(f"Rendering login page with redirect_uri: {redirect_uri}")
     return render(request, 'accounts/login.html', {'form': form})
+
+class BlacklistRefreshToken(APIView):
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            logger.debug(f"Refresh token blacklisted: {refresh_token}")
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            logger.error(f"Error blacklisting token: {str(e)}")
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 @login_required
 def logout_view(request):
@@ -70,7 +115,71 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     """View for user profile"""
+    logger.debug(f"Profile accessed for user: {request.user.id}")
     return render(request, 'accounts/profile.html')
+# def login_view(request):
+    """Modified login view that returns tokens to client"""
+    if request.user.is_authenticated:
+        return redirect('accounts:profile')
+        
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            print("Form is valid")
+            user = form.get_user()
+            login(request, user)  # Traditional session login
+            
+            # Generate tokens (same as your API does)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            
+            # Get the client's redirect URL from params
+            client_redirect_url = request.GET.get('redirect_uri')
+            if not client_redirect_url:
+                messages.success(request, 'Login successful!')
+                return redirect('accounts:profile')
+            
+            # Redirect back to client with tokens
+            print(f"Redirecting to {client_redirect_url} with tokens")
+            print(f"Access Token: {access_token}")
+            print(f"Refresh Token: {str(refresh)}")
+            messages.success(request, 'Login successful! Redirecting to client application.')
+            return redirect(
+                f"{client_redirect_url}?"
+                f"access_token={access_token}&"
+                f"refresh_token={str(refresh)}&"
+                f"user_id={user.id}"
+            )
+    else:
+        form = CustomAuthenticationForm()
+    
+    return render(request, 'accounts/login.html', {'form': form})
+# class BlacklistRefreshToken(APIView):
+#     def post(self, request):
+#         refresh_token = request.data.get('refresh')
+#         # Add token to blacklist (implementation specific)
+#         # Example using django-rest-framework-simplejwt:
+#         from rest_framework_simplejwt.tokens import RefreshToken
+#         try:
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response(status=status.HTTP_205_RESET_CONTENT)
+#         except Exception as e:
+#             return Response(
+#                 {'error': str(e)},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
+# @login_required
+# def logout_view(request):
+#     """View for user logout"""
+#     logout(request)
+#     messages.success(request, 'You have been logged out successfully.')
+#     return redirect('accounts:login')
+
+# @login_required
+# def profile_view(request):
+#     """View for user profile"""
+#     return render(request, 'accounts/profile.html')
 
 def password_reset_request(request):
     """View to request a password reset"""
