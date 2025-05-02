@@ -50,10 +50,26 @@ def login_view(request):
     """Modified login view that returns tokens to client"""
     redirect_uri = request.GET.get('redirect_uri')
     
-    # Only redirect to profile if no redirect_uri is provided
-    if request.user.is_authenticated and not redirect_uri:
-        logger.debug("User already authenticated, redirecting to profile")
-        return redirect('accounts:profile')
+    
+    logger.debug(f"User authenticated: {request.user.is_authenticated}, redirect_uri: {redirect_uri}")
+    
+    if request.user.is_authenticated:
+        if redirect_uri:
+            # User is already logged in, generate tokens and redirect back
+            serializer = CustomTokenObtainPairSerializer()
+            token_data = serializer.get_token(request.user)
+            access_token = str(token_data.access_token)
+            refresh_token = str(token_data)
+            logger.debug(f"User already authenticated, redirecting to {redirect_uri} with tokens")
+            return redirect(
+                f"{redirect_uri}?"
+                f"access_token={access_token}&"
+                f"refresh_token={refresh_token}&"
+                f"user_id={request.user.id}"
+            )
+        else:
+            logger.debug("User already authenticated, redirecting to profile")
+            return redirect('accounts:profile')
         
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
