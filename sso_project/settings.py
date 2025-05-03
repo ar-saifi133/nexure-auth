@@ -2,13 +2,13 @@
 # Django settings for sso_project project.
 # """
 
-# import os
-# from datetime import timedelta
-# from pathlib import Path
-# from dotenv import load_dotenv
+import os
+from datetime import timedelta
+from pathlib import Path
+from dotenv import load_dotenv
 
-# # Load environment variables
-# load_dotenv()
+# Load environment variables
+load_dotenv()
 
 # # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -156,15 +156,16 @@
 #     'TOKEN_TYPE_CLAIM': 'token_type',
 # }
 
-# # Email settings
+# Email settings
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
-# # For production, use SMTP:
-# # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# # EMAIL_HOST = os.getenv('EMAIL_HOST')
-# # EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-# # EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
-# # EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-# # EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# For production, use SMTP:
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
 
 # # CORS settings
 # # CORS settings
@@ -249,9 +250,10 @@ TEMPLATES = [
         },
     },
 ]
-
+ALLOWED_REDIRECT_DOMAINS = os.getenv('ALLOWED_REDIRECT_DOMAINS', 'localhost,127.0.0.1').split(',')
+CLIENT_LOGOUT_URL = "http://localhost:8005/accounts/logout"  # URL to redirect after logout
 WSGI_APPLICATION = 'sso_project.wsgi.application'
-
+TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.csrf')
 # Database
 if os.getenv('DATABASE_URL'):
     import dj_database_url

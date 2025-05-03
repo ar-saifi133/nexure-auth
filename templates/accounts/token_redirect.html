@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+</head>
+<body>
+    <form id="tokenForm" action="{{ redirect_uri }}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="access_token" value="{{ access_token }}">
+        <input type="hidden" name="refresh_token" value="{{ refresh_token }}">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+    </form>
+    <script>
+        document.getElementById("tokenForm").submit();
+    </script>
+</body>
+</html>

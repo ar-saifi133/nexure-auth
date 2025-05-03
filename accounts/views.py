@@ -15,6 +15,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import logging
+from django.conf import settings
+from urllib.parse import urlparse
 from .forms import (
     CustomUserCreationForm,
     CustomAuthenticationForm,
@@ -47,26 +50,33 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 def login_view(request):
-    """Modified login view that returns tokens to client"""
+    """Modified login view that sends tokens to client via POST"""
     redirect_uri = request.GET.get('redirect_uri')
     
+    # Validate redirect_uri
+    allowed_domains = settings.ALLOWED_REDIRECT_DOMAINS
+    if redirect_uri:
+        domain = urlparse(redirect_uri).netloc.split(':')[0]
+        if domain not in allowed_domains:
+            logger.error(f"Invalid redirect_uri: {redirect_uri}")
+            return HttpResponse("Invalid redirect URI", status=400)
     
     logger.debug(f"User authenticated: {request.user.is_authenticated}, redirect_uri: {redirect_uri}")
     
     if request.user.is_authenticated:
         if redirect_uri:
-            # User is already logged in, generate tokens and redirect back
+            # User is already logged in, generate tokens and send via POST
             serializer = CustomTokenObtainPairSerializer()
             token_data = serializer.get_token(request.user)
             access_token = str(token_data.access_token)
             refresh_token = str(token_data)
-            logger.debug(f"User already authenticated, redirecting to {redirect_uri} with tokens")
-            return redirect(
-                f"{redirect_uri}?"
-                f"access_token={access_token}&"
-                f"refresh_token={refresh_token}&"
-                f"user_id={request.user.id}"
-            )
+            logger.debug(f"User already authenticated, rendering POST form to {redirect_uri}")
+            return render(request, 'accounts/token_redirect.html', {
+                'redirect_uri': redirect_uri,
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'user_id': request.user.id
+            })
         else:
             logger.debug("User already authenticated, redirecting to profile")
             return redirect('accounts:profile')
@@ -89,17 +99,15 @@ def login_view(request):
                 messages.success(request, 'Login successful!')
                 return redirect('accounts:profile')
             
-            # Redirect back to client with tokens
-            logger.debug(f"Redirecting to {redirect_uri} with tokens")
-            logger.debug(f"Access Token: {access_token}")
-            logger.debug(f"Refresh Token: {refresh_token}")
+            # Send tokens via POST
+            logger.debug(f"Rendering POST form to {redirect_uri}")
             messages.success(request, 'Login successful! Redirecting to client application.')
-            return redirect(
-                f"{redirect_uri}?"
-                f"access_token={access_token}&"
-                f"refresh_token={refresh_token}&"
-                f"user_id={user.id}"
-            )
+            return render(request, 'accounts/token_redirect.html', {
+                'redirect_uri': redirect_uri,
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'user_id': user.id
+            })
     else:
         form = CustomAuthenticationForm()
     
@@ -125,8 +133,10 @@ class BlacklistRefreshToken(APIView):
 def logout_view(request):
     """View for user logout"""
     logout(request)
-    messages.success(request, 'You have been logged out successfully.')
-    return redirect('accounts:login')
+    messages.success(request, 'You have been logged out successfully from all applications.')
+    client_logout_url = f"{settings.CLIENT_LOGOUT_URL}?from_auth_server=true"
+    logger.debug(f"Redirecting to client logout: {client_logout_url}")
+    return redirect(client_logout_url)
 
 @login_required
 def profile_view(request):
