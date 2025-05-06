@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Your Email</title>
+</head>
+<body>
+    <h2>Welcome {{ user.full_name }}!</h2>
+    <p>Thank you for signing up. Please click the button below to verify your email address:</p>
+    <a href="{{ verification_url }}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;">Verify Email</a>
+    <p>This link will expire in 24 hours.</p>
+    <p>If the button doesn't work, copy and paste this URL into your browser:</p>
+    <p>{{ verification_url }}</p>
+</body>
+</html>

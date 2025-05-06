@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div style="max-width: 600px; margin: 2rem auto; padding: 2rem; background-color: #f9f9f9; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+    <h2 style="font-size: 1.75rem; color: #333;">Verify Your Email Address</h2>
+    
+    <p style="font-size: 1rem; color: #555;">
+      We've sent a verification link to your email address:
+      <strong><a href="openmail:{{ email }}" style="color: #007BFF;">{{ email }}</a></strong>.
+    </p>
+
+    <p style="font-size: 1rem; color: #555;">
+      Please check your inbox and click the link to complete the verification process.
+    </p>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem; color: #666;">
+      Didn’t receive the email?
+      <a href="{% url 'accounts:resend_verification' %}" style="color: #007BFF; text-decoration: underline;">
+        Resend verification
+      </a>.
+    </p>
+  </div>
+{% endblock %}
