@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SSO System{% endblock %}</title>
+    <title>{% block title %}Auth Ensight Plus{% endblock %}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -85,7 +85,7 @@
     <header class="bg-white shadow">
         <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="{% url 'home' %}" class="text-xl font-bold text-primary-500">
-                SSO System
+                Auth Ensight Plus
             </a>
             <div class="space-x-4">
                 {% if user.is_authenticated %}
@@ -115,7 +115,7 @@
     
     <footer class="mt-auto py-6 bg-gray-100">
         <div class="container mx-auto px-4 text-center text-gray-600">
-            <p>&copy; {% now "Y" %} SSO System. All rights reserved.</p>
+            <p>&copy; {% now "Y" %} Ensight Plus Team. All rights reserved.</p>
         </div>
     </footer>
 
