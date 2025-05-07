@@ -357,58 +357,58 @@ class BlacklistRefreshToken(APIView):
 
 
 
-@csrf_exempt
-@ratelimit(key='ip', rate='5/h', method='POST', block=True)
-def password_reset_request(request):
-    """View to request a password reset with rate limiting"""
-    if request.method == 'POST':
-        form = CustomPasswordResetForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            try:
-                user = User.objects.get(email=email)
+# @csrf_exempt
+# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# def password_reset_request(request):
+#     """View to request a password reset with rate limiting"""
+#     if request.method == 'POST':
+#         form = CustomPasswordResetForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             try:
+#                 user = User.objects.get(email=email)
                 
-                if not user.email_verified:
-                    messages.error(request, 'Email not verified. Please verify your email first.')
-                    return redirect('accounts:password_reset_request')
+#                 if not user.email_verified:
+#                     messages.error(request, 'Email not verified. Please verify your email first.')
+#                     return redirect('accounts:password_reset_request')
                 
-                # Generate unique token
-                token = str(uuid.uuid4())
-                expires_at = timezone.now() + datetime.timedelta(hours=1)  # 1 hour expiry
+#                 # Generate unique token
+#                 token = str(uuid.uuid4())
+#                 expires_at = timezone.now() + datetime.timedelta(hours=1)  # 1 hour expiry
                 
-                # Save token to database
-                reset_token = PasswordResetToken.objects.create(
-                    user=user,
-                    token=token,
-                    expires_at=expires_at
-                )
+#                 # Save token to database
+#                 reset_token = PasswordResetToken.objects.create(
+#                     user=user,
+#                     token=token,
+#                     expires_at=expires_at
+#                 )
                 
-                # Build reset URL
-                reset_url = request.build_absolute_uri(
-                    reverse('accounts:password_reset_confirm', args=[token])
-                )
+#                 # Build reset URL
+#                 reset_url = request.build_absolute_uri(
+#                     reverse('accounts:password_reset_confirm', args=[token])
+#                 )
                 
-                # Send email
-                subject = 'Password Reset Request'
-                message = render_to_string('accounts/password_reset_email.html', {
-                    'user': user,
-                    'reset_url': reset_url,
-                    'expiry_time': '1 hour'
-                })
+#                 # Send email
+#                 subject = 'Password Reset Request'
+#                 message = render_to_string('accounts/password_reset_email.html', {
+#                     'user': user,
+#                     'reset_url': reset_url,
+#                     'expiry_time': '1 hour'
+#                 })
                 
-                send_mail(subject, message, None, [user.email])
+#                 send_mail(subject, message, None, [user.email])
                 
-                # Store email in session for the email sent page
-                request.session['reset_email'] = user.email
+#                 # Store email in session for the email sent page
+#                 request.session['reset_email'] = user.email
                 
-                return redirect('accounts:password_reset_email_sent')
+#                 return redirect('accounts:password_reset_email_sent')
                 
-            except User.DoesNotExist:
-                messages.error(request, 'No account found with this email address.')
-    else:
-        form = CustomPasswordResetForm()
+#             except User.DoesNotExist:
+#                 messages.error(request, 'No account found with this email address.')
+#     else:
+#         form = CustomPasswordResetForm()
     
-    return render(request, 'accounts/password_reset_form.html', {'form': form})
+#     return render(request, 'accounts/password_reset_form.html', {'form': form})
 
 
 def password_reset_email_sent_view(request):
@@ -501,6 +501,8 @@ def profile_view(request):
 #     """View for user profile"""
 #     return render(request, 'accounts/profile.html')
 
+
+@ratelimit(key='ip', rate='2/h', method='POST', block=True)
 def password_reset_request(request):
     """View to request a password reset"""
     if request.method == 'POST':
@@ -512,7 +514,7 @@ def password_reset_request(request):
                 
                 # Generate unique token
                 token = str(uuid.uuid4())
-                expires_at = timezone.now() + datetime.timedelta(hours=24)
+                expires_at = timezone.now() + datetime.timedelta(hours=1)
                 
                 # Save token to database
                 reset_token = PasswordResetToken.objects.create(
@@ -531,7 +533,7 @@ def password_reset_request(request):
                 message = render_to_string('accounts/password_reset_email.html', {
                     'user': user,
                     'reset_url': reset_url,
-                    'expiry_time': '24 hours'
+                    'expiry_time': '1 hours'
                 })
                 
                 send_mail(subject, message, None, [user.email])
