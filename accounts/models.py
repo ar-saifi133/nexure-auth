@@ -6,31 +6,6 @@ import uuid
 from .managers import UserManager
 from django.core.validators import RegexValidator
 
-# class User(AbstractBaseUser, PermissionsMixin):
-#     """
-#     Custom User model with email as the unique identifier
-#     """
-#     email = models.EmailField(_('email address'), unique=True)
-#     full_name = models.CharField(_('full name'), max_length=150)
-#     is_staff = models.BooleanField(default=False)
-#     is_active = models.BooleanField(default=False)  # Changed to False for email verification
-#     date_joined = models.DateTimeField(default=timezone.now)
-#     email_verified = models.BooleanField(default=False)
-    
-#     objects = UserManager()
-    
-#     USERNAME_FIELD = 'email'
-#     REQUIRED_FIELDS = ['full_name']
-    
-#     class Meta:
-#         verbose_name = _('user')
-#         verbose_name_plural = _('users')
-    
-#     def __str__(self):
-#         return self.email
-    
-#     def get_full_name(self):
-#         return self.full_name
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -58,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)  # Changed to False for email verification
     date_joined = models.DateTimeField(default=timezone.now)
     email_verified = models.BooleanField(default=False)
+    avatar = models.CharField(max_length=20, default='avatar1.png') 
     
     objects = UserManager()
     

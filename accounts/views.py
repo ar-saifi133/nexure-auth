@@ -1,5 +1,6 @@
 import datetime
 import uuid
+import random
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -25,6 +26,7 @@ from .forms import (
     CustomSetPasswordForm,
     ProfileUpdateForm,
     DeleteAccountForm,
+    CustomPasswordChangeForm
 )
 from .models import PasswordResetToken, EmailVerificationToken
 from .serializers import CustomTokenObtainPairSerializer
@@ -34,6 +36,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.core import is_ratelimited
+from django.contrib.auth import update_session_auth_hash
 
 
 
@@ -57,6 +60,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False  # User inactive until email verification
+            user.avatar = f'avatar{random.randint(1, 6)}.png'
             user.save()
             
             # Create email verification token
@@ -461,3 +465,20 @@ def delete_account_view(request):
         form = DeleteAccountForm(user=request.user)
     
     return render(request, 'accounts/delete_account.html', {'form': form})
+
+
+
+
+
+@login_required
+def password_change_view(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)  # Keep user logged in
+            messages.success(request, 'Password updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = CustomPasswordChangeForm(user=request.user)
+    return render(request, 'accounts/password_change.html', {'form': form})

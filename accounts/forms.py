@@ -434,14 +434,31 @@ class CustomSetPasswordForm(SetPasswordForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+
+    AVATAR_CHOICES = [
+        (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 8)  # Adjust range for number of avatars
+    ]
+
+    avatar = forms.ChoiceField(
+        choices=AVATAR_CHOICES,
+        widget=forms.RadioSelect(attrs={'class': 'hidden'}),
+        required=True,
+        label="Profile Picture"
+    )
+
     class Meta:
         model = User
-        fields = ['full_name', 'username', 'email']
+        fields = ['avatar', 'full_name', 'username', 'email']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Initialize avatar selection with current avatar
+        self.fields['avatar'].initial = self.instance.avatar
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -478,3 +495,55 @@ class DeleteAccountForm(forms.Form):
         if not self.user.check_password(password):
             raise ValidationError(_("The password is incorrect."))
         return password
+
+
+
+class CustomPasswordChangeForm(forms.Form):
+    old_password = forms.CharField(
+        label=_("Current Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter current password'})
+    )
+    new_password1 = forms.CharField(
+        label=_("New Password"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter new password'}),
+        help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
+        validators=[validate_password_complexity]
+    )
+    new_password2 = forms.CharField(
+        label=_("Confirm New Password"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm new password'})
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        if not self.user.check_password(old_password):
+            raise ValidationError(_("Your current password was entered incorrectly."))
+        return old_password
+
+    def clean_new_password1(self):
+        new_password = self.cleaned_data.get('new_password1')
+        
+        if self.user.check_password(new_password):
+            raise ValidationError(
+                _("New password cannot be the same as your current password.")
+            )
+        return new_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('new_password1') != cleaned_data.get('new_password2'):
+            self.add_error('new_password2', "Passwords don't match.")
+        return cleaned_data
+
+    def save(self):
+        password = self.cleaned_data['new_password1']
+        self.user.set_password(password)
+        self.user.save()
+
+
+

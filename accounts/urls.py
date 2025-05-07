@@ -24,6 +24,7 @@ urlpatterns = [
     path('password-reset/', views.password_reset_request, name='password_reset_request'),
     path('password-reset/email-sent/', views.password_reset_email_sent_view, name='password_reset_email_sent'),
     path('password-reset/confirm/<str:token>/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('password-change/', views.password_change_view, name='password_change'),
     
     # API endpoints
     path('api/register/', api_views.RegisterAPIView.as_view(), name='api_register'),
