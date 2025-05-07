@@ -86,13 +86,21 @@ def signup_view(request):
             
             # Send verification email
             subject = 'Verify Your Email Address'
-            message = render_to_string('accounts/email_verification.html', {
+            html_message = render_to_string('accounts/email_verification.html', {
                 'user': user,
                 'verification_url': verification_url,
                 'expiry_time': '24 hours'
             })
-            
-            send_mail(subject, message, None, [user.email])
+            plain_message = f"Please verify your email by visiting this link: {verification_url}"
+
+            send_mail(
+                subject=subject,
+                message=plain_message,  # Fallback plain-text version
+                html_message=html_message,  # HTML version
+                from_email=settings.DEFAULT_FROM_EMAIL,  # Make sure this is set in settings.py
+                recipient_list=[user.email],
+                fail_silently=False
+            )
             
             # Store email in session for the email sent page
             request.session['verification_email'] = user.email

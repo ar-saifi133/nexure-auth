@@ -107,6 +107,9 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 import re
+from django.db import models 
+from django.contrib.auth import authenticate
+
 
 User = get_user_model()
 
@@ -154,10 +157,82 @@ def validate_temp_email(email):
     if domain in TEMP_EMAIL_DOMAINS:
         raise ValidationError("Temporary email addresses are not allowed.")
 
+# class CustomUserCreationForm(UserCreationForm):
+#     """
+#     A form for creating new users with full name, email and password.
+#     """
+#     full_name = forms.CharField(
+#         label=_("Full Name"),
+#         max_length=150,
+#         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
+#         validators=[
+#             RegexValidator(
+#                 regex=r'^[A-Za-z ]+$',
+#                 message='Name must contain only alphabets and spaces.',
+#                 code='invalid_name'
+#             )
+#         ]
+#     )
+    
+#     email = forms.EmailField(
+#         label=_("Email"),
+#         max_length=254,
+#         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+#         validators=[validate_temp_email]
+#     )
+    
+#     password1 = forms.CharField(
+#         label=_("Password"),
+#         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Create a password'}),
+#         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
+#         validators=[validate_password_complexity]
+#     )
+    
+#     password2 = forms.CharField(
+#         label=_("Confirm Password"),
+#         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your password'})
+#     )
+
+#     class Meta:
+#         model = User
+#         fields = ('full_name', 'email', 'password1', 'password2')
+
+#     def clean_email(self):
+#         email = self.cleaned_data.get('email')
+#         if User.objects.filter(email=email).exists():
+#             raise ValidationError(_("This email is already in use."))
+#         return email
+
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         password1 = cleaned_data.get('password1')
+#         password2 = cleaned_data.get('password2')
+        
+#         if password1 and password2 and password1 != password2:
+#             self.add_error('password2', "Passwords don't match.")
+        
+#         return cleaned_data
+
+
+
+
 class CustomUserCreationForm(UserCreationForm):
     """
-    A form for creating new users with full name, email and password.
+    A form for creating new users with username, full name, email and password.
     """
+    username = forms.CharField(
+        label=_("Username"),
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Choose a username'}),
+        validators=[
+            RegexValidator(
+                regex=r'^[\w.@+-]+$',
+                message='Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.'
+            )
+        ],
+        help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.')
+    )
+    
     full_name = forms.CharField(
         label=_("Full Name"),
         max_length=150,
@@ -192,7 +267,13 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('full_name', 'email', 'password1', 'password2')
+        fields = ('username', 'full_name', 'email', 'password1', 'password2')
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise ValidationError(_("This username is already in use."))
+        return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -223,13 +304,42 @@ class CustomPasswordResetForm(PasswordResetForm):
         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
     )
 
+# class CustomAuthenticationForm(AuthenticationForm):
+#     """
+#     A form for authenticating users with email and password.
+#     """
+#     username = forms.EmailField(
+#         label=_("Email"),
+#         widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+#     )
+#     password = forms.CharField(
+#         label=_("Password"),
+#         strip=False,
+#         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+#     )
+
+#     def clean(self):
+#         email = self.cleaned_data.get('username')
+#         password = self.cleaned_data.get('password')
+
+#         if email and password:
+#             try:
+#                 user = User.objects.get(email=email)
+#                 if not user.is_active:
+#                     raise ValidationError(_("This account is not verified. Please check your email for verification link."))
+#             except User.DoesNotExist:
+#                 raise ValidationError(_("Account not found. Please check your email or sign up."))
+                
+#         return super().clean()
+
+
 class CustomAuthenticationForm(AuthenticationForm):
     """
-    A form for authenticating users with email and password.
+    A form for authenticating users with email/username and password.
     """
-    username = forms.EmailField(
-        label=_("Email"),
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+    username = forms.CharField(
+        label=_("Email or Username"),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email or username'})
     )
     password = forms.CharField(
         label=_("Password"),
@@ -238,17 +348,37 @@ class CustomAuthenticationForm(AuthenticationForm):
     )
 
     def clean(self):
-        email = self.cleaned_data.get('username')
+        username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
-        if email and password:
-            try:
-                user = User.objects.get(email=email)
-                if not user.is_active:
-                    raise ValidationError(_("This account is not verified. Please check your email for verification link."))
-            except User.DoesNotExist:
-                raise ValidationError(_("Account not found. Please check your email or sign up."))
+        if username and password:
+            # Try to fetch user by email or username
+            user = authenticate(
+                self.request,
+                username=username,  # First try username
+                password=password
+            )
+            
+            # If authentication with username failed, try with email
+            if user is None:
+                try:
+                    user = User.objects.get(email=username)
+                    user = authenticate(
+                        self.request,
+                        username=user.username,
+                        password=password
+                    )
+                except User.DoesNotExist:
+                    pass
+            
+            if user is None:
+                raise ValidationError(_("Please enter a correct email/username and password."))
                 
+            if not user.email_verified:
+                raise ValidationError(_("This account is not verified. Please check your email for verification link."))
+                
+            self.user_cache = user
+            
         return super().clean()
 
 

@@ -4,11 +4,54 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 import uuid
 from .managers import UserManager
+from django.core.validators import RegexValidator
+
+# class User(AbstractBaseUser, PermissionsMixin):
+#     """
+#     Custom User model with email as the unique identifier
+#     """
+#     email = models.EmailField(_('email address'), unique=True)
+#     full_name = models.CharField(_('full name'), max_length=150)
+#     is_staff = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=False)  # Changed to False for email verification
+#     date_joined = models.DateTimeField(default=timezone.now)
+#     email_verified = models.BooleanField(default=False)
+    
+#     objects = UserManager()
+    
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = ['full_name']
+    
+#     class Meta:
+#         verbose_name = _('user')
+#         verbose_name_plural = _('users')
+    
+#     def __str__(self):
+#         return self.email
+    
+#     def get_full_name(self):
+#         return self.full_name
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom User model with email as the unique identifier
     """
+    username = models.CharField(
+        _('username'),
+        max_length=30,
+        unique=True,
+        help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        validators=[
+            RegexValidator(
+                regex=r'^[\w.@+-]+$',
+                message=_('Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.')
+            )
+        ],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        }
+    )
     email = models.EmailField(_('email address'), unique=True)
     full_name = models.CharField(_('full name'), max_length=150)
     is_staff = models.BooleanField(default=False)
@@ -19,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name']
+    REQUIRED_FIELDS = ['username', 'full_name']
     
     class Meta:
         verbose_name = _('user')
@@ -30,6 +73,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def get_full_name(self):
         return self.full_name
+
+
 
 
 class EmailVerificationToken(models.Model):
