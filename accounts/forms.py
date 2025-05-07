@@ -109,6 +109,7 @@ from django.core.validators import RegexValidator
 import re
 from django.db import models 
 from django.contrib.auth import authenticate
+from django.db.models import Q
 
 
 User = get_user_model()
@@ -334,17 +335,22 @@ class CustomPasswordResetForm(PasswordResetForm):
 
 
 class CustomAuthenticationForm(AuthenticationForm):
-    """
-    A form for authenticating users with email/username and password.
-    """
+    """Login form that accepts both username and email"""
     username = forms.CharField(
         label=_("Email or Username"),
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email or username'})
+        widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'placeholder': 'Enter your email or username'
+        })
     )
+    
     password = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control', 
+            'placeholder': 'Enter your password'
+        })
     )
 
     def clean(self):
@@ -352,34 +358,51 @@ class CustomAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get('password')
 
         if username and password:
-            # Try to fetch user by email or username
+            # Initial authentication attempt using the provided credentials
             user = authenticate(
-                self.request,
-                username=username,  # First try username
+                request=self.request,
+                username=username,
                 password=password
             )
             
-            # If authentication with username failed, try with email
+            # If authentication fails, check if the input is a username
             if user is None:
                 try:
-                    user = User.objects.get(email=username)
+                    # Check if the input matches a username
+                    user_by_username = User.objects.get(username=username)
+                    # Attempt authentication using the user's email (USERNAME_FIELD)
                     user = authenticate(
-                        self.request,
-                        username=user.username,
+                        request=self.request,
+                        username=user_by_username.email,
                         password=password
                     )
                 except User.DoesNotExist:
                     pass
-            
+
+            # If still not authenticated, check if the input is an email (case-insensitive)
             if user is None:
-                raise ValidationError(_("Please enter a correct email/username and password."))
+                try:
+                    user_by_email = User.objects.get(email__iexact=username)
+                    # Attempt authentication with the retrieved email
+                    user = authenticate(
+                        request=self.request,
+                        username=user_by_email.email,
+                        password=password
+                    )
+                except User.DoesNotExist:
+                    pass
+
+            if user is None:
+                raise ValidationError(_("Invalid email/username or password."))
                 
             if not user.email_verified:
-                raise ValidationError(_("This account is not verified. Please check your email for verification link."))
+                raise ValidationError(_("Account not verified. Please check your email."))
                 
             self.user_cache = user
             
-        return super().clean()
+        return self.cleaned_data
+
+
 
 
 class CustomSetPasswordForm(SetPasswordForm):
