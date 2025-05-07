@@ -12,6 +12,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
+    path('profile/update/', views.profile_update_view, name='profile_update'),
+    path('profile/delete/', views.delete_account_view, name='delete_account'),
    
     # Email verification
     path('email-sent/', views.email_sent_view, name='email_sent'),

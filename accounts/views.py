@@ -22,7 +22,9 @@ from .forms import (
     CustomUserCreationForm,
     CustomAuthenticationForm,
     CustomPasswordResetForm,
-    CustomSetPasswordForm
+    CustomSetPasswordForm,
+    ProfileUpdateForm,
+    DeleteAccountForm,
 )
 from .models import PasswordResetToken, EmailVerificationToken
 from .serializers import CustomTokenObtainPairSerializer
@@ -40,22 +42,6 @@ logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
-# def signup_view(request):
-#     """View for user registration"""
-#     if request.user.is_authenticated:
-#         return redirect('accounts:profile')
-        
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             messages.success(request, 'Registration successful! Welcome to our platform.')
-#             return redirect('accounts:profile')
-#     else:
-#         form = CustomUserCreationForm()
-    
-#     return render(request, 'accounts/signup.html', {'form': form})
 
 
 
@@ -209,75 +195,6 @@ def resend_verification_view(request):
 
 
 
-# def login_view(request):
-#     """Modified login view that sends tokens to client via POST"""
-#     redirect_uri = request.GET.get('redirect_uri')
-    
-#     # Validate redirect_uri
-#     allowed_domains = settings.ALLOWED_REDIRECT_DOMAINS
-#     if redirect_uri:
-#         domain = urlparse(redirect_uri).netloc.split(':')[0]
-#         if domain not in allowed_domains:
-#             logger.error(f"Invalid redirect_uri: {redirect_uri}")
-#             return HttpResponse("Invalid redirect URI", status=400)
-    
-#     logger.debug(f"User authenticated: {request.user.is_authenticated}, redirect_uri: {redirect_uri}")
-    
-#     if request.user.is_authenticated:
-#         if redirect_uri:
-#             # User is already logged in, generate tokens and send via POST
-#             serializer = CustomTokenObtainPairSerializer()
-#             token_data = serializer.get_token(request.user)
-#             access_token = str(token_data.access_token)
-#             refresh_token = str(token_data)
-#             logger.debug(f"User already authenticated, rendering POST form to {redirect_uri}")
-#             return render(request, 'accounts/token_redirect.html', {
-#                 'redirect_uri': redirect_uri,
-#                 'access_token': access_token,
-#                 'refresh_token': refresh_token,
-#                 'user_id': request.user.id
-#             })
-#         else:
-#             logger.debug("User already authenticated, redirecting to profile")
-#             return redirect('accounts:profile')
-        
-#     if request.method == 'POST':
-#         form = CustomAuthenticationForm(request, data=request.POST)
-#         if form.is_valid():
-#             logger.debug("Form is valid")
-#             user = form.get_user()
-#             login(request, user)  # Traditional session login
-            
-#             # Generate tokens using custom serializer
-#             serializer = CustomTokenObtainPairSerializer()
-#             token_data = serializer.get_token(user)
-#             access_token = str(token_data.access_token)
-#             refresh_token = str(token_data)
-            
-#             if not redirect_uri:
-#                 logger.debug("No redirect_uri, redirecting to profile")
-#                 messages.success(request, 'Login successful!')
-#                 return redirect('accounts:profile')
-            
-#             # Send tokens via POST
-#             logger.debug(f"Rendering POST form to {redirect_uri}")
-#             messages.success(request, 'Login successful! Redirecting to client application.')
-#             return render(request, 'accounts/token_redirect.html', {
-#                 'redirect_uri': redirect_uri,
-#                 'access_token': access_token,
-#                 'refresh_token': refresh_token,
-#                 'user_id': user.id
-#             })
-#     else:
-#         form = CustomAuthenticationForm()
-    
-#     logger.debug(f"Rendering login page with redirect_uri: {redirect_uri}")
-#     return render(request, 'accounts/login.html', {'form': form})
-
-
-
-
-
 @ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def login_view(request):
     """View for authenticating users with rate limiting"""
@@ -357,60 +274,6 @@ class BlacklistRefreshToken(APIView):
 
 
 
-# @csrf_exempt
-# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
-# def password_reset_request(request):
-#     """View to request a password reset with rate limiting"""
-#     if request.method == 'POST':
-#         form = CustomPasswordResetForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data['email']
-#             try:
-#                 user = User.objects.get(email=email)
-                
-#                 if not user.email_verified:
-#                     messages.error(request, 'Email not verified. Please verify your email first.')
-#                     return redirect('accounts:password_reset_request')
-                
-#                 # Generate unique token
-#                 token = str(uuid.uuid4())
-#                 expires_at = timezone.now() + datetime.timedelta(hours=1)  # 1 hour expiry
-                
-#                 # Save token to database
-#                 reset_token = PasswordResetToken.objects.create(
-#                     user=user,
-#                     token=token,
-#                     expires_at=expires_at
-#                 )
-                
-#                 # Build reset URL
-#                 reset_url = request.build_absolute_uri(
-#                     reverse('accounts:password_reset_confirm', args=[token])
-#                 )
-                
-#                 # Send email
-#                 subject = 'Password Reset Request'
-#                 message = render_to_string('accounts/password_reset_email.html', {
-#                     'user': user,
-#                     'reset_url': reset_url,
-#                     'expiry_time': '1 hour'
-#                 })
-                
-#                 send_mail(subject, message, None, [user.email])
-                
-#                 # Store email in session for the email sent page
-#                 request.session['reset_email'] = user.email
-                
-#                 return redirect('accounts:password_reset_email_sent')
-                
-#             except User.DoesNotExist:
-#                 messages.error(request, 'No account found with this email address.')
-#     else:
-#         form = CustomPasswordResetForm()
-    
-#     return render(request, 'accounts/password_reset_form.html', {'form': form})
-
-
 def password_reset_email_sent_view(request):
     """View to show after password reset email is sent"""
     email = request.session.get('reset_email')
@@ -474,32 +337,6 @@ def profile_view(request):
         form = CustomAuthenticationForm()
     
     return render(request, 'accounts/login.html', {'form': form})
-# class BlacklistRefreshToken(APIView):
-#     def post(self, request):
-#         refresh_token = request.data.get('refresh')
-#         # Add token to blacklist (implementation specific)
-#         # Example using django-rest-framework-simplejwt:
-#         from rest_framework_simplejwt.tokens import RefreshToken
-#         try:
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
-#             return Response(status=status.HTTP_205_RESET_CONTENT)
-#         except Exception as e:
-#             return Response(
-#                 {'error': str(e)},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-# @login_required
-# def logout_view(request):
-#     """View for user logout"""
-#     logout(request)
-#     messages.success(request, 'You have been logged out successfully.')
-#     return redirect('accounts:login')
-
-# @login_required
-# def profile_view(request):
-#     """View for user profile"""
-#     return render(request, 'accounts/profile.html')
 
 
 @ratelimit(key='ip', rate='2/h', method='POST', block=True)
@@ -590,3 +427,37 @@ def password_reset_confirm(request, token):
     except PasswordResetToken.DoesNotExist:
         messages.error(request, 'The password reset link is invalid.')
         return redirect('accounts:password_reset_request')
+
+
+
+
+@login_required
+def profile_update_view(request):
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    
+    return render(request, 'accounts/profile_update.html', {'form': form})
+
+@login_required
+def delete_account_view(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST, user=request.user)
+        if form.is_valid():
+            # Capture user instance before logout
+            user = request.user
+            # Logout the user to clear the session
+            logout(request)
+            # Now delete the user
+            user.delete()
+            messages.success(request, 'Your account has been deleted successfully.')
+            return redirect('accounts:login')
+    else:
+        form = DeleteAccountForm(user=request.user)
+    
+    return render(request, 'accounts/delete_account.html', {'form': form})

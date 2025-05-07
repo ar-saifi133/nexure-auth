@@ -429,3 +429,52 @@ class CustomSetPasswordForm(SetPasswordForm):
             raise ValidationError(_("New password cannot be same as current password."))
             
         return new_password
+
+
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['full_name', 'username', 'email']
+        widgets = {
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError(_("This email is already in use."))
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+            raise ValidationError(_("This username is already in use."))
+        return username
+
+
+class DeleteAccountForm(forms.Form):
+    confirm = forms.BooleanField(
+        required=True,
+        label="I understand this action cannot be undone",
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    password = forms.CharField(
+        label="Current Password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+            raise ValidationError(_("The password is incorrect."))
+        return password
