@@ -86,7 +86,7 @@ TEMPLATES = [
     },
 ]
 ALLOWED_REDIRECT_DOMAINS = os.getenv('ALLOWED_REDIRECT_DOMAINS', 'localhost,127.0.0.1').split(',')
-CLIENT_LOGOUT_URL = "http://localhost:8000/accounts/logout"  # URL to redirect after logout
+CLIENT_LOGOUT_URL = "http://localhost:8005/accounts/logout"  # URL to redirect after logout
 WSGI_APPLICATION = 'sso_project.wsgi.application'
 TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.csrf')
 # Database
@@ -170,7 +170,17 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
     'TOKEN_OBTAIN_PAIR_SERIALIZER': 'accounts.serializers.CustomTokenObtainPairSerializer',
 }
+ALLOWED_CLIENT_HOSTS = [
+    "localhost:8000",
+    "localhost:8005",
+]
+CLIENT_APPS = [
+    { 'name': 'Client 1', 'login_url': 'http://localhost:8000/accounts/login/' },
+    { 'name': 'Client 2', 'login_url': 'http://localhost:8005/accounts/login/' },
+]
 
+# Fallback if someone passes an unrecognized next=… (you could also omit this)
+DEFAULT_CLIENT_URL = CLIENT_APPS[0]['login_url']
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
