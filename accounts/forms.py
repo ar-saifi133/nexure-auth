@@ -210,13 +210,8 @@ class CustomAuthenticationForm(AuthenticationForm):
             if user is None:
                 raise ValidationError(_("Invalid email/username or password."))
                 
-<<<<<<< HEAD
-            # if not user.email_verified:
-            #     raise ValidationError(_("Account not verified. Please check your email."))
-=======
             if not user.is_superuser and not user.email_verified:
                 raise ValidationError(_("Account not verified. Please check your email."))
->>>>>>> 2c711428784bcaf54aa9ab24b4b02eba76deb2ca
                 
             self.user_cache = user
             
