@@ -49,7 +49,7 @@ User = get_user_model()
 
 
 @csrf_exempt
-@ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def signup_view(request):
     """View for user registration with rate limiting"""
     if request.user.is_authenticated:
@@ -199,7 +199,7 @@ def resend_verification_view(request):
 
 
 
-@ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def login_view(request):
     """View for authenticating users with rate limiting"""
     redirect_uri = request.GET.get('redirect_uri')
@@ -234,7 +234,7 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             
-            if not user.email_verified:
+            if not user.is_superuser and not user.email_verified:
                 logout(request)
                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
                 return redirect('accounts:resend_verification')
@@ -290,14 +290,54 @@ def password_reset_email_sent_view(request):
 
 
 
+# @login_required
+# def logout_view(request):
+#     """View for user logout"""
+#     logout(request)
+#     messages.success(request, 'You have been logged out successfully from all applications.')
+#     client_logout_url = f"{settings.CLIENT_LOGOUT_URL}?from_auth_server=true"
+#     logger.debug(f"Redirecting to client logout: {client_logout_url}")
+#     return redirect(client_logout_url)
+
+
+from django.contrib.auth import logout
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlencode
+import logging
+
+logger = logging.getLogger(__name__)
+
 @login_required
 def logout_view(request):
-    """View for user logout"""
+    """Centralized auth-server logout supporting multiple clients."""
+    # 1. Log the user out of Django session
     logout(request)
+
+    # 2. Success message (optional)
     messages.success(request, 'You have been logged out successfully from all applications.')
-    client_logout_url = f"{settings.CLIENT_LOGOUT_URL}?from_auth_server=true"
+
+    # 3. Determine where to send them next:
+    #    - honor a ?next=... param if it’s on the allow-list
+    #    - otherwise fall back to a default client URL
+    next_url = request.GET.get('next')
+    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts=settings.ALLOWED_CLIENT_HOSTS):
+        redirect_to = next_url
+    else:
+        redirect_to = settings.CLIENT_LOGOUT_URL  # your default
+    
+    # 4. Attach flag so client knows it came from the auth server
+    sep = '&' if '?' in redirect_to else '?'
+    client_logout_url = f"{redirect_to}{sep}{urlencode({'from_auth_server': 'true'})}"
+
     logger.debug(f"Redirecting to client logout: {client_logout_url}")
     return redirect(client_logout_url)
+
+
+
+
+
 
 @login_required
 def profile_view(request):
@@ -343,7 +383,7 @@ def profile_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-@ratelimit(key='ip', rate='2/h', method='POST', block=True)
+# @ratelimit(key='ip', rate='2/h', method='POST', block=True)
 def password_reset_request(request):
     """View to request a password reset"""
     if request.method == 'POST':
