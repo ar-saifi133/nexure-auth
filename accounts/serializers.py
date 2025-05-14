@@ -173,16 +173,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    Custom token serializer that adds user data to the JWT payload
-    """
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # Add custom claims to JWT payload
         token['username'] = user.username
-        token['email'] = user.email
         token['full_name'] = user.full_name
+        token['is_staff'] = user.is_staff
+        token['is_active'] = user.is_active
+        token['is_superuser'] = user.is_superuser
         return token
 
     def validate(self, attrs):
