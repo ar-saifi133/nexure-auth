@@ -482,3 +482,15 @@ def password_change_view(request):
     else:
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'accounts/password_change.html', {'form': form})
+
+
+
+from django.core.mail import send_mail, get_connection
+
+try:
+    connection = get_connection()
+    connection.open()
+    print("✅ SMTP connection established.")
+    connection.close()
+except Exception as e:
+    print("❌ SMTP connection failed:", e)
