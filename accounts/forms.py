@@ -221,10 +221,32 @@ class CustomUserCreationForm(UserCreationForm):
     """
     A form for creating new users with username, full name, email and password.
     """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Base input class
+        base_input_class = (
+            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
+            "focus:ring-0 focus:outline-none focus:border-accent-grey "
+            "text-sm font-medium placeholder:text-sm placeholder:font-light"
+        )
+
+        # Apply default classes and keep placeholders
+        for field_name, field in self.fields.items():
+            widget = field.widget
+
+            # Skip if it's a checkbox or other non-text input
+            if isinstance(widget, (forms.TextInput, forms.EmailInput, forms.PasswordInput)):
+                existing_attrs = widget.attrs
+                placeholder = existing_attrs.get('placeholder', f"{field.label}*")
+                widget.attrs.update({
+                    'class': base_input_class,
+                    'placeholder': placeholder
+                })
     username = forms.CharField(
         label=_("Username"),
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Choose a username'}),
+        widget=forms.TextInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Username*'}),
         validators=[
             RegexValidator(
                 regex=r'^[\w.@+-]+$',
@@ -237,7 +259,7 @@ class CustomUserCreationForm(UserCreationForm):
     full_name = forms.CharField(
         label=_("Full Name"),
         max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
+        widget=forms.TextInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Full Name*'}),
         validators=[
             RegexValidator(
                 regex=r'^[A-Za-z ]+$',
@@ -250,20 +272,20 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+        widget=forms.EmailInput(attrs={'class': 'form-control text-sm font-medium w-full h-11 rounded-[10px] border border-accent-grey pl-5  focus:ring-0 focus:outline-none focus:border-accent-grey placeholder:text-sm placeholder:font-light', 'placeholder': 'Email*'}),
         validators=[validate_temp_email]
     )
     
     password1 = forms.CharField(
         label=_("Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Create a password'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Password*'}),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     
     password2 = forms.CharField(
         label=_("Confirm Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm your password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Confirm Password'})
     )
 
     class Meta:

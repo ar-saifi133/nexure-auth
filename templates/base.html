@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Auth Ensight Plus{% endblock %}</title>
@@ -10,13 +13,24 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    keyframes: {
+                        slideUp: {
+                        '0%': { maxHeight: '0', paddingTop: '0', paddingBottom: '0' },
+                        '100%': { maxHeight: '200px', paddingTop: '1rem', paddingBottom: '1rem' }
+                        }
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 4s ease-out forwards',
+                    },
+                     fontFamily: {
+                            sans: ['Montserrat', 'sans-serif'],
+                            },
                     colors: {
                         primary: {
-                            black: '#0000',
-                            white: '#fff',
+                            black: 'rgb(0 0 0 / <alpha-value>)',
+                            white: '#ffffff',
                             red: '#F44336',
-                            black-600: '#00000099',
-                            black-300: '#0000004D',
+                            
                         },
                         secondary: {
                             black: '#000000',
@@ -26,7 +40,7 @@
                         }, 
                         accent: {
                             blue: '#33CCFF', // accent blue
-                            grey: '#262626', // accent grey
+                            grey: '#8C8C8C', // accent grey
                         },
                         success: {
                             200: ' #33CCFF33', // success green
@@ -36,7 +50,8 @@
                            // 500: '#F59E0B', // warning amber
                         },
                         error: {
-                            500: ' #FF2C2C33;', // error red
+                            500: ' #F44336;',
+                             // error red
                         },
                     },
                 },
@@ -81,25 +96,10 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-    <header class="bg-white shadow">
-        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-xl font-bold text-primary-500">
-                Auth Ensight Plus
-            </a>
-            <div class="space-x-4">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'accounts:profile' %}" class="text-gray-700 hover:text-primary-500 transition-colors">Profile</a>
-                    <a href="{% url 'accounts:logout' %}" class="bg-white text-primary-500 border border-primary-500 px-4 py-2 rounded hover:bg-primary-50 transition-colors">Logout</a>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="text-gray-700 hover:text-primary-500 transition-colors">Login</a>
-                    <a href="{% url 'accounts:signup' %}" class="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600 transition-colors">Sign Up</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
+<body class="bg-gray-50 text-gray-900 h-screen font-sans">
     
-    <main class="container mx-auto px-4 py-8">
+    
+    <main class="container w-full max-w-full min-h-[calc(100vh+60px)]">
         {% if messages %}
             <div class="mb-6">
                 {% for message in messages %}
@@ -112,12 +112,7 @@
         
         {% block content %}{% endblock %}
     </main>
-    
-    <footer class="mt-auto py-6 bg-gray-100">
-        <div class="container mx-auto px-4 text-center text-gray-600">
-            <p>&copy; {% now "Y" %} Ensight Plus Team. All rights reserved.</p>
-        </div>
-    </footer>
+ 
 
     {% block extra_js %}{% endblock %}
 </body>
