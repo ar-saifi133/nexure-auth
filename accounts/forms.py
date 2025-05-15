@@ -357,12 +357,34 @@ class CustomPasswordResetForm(PasswordResetForm):
 
 
 class CustomAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Base input class
+        base_input_class = (
+            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
+            "focus:ring-0 focus:outline-none focus:border-accent-grey "
+            "text-sm font-medium placeholder:text-sm placeholder:font-light"
+        )
+
+        # Apply default classes and keep placeholders
+        for field_name, field in self.fields.items():
+            widget = field.widget
+
+            # Skip if it's a checkbox or other non-text input
+            if isinstance(widget, (forms.TextInput, forms.EmailInput, forms.PasswordInput)):
+                existing_attrs = widget.attrs
+                placeholder = existing_attrs.get('placeholder', f"{field.label}*")
+                widget.attrs.update({
+                    'class': base_input_class,
+                    'placeholder': placeholder
+                })
     """Login form that accepts both username and email"""
     username = forms.CharField(
         label=_("Email or Username"),
         widget=forms.TextInput(attrs={
             'class': 'form-control', 
-            'placeholder': 'Enter your email or username'
+            'placeholder': 'Email/Username'
         })
     )
     
@@ -371,7 +393,7 @@ class CustomAuthenticationForm(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={
             'class': 'form-control', 
-            'placeholder': 'Enter your password'
+            'placeholder': 'Password* '
         })
     )
 
