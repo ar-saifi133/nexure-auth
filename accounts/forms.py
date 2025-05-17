@@ -226,9 +226,9 @@ class CustomUserCreationForm(UserCreationForm):
 
         # Base input class
         base_input_class = (
-            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
+            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] px-5 "
             "focus:ring-0 focus:outline-none focus:border-accent-grey "
-            "text-sm font-medium placeholder:text-sm placeholder:font-light"
+            "text-[12px] font-medium placeholder:text-[12px] placeholder:font-light"
         )
 
         # Apply default classes and keep placeholders
@@ -238,9 +238,10 @@ class CustomUserCreationForm(UserCreationForm):
             # Skip if it's a checkbox or other non-text input
             if isinstance(widget, (forms.TextInput, forms.EmailInput, forms.PasswordInput)):
                 existing_attrs = widget.attrs
+                existing = widget.attrs.get('class', '')
                 placeholder = existing_attrs.get('placeholder', f"{field.label}*")
                 widget.attrs.update({
-                    'class': base_input_class,
+                    'class': f"{base_input_class} {existing}",
                     'placeholder': placeholder
                 })
     username = forms.CharField(
@@ -272,20 +273,20 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={'class': 'form-control text-sm font-medium w-full h-11 rounded-[10px] border border-accent-grey pl-5  focus:ring-0 focus:outline-none focus:border-accent-grey placeholder:text-sm placeholder:font-light', 'placeholder': 'Email*'}),
+        widget=forms.EmailInput(attrs={  'class': 'form-control text-sm font-medium w-full h-11 rounded-[10px] border border-accent-grey pl-5  focus:ring-0 focus:outline-none focus:border-accent-grey placeholder:text-sm placeholder:font-light', 'placeholder': 'Email*'}),
         validators=[validate_temp_email]
     )
     
     password1 = forms.CharField(
         label=_("Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Password*'}),
+        widget=forms.PasswordInput(attrs={ "id": "id_password1", 'class': ' form-control pr-10', 'placeholder': 'Password*'}),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     
     password2 = forms.CharField(
         label=_("Confirm Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Confirm Password'})
+        widget=forms.PasswordInput(attrs={ "id": "id_password2", 'class': 'form-control pr-10', 'placeholder': 'Confirm Password'})
     )
 
     class Meta:
@@ -364,7 +365,7 @@ class CustomAuthenticationForm(AuthenticationForm):
         base_input_class = (
             "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
             "focus:ring-0 focus:outline-none focus:border-accent-grey "
-            "text-sm font-medium placeholder:text-sm placeholder:font-light"
+            "text-[12px] font-medium placeholder:text-[12px ] placeholder:font-light"
         )
 
         # Apply default classes and keep placeholders

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +11,7 @@
     <title>{% block title %}Auth Ensight Plus{% endblock %}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -28,13 +31,13 @@
                     colors: {
                         primary: {
                             black: 'rgb(0 0 0 / <alpha-value>)',
-                            white: '#ffffff',
+                            white: 'rgb(255 255 255 / <alpha-value>)',
                             red: '#F44336',
-                            
+                            grey: 'rgb(63 63 63 / <alpha-value>)'
                         },
                         secondary: {
                             black: '#000000',
-                            white: '#FFFFFF',
+                            white: '#F8F8F8',
                             blue: '#03AFDD',
                             grey: '#F3F4F6',
                         }, 
@@ -96,15 +99,24 @@
         }
     </style>
 </head>
-<body class="bg-primary-white text-primary-black h-screen font-sans">
+<body class="bg-primary-black text-primary-black h-screen font-sans">
     
     
     <main class="container w-full max-w-full min-h-[calc(100vh+60px)]">
-        {% if messages %}
-            <div class="mb-6">
-                {% for message in messages %}
-                    <div class="alert px-4 py-3 rounded mb-4 {% if message.tags == 'success' %}bg-success-500 text-white{% elif message.tags == 'error' %}bg-error-500 text-white{% else %}bg-primary-100 text-primary-800{% endif %}">
-                        {{ message }}
+       {% if messages %}
+            <div class="mb-6 msg">
+                 {% for message in messages %} 
+                    <div class=" px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
+                     {% if message.tags == 'success' %}
+                    bg-success-blue/20 text-primary-black border border-success-blue/40
+                     {% elif message.tags == 'warning' %}
+                    {% elif message.tags == 'error' %}
+                    bg-error-red/20 border border-error-red/40  text-primary-black
+                     {% else %}
+                    bg-primary-white text-primary-800
+                    {% endif %} 
+                    ">
+                        <span class='flex justify-center w-[calc(100%-25px)] ' >{{ message }} sdasdasdasdasdasdasdasdasdasd </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
                     </div>
                 {% endfor %}
             </div>

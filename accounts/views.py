@@ -110,8 +110,8 @@ def signup_view(request):
 def email_sent_view(request):
     """View to show after email verification is sent"""
     email = request.session.get('verification_email')
-    if not email:
-        return redirect('accounts:signup')
+    # if not email:
+        # return redirect('accounts:signup')
         
     return render(request, 'accounts/email_sent.html', {'email': email})
 
@@ -343,7 +343,7 @@ def logout_view(request):
 def profile_view(request):
     """View for user profile"""
     logger.debug(f"Profile accessed for user: {request.user.id}")
-    return render(request, 'accounts/profile.html')
+    return render(request, 'accounts/profile/profile.html')
 # def login_view(request):
     """Modified login view that returns tokens to client"""
     if request.user.is_authenticated:
@@ -486,29 +486,51 @@ def profile_update_view(request):
     else:
         form = ProfileUpdateForm(instance=request.user)
     
-    return render(request, 'accounts/profile_update.html', {'form': form})
+    return render(request, 'accounts/profile/profile_update.html', {'form': form})
 
+# @login_required
+# def delete_account_view(request):
+#     if request.method == 'POST':
+#         form = DeleteAccountForm(request.POST, user=request.user)
+#         if form.is_valid():
+#             # Capture user instance before logout
+#             user = request.user
+#             # Logout the user to clear the session
+#             logout(request)
+#             # Now delete the user
+#             user.delete()
+#             messages.success(request, 'Your account has been deleted successfully.')
+#             return redirect('accounts:login')
+#     else:
+#         form = DeleteAccountForm(user=request.user)
+    
+#     return render(request, 'accounts/profile/delete_account.html', {'form': form})
 @login_required
 def delete_account_view(request):
-    if request.method == 'POST':
-        form = DeleteAccountForm(request.POST, user=request.user)
-        if form.is_valid():
-            # Capture user instance before logout
-            user = request.user
-            # Logout the user to clear the session
-            logout(request)
-            # Now delete the user
-            user.delete()
-            messages.success(request, 'Your account has been deleted successfully.')
-            return redirect('accounts:login')
-    else:
-        form = DeleteAccountForm(user=request.user)
-    
-    return render(request, 'accounts/delete_account.html', {'form': form})
-
-
-
-
+    try:
+        # Log request headers for debugging
+        print("Request headers:", request.headers)
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        
+        if request.method == 'POST':
+            form = DeleteAccountForm(request.POST, user=request.user)
+            if form.is_valid():
+                user = request.user
+                logout(request)
+                user.delete()
+                messages.success(request, 'Your account has been deleted successfully.')
+                return redirect('accounts:login')
+            else:
+                # Always use partial template for AJAX, full template for non-AJAX
+                template = 'accounts/profile/delete_account_form.html' if is_ajax else 'accounts/profile/delete_account.html'
+                return render(request, template, {'form': form})
+        else:
+            form = DeleteAccountForm(user=request.user)
+            template = 'accounts/profile/delete_account_form.html' if is_ajax else 'accounts/profile/delete_account.html'
+            return render(request, template, {'form': form})
+    except Exception as e:
+        print(f"Error in delete_account_view: {str(e)}")
+        raise
 
 @login_required
 def password_change_view(request):
@@ -521,4 +543,4 @@ def password_change_view(request):
             return redirect('accounts:profile')
     else:
         form = CustomPasswordChangeForm(user=request.user)
-    return render(request, 'accounts/password_change.html', {'form': form})
+    return render(request, 'accounts/profile/password_change.html', {'form': form})
