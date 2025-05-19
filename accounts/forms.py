@@ -521,13 +521,18 @@ class ProfileUpdateForm(forms.ModelForm):
 class DeleteAccountForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
-        label="I understand this action cannot be undone",
+        label="All data associated with this account will be deleted",
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    confirm2 = forms.BooleanField(
+        required=True,
+        label="I agree to this action, knowing it cannot be undone",
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
     password = forms.CharField(
         label="Current Password",
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control border border-accent-grey/30 h-[40px] px-5 w-full rounded-[10px] placeholder:text-[14px] placeholder:font-medium', 'placeholder':'Password*'}),
         required=True
     )
 
