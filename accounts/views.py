@@ -312,15 +312,6 @@ def password_reset_email_sent_view(request):
 
 
 
-# @login_required
-# def logout_view(request):
-#     """View for user logout"""
-#     logout(request)
-#     messages.success(request, 'You have been logged out successfully from all applications.')
-#     client_logout_url = f"{settings.CLIENT_LOGOUT_URL}?from_auth_server=true"
-#     logger.debug(f"Redirecting to client logout: {client_logout_url}")
-#     return redirect(client_logout_url)
-
 
 from django.contrib.auth import logout
 from django.contrib import messages
