@@ -1,66 +1,158 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Log In - ensight+{% endblock %}
 
-{% block title %}Login - Ensight+{% endblock %}
 
 {% block content %}
-<div class="flex justify-center py-10">
-    <div class="w-full max-w-md">
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="px-6 py-8">
-                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Sign In</h2>
-                
-                <form method="post" class="space-y-6" novalidate>
+<div class="flex min-h-[calc(100vh+60px)] bg-[#FFFFFF] font-montserrat h-full max-h-full">
+    <!-- Left Column: Form -->
+    <div class="w-[54%] flex justify-center items-center flex-col">
+        <!-- Section 1: Top "Sign Up" Link -->
+        <div class="flex flex-row justify-end  h-[60px] w-full">
+            <div class="h-[28px] mt-[30px] mr-[66px] gap-[21px] flex  ">
+               
+                    <span class=" text-black text-center flex items-center
+                     font-inter text-[14px] text-[var(--Typeface-size-body-1,14px)] not-italic font-normal leading-none">Don't have an account?
+                    </span>
+                    <a href="{% url 'accounts:signup' %}" class="rounded-[5px] bg-white
+                     shadow-[1.5px_3.5px_9px_0px_rgba(0,0,0,0.15)] text-center text-[var(--text-selected-state,#000)]
+                      font-inter text-[var(--Typeface-size-body-2,12px)]
+                      font-medium not-italic leading-none w-[100px] flex justify-center items-center flex gap-[8px] hover:gap-[11px]
+                      transition-all duration-300 ">
+                        <span class="text-[12px]">Sign Up</span> <span class="w-[10px] h-[8px] "><img src="{% static 'img/arrow-icon.svg' %}"/>  </span>
+                    </a>
+               
+            </div>
+         
+         
+        </div>
+
+
+        <!-- Section 2: Central Login Form Block -->
+        <div class="w-[440px] h-[calc(100%-120px)] p-[20px]">
+            <div class="w-full h-full flex justify-center items-center flex-col">
+                <div class="mb-[24px] mt-[20px] w-[400px] text-center"> <!-- Margin bottom for "LOG IN" title: 32px -->
+                    <h2 class="text-black text-center font-montserrat text-[24px] not-italic font-bold leading-normal capitalize  ">
+                        LOG IN</h2>
+                </div>
+
+
+               
+   
+                <form method="post" class="w-full  " novalidate> <!-- Space between form groups: 16px -->
                     {% csrf_token %}
-                    
-                    <div>
-                        <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                            {{ form.username.label }}
-                        </label>
-                        {{ form.username }}
-                        {% if form.username.errors %}
-                            <p class="mt-1 text-sm text-error-500">{{ form.username.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    
-                    <div>
-                        <div class="flex justify-between items-center">
-                            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                {{ form.password.label }}
-                            </label>
-                            <a href="{% url 'accounts:password_reset_request' %}" class="text-xs text-primary-500 hover:text-primary-600 transition-colors">
-                                Forgot password?
-                            </a>
-                        </div>
-                        {{ form.password }}
-                        {% if form.password.errors %}
-                            <p class="mt-1 text-sm text-error-500">{{ form.password.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    
+   
                     {% if form.non_field_errors %}
-                        <div class="bg-error-50 text-error-500 px-4 py-3 rounded-md">
+                        <div class="msg flex w-[400px] h-[44px] justify-center items-center gap-[10px] mb-[20px] rounded-[10px]
+                        border border-[rgba(244,67,54,0.4)] bg-[rgba(244,67,54,0.2)]" role="alert">
                             {% for error in form.non_field_errors %}
-                                <p class="text-sm">{{ error }}</p>
+                                <p class=" w-full  h-[44px]  flex justify-center items-center ">{{ error }}<span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span></p>
                             {% endfor %}
                         </div>
                     {% endif %}
-                    
+   
+                    <div class=" flex flex-col gap-[24px]  ">
+                        {# Label is effectively the placeholder set in forms.py #}
+                       <div>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                      <div class="flex gap-[10px]">  <span class="mt-[10px] "><img src="{% static 'img/error.svg' %}"/>  </span>
+                        <p class="text-[#F44336] text-left mt-[10px] font-[Montserrat] text-[12px] not-italic font-medium leading-none flex items-center">{{ form.username.errors.0 }}</p></div>
+                        {% endif %}
+                       </div>
+                       <div>
+                       
+                        {{ form.password }}
+
+
+
+
+                        {% if form.password.errors %}
+                        <div class="flex gap-[10px]"><span class="mt-[10px]"><img src="{% static 'img/error.svg' %}"/>  </span>
+                            <p class="mt-[10px] text-[#F44336] text-left mt-[10px] font-[Montserrat] text-[12px] not-italic font-medium leading-none flex items-center">{{ form.password.errors.0 }}</p></div>
+                        {% endif %}
+                       </div> 
+                    </div>
+                    <div class="text-right mt-[2px] mb-[12px]"> <!-- Margin top for "Forgot Password?": 8px -->
+                        <a href="{% url 'accounts:password_reset_request' %}" class="text-[rgba(0,0,0,0.5)] text-center
+                        font-montserrat text-[12px] not-italic font-medium  tracking-[0.24px]">
+                            Forgot Password?
+                        </a>
+                    </div>
+   
                     <div>
-                        <button type="submit" class="w-full bg-primary-500 text-white py-3 px-4 rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-300">
-                            Sign In
+                        <button type="submit"
+                            class="w-full h-[52px] bg-black text-white py-0 px-5 rounded-[13px]  font-medium flex items-center justify-center">
+                            {# Explicit h-[44px], py-0 because height is fixed. flex items-center justify-center to center text #}
+                            Log in to your account
                         </button>
                     </div>
                 </form>
             </div>
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 text-center">
-                <p class="text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="{% url 'accounts:signup' %}" class="font-medium text-primary-500 hover:text-primary-600 transition-colors">
-                        Create an account
-                    </a>
-                </p>
-            </div>
+        </div>
+
+
+        <!-- Section 3: Bottom Footer Links -->
+     <div class="flex justify-center whitespace-normal  h-[15px] ">
+           <div><a href="#" class="mr-[11px] text-[color:var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-none ">Privacy Policy</a></div>
+            <div><a href="#" class="mr-[11px] text-[var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-normal">Terms of Use</a></div>
+           
+           
+            <div><a href="#" class="text-[var(--text-selected-state,#000)] text-center font-montserrat text-[12px] not-italic font-light leading-normal">© 2025 All rights reserved to Enord Pvt. Ltd.</a></div>
         </div>
     </div>
+
+
+
+
+ 
+
+
+    <!-- Right Column: Branding (MODIFIED SECTION) -->
+    <div class="w-[46%]   bg-black relative overflow-hidden">
+       
+
+
+        <!-- Ensight+ Logo -->
+      <!-- <h1 class="absolute top-50  right-20 text-white text-3xl font-semibold
+         z-20">
+            ensight+
+        </h1>-->
+       
+        <img src="{% static 'img/ensight.svg' %}"
+        alt="logo Background Pattern"
+        class=" absolute  object-cover z-20"
+        style="
+           width: 160.242px;
+           height: 36.571px;
+           top: 30px;
+           right:55px;
+           
+           
+           
+        " />
+        <img src="{% static 'img/auth-bg.png' %}"
+             alt="Decorative Background Pattern"
+             class="absolute  object-cover z-10"
+             style="
+                width: 490px;
+                height: 735px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+               
+               
+             " />
+              <div class=" z-10 absolute top-0 left-0  w-full h-screen text-primary-white text-2xl font-semibold flex items-center justify-center p-[60px] ">
+                <div class='overflow-hidden  max-h-0 animate-slide-up min-h-[0px] [animation-delay:2s] duration-700'>
+                    <span class='max-w-[550px] block'>Empowering The Future With Cutting-Edge Arial Technology </span>
+                </div>    
+                
+            </div>
+       
+    </div>
+   
 </div>
 {% endblock %}
+
+
