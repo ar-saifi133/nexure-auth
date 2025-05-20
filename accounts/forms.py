@@ -10,6 +10,8 @@ import re
 from django.db import models 
 from django.contrib.auth import authenticate
 from django.db.models import Q
+from django.contrib.auth.forms import PasswordResetForm
+
 
 
 User = get_user_model()
@@ -161,14 +163,24 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
+# forms.py  (excerpt)
+
 class CustomPasswordResetForm(PasswordResetForm):
-    """
-    A form for generating a password reset token for a user.
-    """
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+        widget=forms.EmailInput(
+            attrs={
+                "id": "reset-email",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",          # <-- literally one space
+            }
+        ),
     )
 
 
@@ -271,14 +283,36 @@ class CustomSetPasswordForm(SetPasswordForm):
     """
     new_password1 = forms.CharField(
         label=_("New password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter new password'}),
+        widget=forms.PasswordInput(
+        attrs={
+        "id": "first-password",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",
+        }
+        ),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     
     new_password2 = forms.CharField(
         label=_("Confirm new password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm new password'})
+        widget=forms.PasswordInput(
+        attrs={
+            "id": "second-password",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",
+        }
+        )
     )
 
     def clean_new_password1(self):
