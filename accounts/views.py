@@ -48,10 +48,17 @@ User = get_user_model()
 
 
 
-@csrf_exempt
 # @ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# accounts/views.py
+from django.core.mail import send_mail, EmailMessage  # Added EmailMessage import
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
 def signup_view(request):
-    """View for user registration with rate limiting"""
+    """View for user registration with proper error handling"""
     if request.user.is_authenticated:
         return redirect('accounts:profile')
         
@@ -59,44 +66,59 @@ def signup_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False  # User inactive until email verification
+            user.is_active = False
             user.avatar = f'avatar{random.randint(1, 6)}.png'
-            user.save()
             
-            # Create email verification token
-            token = EmailVerificationToken.objects.create(
-                user=user,
-                expires_at=timezone.now() + datetime.timedelta(hours=24)
-            )
-            
-            # Build verification URL
-            verification_url = request.build_absolute_uri(
-                reverse('accounts:verify_email', args=[str(token.token)])
-            )
-            
-            # Send verification email
-            subject = 'Verify Your Email Address'
-            html_message = render_to_string('accounts/email_verification.html', {
-                'user': user,
-                'verification_url': verification_url,
-                'expiry_time': '24 hours'
-            })
-            plain_message = f"Please verify your email by visiting this link: {verification_url}"
+            try:
+                user.save()
+            except Exception as e:
+                logger.error(f"User creation failed: {str(e)}")
+                messages.error(request, 'Registration failed. Please try again.')
+                return redirect('accounts:signup')
 
-            send_mail(
-                subject=subject,
-                message=plain_message,  # Fallback plain-text version
-                html_message=html_message,  # HTML version
-                from_email=settings.DEFAULT_FROM_EMAIL,  # Make sure this is set in settings.py
-                recipient_list=[user.email],
-                fail_silently=False
-            )
-            
-            # Store email in session for the email sent page
-            request.session['verification_email'] = user.email
-            
-            messages.success(request, 'Registration successful! Please check your email for verification link.')
-            return redirect('accounts:email_sent')
+            try:
+                # Create verification token
+                token = EmailVerificationToken.objects.create(
+                    user=user,
+                    expires_at=timezone.now() + datetime.timedelta(hours=24)
+                )
+                
+                verification_url = request.build_absolute_uri(
+                    reverse('accounts:verify_email', args=[str(token.token)])
+                )
+
+                # Send email using proper HTML template
+                subject = 'Verify Your Email Address'
+                html_message = render_to_string('accounts/email_verification.html', {
+                    'user': user,
+                    'verification_url': verification_url,
+                    'expiry_time': '24 hours'
+                })
+                plain_message = f"Please verify your email: {verification_url}"
+
+                # Use EmailMessage for better control
+                email = EmailMessage(
+                    subject,
+                    plain_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                )
+                email.content_subtype = "html"  # Main content is HTML
+                email.body = html_message
+                email.send(fail_silently=False)
+
+                request.session['verification_email'] = user.email
+                messages.success(request, 'Registration successful! Check your email for verification.')
+                return redirect('accounts:email_sent')
+
+            except Exception as e:
+                logger.error(f"Email sending failed: {str(e)}")
+                user.delete()  # Rollback user creation
+                messages.error(request, 'Failed to send verification email. Please contact support.')
+                return redirect('accounts:signup')
+
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomUserCreationForm()
     
@@ -110,8 +132,8 @@ def signup_view(request):
 def email_sent_view(request):
     """View to show after email verification is sent"""
     email = request.session.get('verification_email')
-    # if not email:
-        # return redirect('accounts:signup')
+    if not email:
+        return redirect('accounts:signup')
         
     return render(request, 'accounts/email_sent.html', {'email': email})
 
@@ -488,23 +510,6 @@ def profile_update_view(request):
     
     return render(request, 'accounts/profile/profile_update.html', {'form': form})
 
-# @login_required
-# def delete_account_view(request):
-#     if request.method == 'POST':
-#         form = DeleteAccountForm(request.POST, user=request.user)
-#         if form.is_valid():
-#             # Capture user instance before logout
-#             user = request.user
-#             # Logout the user to clear the session
-#             logout(request)
-#             # Now delete the user
-#             user.delete()
-#             messages.success(request, 'Your account has been deleted successfully.')
-#             return redirect('accounts:login')
-#     else:
-#         form = DeleteAccountForm(user=request.user)
-    
-#     return render(request, 'accounts/profile/delete_account.html', {'form': form})
 @login_required
 def delete_account_view(request):
     try:
@@ -544,3 +549,14 @@ def password_change_view(request):
     else:
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'accounts/profile/password_change.html', {'form': form})
+
+
+from django.core.mail import send_mail, get_connection
+
+try:
+    connection = get_connection()
+    connection.open()
+    print("✅ SMTP connection established.")
+    connection.close()
+except Exception as e:
+    print("❌ SMTP connection failed:", e)

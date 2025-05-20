@@ -1,47 +1,22 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+{% autoescape off %}
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Verify Your Email</title>
-    <style type="text/css">
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            margin: 15px 0;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #777;
-        }
-    </style>
+    <title>Email Verification</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Welcome {{ user.full_name }}!</h2>
-        <p>Thank you for signing up. Please click the button below to verify your email address:</p>
-        <a href="{{ verification_url }}" class="button">Verify Email</a>
-        <p>This link will expire in {{ expiry_time }}.</p>
-        <p>If the button doesn't work, copy and paste this URL into your browser:</p>
-        <p><a href="{{ verification_url }}">{{ verification_url }}</a></p>
-        <div class="footer">
-            <p>If you didn't request this, please ignore this email.</p>
-        </div>
-    </div>
+    <p>Hello {{ user.full_name }},</p>
+    
+    <p>Verify your email address to complete your registration on Ensight Plus:</p>
+    
+    <p><a href="{{ verification_url }}">Verify Email Address</a></p>
+    
+    <p>This link will expire in {{ expiry_time }}.</p>
+    
+    <p>If you didn't request this verification, you can safely ignore this email.</p>
+    
+    <p>Thanks,<br>
+    Ensight Plus Team</p>
 </body>
 </html>
+{% endautoescape %}
