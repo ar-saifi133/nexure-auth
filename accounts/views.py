@@ -1,4 +1,6 @@
 import datetime
+import time
+from django.http import JsonResponse
 import uuid
 import random
 from django.contrib import messages
@@ -138,6 +140,7 @@ def email_sent_view(request):
     return render(request, 'accounts/email_sent.html', {'email': email})
 
 
+
 def verify_email_view(request, token):
     """View to verify email"""
     try:
@@ -145,14 +148,14 @@ def verify_email_view(request, token):
         
         if not verification_token.is_valid():
             messages.error(request, 'The verification link has expired.')
-            return redirect('accounts:resend_verification')
+            request.session['verification_email'] = verification_token.user.email
+            return redirect('accounts:email_sent')
             
         user = verification_token.user
         user.is_active = True
         user.email_verified = True
         user.save()
         
-        # Delete all verification tokens for this user
         EmailVerificationToken.objects.filter(user=user).delete()
         
         messages.success(request, 'Email verified successfully! You can now login.')
@@ -160,24 +163,96 @@ def verify_email_view(request, token):
         
     except EmailVerificationToken.DoesNotExist:
         messages.error(request, 'Invalid verification link.')
-        return redirect('accounts:resend_verification')
+        return redirect('accounts:email_sent')
 
 
 
-@ratelimit(key='ip', rate='2/h', method='POST', block=True)
+#@ratelimit(key='ip', rate='2/h', method='POST', block=True)
+# def resend_verification_view(request):
+#     """View to resend verification email"""
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+        
+#         try:
+#             user = User.objects.get(email=email)
+            
+#             if user.email_verified:
+#                 messages.info(request, 'Email is already verified. You can login now.')
+#                 return redirect('accounts:login')
+                
+#             # Delete any existing tokens
+#             EmailVerificationToken.objects.filter(user=user).delete()
+            
+#             # Create new token
+#             token = EmailVerificationToken.objects.create(
+#                 user=user,
+#                 expires_at=timezone.now() + datetime.timedelta(hours=24)
+#             )
+            
+#             # Build verification URL
+#             verification_url = request.build_absolute_uri(
+#                 reverse('accounts:verify_email', kwargs={'token': str(token.token)})
+#             )
+
+#             # Render the email content
+#             subject = 'Verify Your Email Address'
+#             message = render_to_string('accounts/email_verification.html', {
+#                 'user': user,
+#                 'verification_url': verification_url, 
+#                 'expiry_time': '24 hours'
+#             })
+            
+#             # Send verification email
+#             send_mail(
+#                 subject=subject,
+#                 message='',  # Empty message since we're using HTML
+#                 html_message=message,
+#                 from_email=settings.DEFAULT_FROM_EMAIL,
+#                 recipient_list=[user.email],
+#                 fail_silently=False
+#             )
+
+#             messages.success(request, 'Verification email has been resent. Please check your inbox.')
+#             return render(request, 'accounts/email_sent.html', {'email': user.email})
+            
+#         except User.DoesNotExist:
+#             messages.error(request, 'No account found with this email address.')
+    
+#     return render(request, 'accounts/resend_verification.html')
+
+
 def resend_verification_view(request):
     """View to resend verification email"""
+    initial = {}
+    if 'verification_email' in request.session:
+        initial['email'] = request.session['verification_email']
+
+        
     if request.method == 'POST':
         email = request.POST.get('email')
+        
+        # Check session if email not provided
+        if not email:
+            email = request.session.get('verification_email')
+        
+        if not email:
+            error_msg = 'Email address is required.'
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': error_msg}, status=400)
+            messages.error(request, error_msg)
+            return render(request, 'accounts/resend_verification.html')
         
         try:
             user = User.objects.get(email=email)
             
             if user.email_verified:
-                messages.info(request, 'Email is already verified. You can login now.')
+                msg = 'Email is already verified. You can login now.'
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': msg})
+                messages.info(request, msg)
                 return redirect('accounts:login')
                 
-            # Delete any existing tokens
+            # Delete existing tokens
             EmailVerificationToken.objects.filter(user=user).delete()
             
             # Create new token
@@ -186,38 +261,47 @@ def resend_verification_view(request):
                 expires_at=timezone.now() + datetime.timedelta(hours=24)
             )
             
-            # Build verification URL
             verification_url = request.build_absolute_uri(
-                reverse('accounts:verify_email', kwargs={'token': str(token.token)})
+                reverse('accounts:verify_email', kwargs={'token': token.token})
             )
 
-            # Render the email content
+            # Send email
             subject = 'Verify Your Email Address'
             message = render_to_string('accounts/email_verification.html', {
                 'user': user,
-                'verification_url': verification_url, 
+                'verification_url': verification_url,
                 'expiry_time': '24 hours'
             })
             
-            # Send verification email
             send_mail(
                 subject=subject,
-                message='',  # Empty message since we're using HTML
+                message='',
                 html_message=message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],
                 fail_silently=False
             )
 
-            messages.success(request, 'Verification email has been resent. Please check your inbox.')
-            return render(request, 'accounts/email_sent.html', {'email': user.email})
+            # Handle AJAX response
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            else:
+                request.session['verification_email'] = user.email
+                messages.success(request, 'Verification email has been resent.')
+                return redirect('accounts:email_sent')
             
         except User.DoesNotExist:
-            messages.error(request, 'No account found with this email address.')
+            error_msg = 'No account found with this email address.'
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': error_msg}, status=400)
+            messages.error(request, error_msg)
+            return render(request, 'accounts/resend_verification.html')
     
+    # GET request handling
+    email = request.session.get('verification_email')
+    if email:
+        return render(request, 'accounts/email_sent.html', {'email': email})
     return render(request, 'accounts/resend_verification.html')
-
-
 
 
 
@@ -252,15 +336,18 @@ def login_view(request):
         
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
+        
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             
             if not user.is_superuser and not user.email_verified:
                 logout(request)
+                # Store email in session and redirect
+                request.session['verification_email'] = user.email
                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
-                return redirect('accounts:resend_verification')
-            
+                return redirect('accounts:email_sent')  
+                  
             if redirect_uri:
                 # Generate tokens and send via POST
                 serializer = CustomTokenObtainPairSerializer()
@@ -276,6 +363,15 @@ def login_view(request):
             else:
                 messages.success(request, 'Login successful!')
                 return redirect('accounts:profile')
+        else:
+            if hasattr(form, 'unverified_email') and form.unverified_email:
+                request.session['verification_email'] = form.unverified_email
+                messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
+
+                return redirect('accounts:resend_verification')
+            
+            messages.error(request, 'Invalid email/username or password.')
+
     else:
         form = CustomAuthenticationForm()
     
@@ -356,7 +452,7 @@ def logout_view(request):
 def profile_view(request):
     """View for user profile"""
     logger.debug(f"Profile accessed for user: {request.user.id}")
-    return render(request, 'accounts/profile.html')
+    return render(request, 'accounts/profile/profile.html')
 # def login_view(request):
     """Modified login view that returns tokens to client"""
     if request.user.is_authenticated:

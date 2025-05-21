@@ -1,124 +1,136 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Auth Ensight Plus{% endblock %}</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#4F46E5', // primary blue
-                            600: '#4338ca',
-                            700: '#3730a3',
-                            800: '#312e81',
-                            900: '#1e1b4b',
-                        },
-                        secondary: {
-                            500: '#0D9488', // secondary teal
-                        },
-                        accent: {
-                            500: '#9333EA', // accent purple
-                        },
-                        success: {
-                            500: '#22C55E', // success green
-                        },
-                        warning: {
-                            500: '#F59E0B', // warning amber
-                        },
-                        error: {
-                            500: '#EF4444', // error red
-                        },
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        /* Base styles */
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.5;
-        }
-        
-        /* Form animations */
-        .form-control {
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-        
-        .form-control:focus {
-            border-color: #4F46E5;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-        }
-        
-        /* Button animations */
-        .btn-primary {
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        /* Alert animations */
-        .alert {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>{% block title %}Auth Ensight Plus{% endblock %}</title>
+   <!-- Tailwind CSS CDN -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+   <script>
+       tailwind.config = {
+           theme: {
+               extend: {
+                   keyframes: {
+                       slideUp: {
+                       '0%': { maxHeight: '0', paddingTop: '0', paddingBottom: '0' },
+                       '100%': { maxHeight: '200px', paddingTop: '1rem', paddingBottom: '1rem' }
+                       }
+                   },
+                   animation: {
+                       'slide-up': 'slideUp 4s ease-out forwards',
+                   },
+                    fontFamily: {
+                           sans: ['Montserrat', 'sans-serif'],
+                           },
+                   colors: {
+                       primary: {
+                           black: 'rgb(0 0 0 / <alpha-value>)',
+                           white: 'rgb(255 255 255 / <alpha-value>)',
+                           red: '#F44336',
+                           grey: 'rgb(63 63 63 / <alpha-value>)'
+                       },
+                       secondary: {
+                           black: '#000000',
+                           white: '#F8F8F8',
+                           blue: '#03AFDD',
+                           grey: '#F3F4F6',
+                       },
+                       accent: {
+                           blue: '#33CCFF', // accent blue
+                           grey: 'rgb(140 140 140 / <alpha-value>)', // accent grey
+                       },
+                       success: {
+                           blue: 'rgb( 51 204 255 / <alpha-value>)', // success
+                       },
+                       warning: {
+                          // 500: '#F59E0B', // warning amber
+                       },
+                       error: {
+                           red: ' rgb( 244 67 54 / <alpha-value>) ',
+                           500: '#F44336', // error red
+                            // error red
+                       },
+                   },
+               },
+           },
+       }
+   </script>
+   <style>
+       /* Base styles */
+       body {
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           line-height: 1.5;
+       }
+      
+       /* Form animations */
+       .form-control {
+           transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+       }
+      
+       .form-control:focus {
+           border-color: #4F46E5;
+           box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+       }
+      
+       /* Button animations */
+       .btn-primary {
+           transition: all 0.3s ease;
+       }
+      
+       .btn-primary:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+       }
+      
+       /* Alert animations */
+       .alert {
+           animation: fadeIn 0.3s ease-out;
+       }
+      
+       @keyframes fadeIn {
+           from { opacity: 0; transform: translateY(-10px); }
+           to { opacity: 1; transform: translateY(0); }
+       }
+   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-    <header class="bg-white shadow">
-        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-xl font-bold text-primary-500">
-                Auth Ensight Plus
-            </a>
-            <div class="space-x-4">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'accounts:profile' %}" class="text-gray-700 hover:text-primary-500 transition-colors">Profile</a>
-                    <a href="{% url 'accounts:logout' %}" class="bg-white text-primary-500 border border-primary-500 px-4 py-2 rounded hover:bg-primary-50 transition-colors">Logout</a>
-                {% else %}
-                    <a href="{% url 'accounts:login' %}" class="text-gray-700 hover:text-primary-500 transition-colors">Login</a>
-                    <a href="{% url 'accounts:signup' %}" class="bg-primary-500 text-white px-4 py-2 rounded hover:bg-primary-600 transition-colors">Sign Up</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-    
-    <main class="container mx-auto px-4 py-8">
-        {% if messages %}
-            <div class="mb-6">
+<body class="bg-primary-white text-primary-black h-screen font-sans">
+  
+  
+   <main class="container w-full max-w-full min-h-[calc(100vh+60px)]">
+      {% if messages %}
+           <div class="mb-6 msg">
                 {% for message in messages %}
-                    <div class="alert px-4 py-3 rounded mb-4 {% if message.tags == 'success' %}bg-success-500 text-white{% elif message.tags == 'error' %}bg-error-500 text-white{% else %}bg-primary-100 text-primary-800{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-        
-        {% block content %}{% endblock %}
-    </main>
-    
-    <footer class="mt-auto py-6 bg-gray-100">
-        <div class="container mx-auto px-4 text-center text-gray-600">
-            <p>&copy; {% now "Y" %} Ensight Plus Team. All rights reserved.</p>
-        </div>
-    </footer>
+                   <div class=" px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
+                    {% if message.tags == 'success' %}
+                   bg-success-blue/20 text-primary-black border border-success-blue/40
+                    {% elif message.tags == 'warning' %}
+                   {% elif message.tags == 'error' %}
+                   bg-error-red/20 border border-error-red/40  text-primary-black
+                    {% else %}
+                   bg-primary-white text-primary-800
+                   {% endif %}
+                   ">
+                       <span class='flex justify-center w-[calc(100%-25px)] ' >{{ message }} sdasdasdasdasdasdasdasdasdasd </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
+                   </div>
+               {% endfor %}
+           </div>
+       {% endif %}
+      
+       {% block content %}{% endblock %}
+   </main>
 
-    {% block extra_js %}{% endblock %}
+
+   {% block extra_js %}{% endblock %}
 </body>
 </html>
+
+
+
+
