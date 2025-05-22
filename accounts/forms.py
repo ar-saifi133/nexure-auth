@@ -232,54 +232,47 @@ class CustomAuthenticationForm(AuthenticationForm):
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
+        self.unverified_email = None  # Add this line
 
 
         if username and password:
-            # Initial authentication attempt using the provided credentials
+            # First try standard authentication
             user = authenticate(
                 request=self.request,
                 username=username,
                 password=password
             )
-           
-            # If authentication fails, check if the input is a username
+
+            # If authentication failed, check username/email manually
             if user is None:
                 try:
-                    # Check if the input matches a username
-                    user_by_username = User.objects.get(username=username)
-                    # Attempt authentication using the user's email (USERNAME_FIELD)
-                    user = authenticate(
-                        request=self.request,
-                        username=user_by_username.email,
-                        password=password
+                    user = User.objects.get(
+                        Q(email__iexact=username) | Q(username=username)
                     )
                 except User.DoesNotExist:
-                    pass
+                    user = None
 
+                # Validate password if user exists
+                if user and not user.check_password(password):
+                    user = None
 
-            # If still not authenticated, check if the input is an email (case-insensitive)
-            if user is None:
-                try:
-                    user_by_email = User.objects.get(email__iexact=username)
-                    # Attempt authentication with the retrieved email
-                    user = authenticate(
-                        request=self.request,
-                        username=user_by_email.email,
-                        password=password
-                    )
-                except User.DoesNotExist:
-                    pass
+            # If we have a valid user at this point
+            if user:
+                self.user_cache = user  # Critical: Set user_cache
+                
+                # Check if user is allowed to login
+                self.confirm_login_allowed(user)  # Handles is_active check
+                
+                # Custom email verification check
+                if not user.email_verified:
+                    self.unverified_email = user.email
+                    raise ValidationError("Account not verified. Please check your email.")
+            else:
+                raise ValidationError("Invalid email/username or password.")
 
+            return self.cleaned_data
 
-            if user is None:
-                raise ValidationError(_("Incorrect Email or Password!"))
-               
-            if not user.is_superuser and not user.email_verified:
-                raise ValidationError(_("Account not verified. Please check your email."))
-               
-            self.user_cache = user
-           
-        return self.cleaned_data
+        raise ValidationError("Both username and password are required.")
 
 
 
