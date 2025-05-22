@@ -26,6 +26,7 @@ from .forms import (
     CustomSetPasswordForm,
     ProfileUpdateForm,
     DeleteAccountForm,
+    AvatarUpdateForm,
     CustomPasswordChangeForm
 )
 from .models import PasswordResetToken, EmailVerificationToken
@@ -338,7 +339,7 @@ def logout_view(request):
     logout(request)
 
     # 2. Success message (optional)
-    messages.success(request, 'You have been logged out successfully from all applications.')
+    messages.success(request, 'You have been logged out successfully.')
 
     # 3. Determine where to send them next:
     #    - honor a ?next=... param if it’s on the allow-list
@@ -497,18 +498,51 @@ def password_reset_confirm(request, token):
 
 
 
+
+
+
 @login_required
 def profile_update_view(request):
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('accounts:profile')
-    else:
-        form = ProfileUpdateForm(instance=request.user)
-    
-    return render(request, 'accounts/profile/profile_update.html', {'form': form})
+   user = request.user
+
+
+   # ――― determine which form was posted ―――
+   if request.method == "POST":
+       if "profile_submit" in request.POST:
+           # username / email / full-name
+           profile_form = ProfileUpdateForm(request.POST, instance=user)
+           avatar_form  = AvatarUpdateForm(instance=user)  # blank copy
+           if profile_form.is_valid():
+               profile_form.save()
+               messages.success(request, "Profile updated successfully!")
+               return redirect("accounts:profile")
+
+
+       elif "avatar_submit" in request.POST:
+           # avatar only
+           avatar_form  = AvatarUpdateForm(request.POST, instance=user)
+           profile_form = ProfileUpdateForm(instance=user)  # blank copy
+           if avatar_form.is_valid():
+               avatar_form.save()
+               messages.success(request, "Avatar updated successfully!")
+               return redirect("accounts:profile")
+
+
+   else:   # ── GET ──
+       profile_form = ProfileUpdateForm(instance=user)
+       avatar_form  = AvatarUpdateForm(instance=user)
+
+
+   return render(
+       request,
+       "accounts/profile/profile_update.html",
+       {
+           "profile_form": profile_form,
+           "avatar_form":  avatar_form,
+       },
+   )
+
+
 
 @login_required
 def delete_account_view(request):
@@ -560,3 +594,10 @@ try:
     connection.close()
 except Exception as e:
     print("❌ SMTP connection failed:", e)
+
+
+def terms_view(request):
+ 
+    return render(request, 'accounts/terms.html')
+
+

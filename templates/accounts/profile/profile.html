@@ -5,54 +5,47 @@
 {% block title %}Your Profile - Auth Ensight Plus{% endblock %}
 
 {% block content1 %}
-<div class="max-w-full h-full mx-auto">
-    <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="md:flex">
+<div class="max-w-full h-full">
+    <div class="bg-white  shadow-soft rounded-[12px] overflow-hidden">
+        <div class="md:flex w-full">
             
-            <div class="md:w-2/3 p-8">
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">Your Profile</h2>
+            <div class=" py-10  px-[60px] w-full">
+                <h2 class="text-[16px] font-semibold mb-7">Personal Details</h2>
                 
-                <div class="space-y-6">
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <h3 class="font-medium text-gray-700 mb-2">Personal Information</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Full Name</p>
-                                <p class="font-medium">{{ user.full_name }}</p>
+                <div class="space-y-7 w-full max-w-[700px]">
+                   
+                        <div class="w-full flex flex-col space-y-4 gap-4">
+                            <div class="flex items-center h-10 justify-between max-w-[700px] w-full " >
+                                <p class="text-[14px] font-medium overflow-hidden  ">Full Name</p>
+                                <p class="font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.full_name }}</p>
                             </div>
 
-                            <div>
-                                <p class="text-sm text-gray-500">Username</p>
-                                <p class="font-medium">{{ user.username }}</p>
+                            <div class='flex items-center h-10 justify-between max-w-[700px] w-full'>
+                                <p class="text-[14px] font-medium">Username</p>
+                                <p class="font-medium text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.username }}</p>
                             </div>
 
-                            <div>
-                                <p class="text-sm text-gray-500">Email Address</p>
-                                <p class="font-medium">{{ user.email }}</p>
+                            <div class='flex items-center h-10 justify-between max-w-[700px] w-full'>
+                                <p class="text-[14px] font-medium">Email Address</p>
+                                <p class="font-medium text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.email }}</p>
                             </div>
                         </div>
-                    </div>
+                   
                     
                     
                     
                     
                     <div class="flex justify-end space-x-4 ">
                         
-                         <div class="flex flex-col items-center">
-                     
-
-                       
+                        <button onclick="openDeleteModal()" class=" font-semibold text-[12px] w-[150px] justify-center border h-9  border-error-red flex items-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0   transition-all duration-300">
+                            Delete Account
+                        </button>
+                        <div class="font-semibold text-[12px] border h-9  border-accent-grey/30 hover:bg-accent-grey/10 w-[150px] justify-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0  transition-all duration-300 flex items-center">  
                             <a href="{% url 'accounts:logout' %}" class="flex text-primary-black items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                                Sign Out
+                                Logout
                             </a>
                         
-                </div>
-                        <button onclick="openDeleteModal()" class="bg-error-500 text-primary-black py-2 px-4 rounded-md hover:bg-error-600 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 transition-all duration-300">
-        Delete Account
-      </button>
+                        </div>
                     </div>
                 </div>
             </div>

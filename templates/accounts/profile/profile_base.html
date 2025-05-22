@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 {% load i18n %}
 
@@ -6,9 +7,9 @@
 
 {% block content %}
 {% if messages %}
-            <div class="mb-6 msg absolute top-[84px] left-[50%] z-10 translate-x-[-50%] width-[620px]">
+            <div class="mb-6  absolute top-[84px] left-[50%] z-10 translate-x-[-50%] w-[620px]">
                  {% for message in messages %} 
-                    <div class=" px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between text-[14px] font-medium text-primary-black
+                    <div class="msg px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between text-[14px] font-medium text-primary-black
                      {% if message.tags == 'success' %}
                     bg-success-blue/20 text-primary-black border border-success-blue/40
                      {% elif message.tags == 'warning' %}
@@ -18,32 +19,32 @@
                     bg-primary-white text-primary-800
                     {% endif %} 
                     ">
-                        <span class='flex justify-center text-center w-[calc(100%-25px)] ' >{{ message }} sdasdasdasdasdasdasdasdasdasd </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
+                        <span class='flex justify-center text-center w-[calc(100%-25px)] ' >{{ message }} </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
 <div class='w-full h-full bg-secondary-white min-h-[calc(100vh+60px)] max-h-full' >
-    <div class='w-full h-[64px] bg-primary-white shadow-[0 0 10px 0 rgba(0 0 0 0 0.5)]'>
-        
-    <div class="bg-primary-white fixed top-0 text-primary-black  w-full h-[64px] flex items-center justify-between px-[80px] shadow-[0 0 10px 0 rgba(0, 0, 0, 0.15]">
+    <div class='w-full h-[64px] bg-primary-white shadow-soft '>
+        <div class="bg-primary-white fixed top-0 text-primary-black  w-full h-[64px] flex items-center justify-between px-[80px] shadow-[0 0 10px 0 rgba(0, 0, 0, 0.15]">
             <div class="  z-10">
-            <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px]">
-        </div>
-        <div class="flex gap-[14px] items-center"> 
+                <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px]">
+            </div>
+            <div class="flex gap-[14px] items-center"> 
             
-             <div class="bg-primary-white rounded-full h-8 w-8 flex items-center justify-center border-primary-black border ">
-                 <img loading='lazy' class='w-8 h-8 object-cover bg-center ' src="{% static 'avatars/'|add:user.avatar %}" class="w-20 h-20 rounded-full" alt="Avatar">
-            </div>
-            <div>
-                <div class='text-[14px] font-medium' >
-                    {{user.full_name}}   
+                <div class="bg-primary-white rounded-full h-8 w-8 flex items-center justify-center border-primary-black border ">
+                    <img loading='lazy' class='w-8 h-8 object-cover bg-center ' src="{% static 'avatars/'|add:user.avatar %}" class="w-20 h-20 rounded-full" alt="Avatar">
+                    
                 </div>
-                <div class='text-[12px] font-normal'>
-                    {{user.username}}
+                <div>
+                    <div class='text-[14px] font-medium' >
+                        {{user.full_name}}   
+                    </div>
+                    <div class='text-[12px] font-normal'>
+                        {{user.username}}
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
     
@@ -51,30 +52,52 @@
         <div class=' w-[310px] h-full '>
             <ul class='flex flex-col gap-[40px] fixed pt-[60px] '>
                 
-         <li class="w-fit">
-            <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile' %}">
-                <img loading='lazy' src="{% static 'img/profile.svg' %}" alt="icon">
+                <li class="w-fit">
+                    <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile' %}">
+                        <img loading='lazy' src="{% static 'img/profile.svg' %}" alt="icon">
 
                 <span class="relative inline-block">
-                Personal Details
-                <!-- Base underline -->
+                    Personal Details
+                    <!-- Base underline -->
                 <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                <!-- Hover underline (color transition left to right) -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span>
-                </span>
-            </a>
-        </li>
-        <li class="w-fit">
-            <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile_update' %}">
-                <img loading='lazy' src="{% static 'img/edit.svg' %}" alt="icon">
-
-                <span class="relative inline-block">
+                           
+    {% if request.path == '/accounts/profile/' %}
+     <!-- we’re on the profile page: full-width, no transition -->
+     <span
+     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+     ></span>
+     {% else %}
+      <!-- not active: zero-width until hover -->
+      <span
+        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+      ></span>
+    {% endif %}
+</span>
+        </a>
+    </li>
+    <li class="w-fit">
+        <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile_update' %}">
+            <img loading='lazy' src="{% static 'img/edit.svg' %}" alt="icon">
+            
+            <span class="relative inline-block">
                 Edit Profile
+                {{ profile_update_url }}  
                 <!-- Base underline -->
                 <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
                 <!-- Hover underline (color transition left to right) -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span>
-                </span>
+                
+    {% if request.path == '/accounts/profile/update/' %}
+     <!-- we’re on the profile page: full-width, no transition -->
+     <span
+     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+     ></span>
+     {% else %}
+      <!-- not active: zero-width until hover -->
+      <span
+        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+      ></span>
+    {% endif %}
+                {% comment %} <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span></span> {% endcomment %}
             </a>
         </li>
         <li class="w-fit">
@@ -85,9 +108,19 @@
                 Change Password
                 <!-- Base underline -->
                 <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                <!-- Hover underline (color transition left to right) -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span>
-                </span>
+                           
+    {% if request.path == '/accounts/password-change/' %}
+     <!-- we’re on the profile page: full-width, no transition -->
+     <span
+     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+     ></span>
+     {% else %}
+      <!-- not active: zero-width until hover -->
+      <span
+        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+      ></span>
+    {% endif %}
+</span>
             </a>
         </li>
         <li class="w-fit">
@@ -109,10 +142,23 @@
 
         </div>
         <div class='w-[calc(100%-310px)] flex flex-col gap-[12px]'>
-            <div class='w-full  px-10 h-[128px] flex justify-start items-center bg-primary-white shadow-[1px 1px 10px 0px rgba(0 0 0 0 )] '>
+            <div class='w-full shadow-soft rounded-[12px] px-10 h-[128px] flex justify-start items-center bg-primary-white '>
                 <div class='flex gap-[60px]' >
-                <div class='h-[80px] w-[80px] rounded-[50%] border border-accent-blue'>
+                <div class='h-[80px] w-[80px] rounded-[50%] border border-primary-black'>
                      <img loading='lazy' src="{% static 'avatars/'|add:user.avatar %}" class="w-20 h-20 rounded-full" alt="Avatar">
+                     {% if request.path == '/accounts/profile/update/' %}
+                    <!--   the button that opens the modal   -->
+                    <button type="button"
+                            onclick="toggleAvatarModal(true)"
+                            class=" -mt-[20px] flex">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.333333" y="0.333333" width="19.3333" height="19.3333" rx="9.66667" fill="white"/>
+                                    <rect x="0.333333" y="0.333333" width="19.3333" height="19.3333" rx="9.66667" stroke="#33CCFF" stroke-width="0.666667"/>
+                                    <path d="M8.66118 14.0637L12.9946 9.73029L10.9363 7.67199L6.60288 12.0054C6.54317 12.0651 6.50078 12.1399 6.48024 12.2218L5.99994 14.6667L8.44434 14.1864C8.52641 14.1658 8.60149 14.1234 8.66118 14.0637ZM14.3935 8.33136C14.5684 8.15647 14.6666 7.91929 14.6666 7.67199C14.6666 7.4247 14.5684 7.18752 14.3935 7.01263L13.654 6.27306C13.4791 6.09822 13.2419 6 12.9946 6C12.7473 6 12.5101 6.09822 12.3352 6.27306L11.5957 7.01263L13.654 9.07093L14.3935 8.33136Z" fill="black"/>
+                                    </svg>
+                                    
+                    </button>
+                    {% endif %}
                 </div>
                 <div class='flex flex-col justify-center'>
                     <div class='text-[20px] font-semibold'> 
@@ -122,7 +168,7 @@
                         Member Since
                      </div>
                     <div class='text-[10px] font-light'>
-                        {{user.date_joined}}
+                        {{user.date_joined|date:"F j, Y" }}
                     </div>
                 </div>    
                 </div>
@@ -135,4 +181,140 @@
 
     </div>
 </div>
+
+{% comment %} MODAL {% endcomment %}
+<div id="avatarModal"
+    class="fixed inset-0  z-50 hidden items-center justify-center bg-black/40">
+
+
+ <!-- modal panel -->
+ <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 space-y-6
+             animate-scale-in">
+
+
+   <h2 class="text-xl font-semibold text-center">Select an Avatar</h2>
+
+
+   <form method="post" enctype="multipart/form-data" class="space-y-6">
+       {% csrf_token %}
+
+
+       <div class="flex flex-wrap gap-6 justify-center">
+           {% for choice in avatar_form.avatar %}
+               <label class="cursor-pointer relative">
+                   {{ choice.tag }}
+                   <img src="{% static 'avatars/'|add:choice.data.value %}"
+                        class="w-20 h-20 rounded-full border-2 transition-all
+                               border-transparent hover:border-primary-500">
+               </label>
+           {% endfor %}
+       </div>
+
+
+       {% if avatar_form.avatar.errors %}
+           <p class="text-center text-sm text-error-500">
+               {{ avatar_form.avatar.errors.0 }}
+           </p>
+       {% endif %}
+
+
+       <div class="flex justify-end gap-4 pt-4">
+           <button type="button"
+                   onclick="toggleAvatarModal(false)"
+                   class="box-border w-[120px] h-[36px] border
+                          border-[rgba(140,140,140,.3)] rounded-[10px]">
+               Cancel
+           </button>
+
+
+           <button type="submit" name="avatar_submit"
+                   class="box-border w-[120px] h-[36px] bg-[#33CCFF]
+                          border border-[#03AFDD] rounded-[10px]">
+               Save
+           </button>
+       </div>
+   </form>
+ </div>
+</div>
+<script>
+   // simple helper to show / hide
+   function toggleAvatarModal(show) {
+       const modal = document.getElementById('avatarModal');
+       if (show) {
+           modal.classList.remove('hidden');
+       } else {
+           modal.classList.add('hidden');
+       }
+   }
+    // close when clicking outside the panel
+   document.getElementById('avatarModal').addEventListener('click', (e) => {
+       if (e.target.id === 'avatarModal') toggleAvatarModal(false);
+   });
+ </script>
+  <!-- optional Tailwind "scale-in" animation (add once in your CSS) -->
+ <style>
+ @keyframes scale-in {
+     0%   {transform: scale(.95); opacity: 0;}
+     100% {transform: scale(1);   opacity: 1;}
+ }
+ .animate-scale-in {animation: scale-in .15s ease-out;}
+ </style>
+ <style>
+   .avatar-option {
+   transition: transform 0.2s;
+}
+
+
+.avatar-option:hover {
+   transform: scale(1.05);
+}
+
+
+.avatar-option img {
+   border: 2px solid transparent;
+}
+
+
+.avatar-option input:checked + img {
+   border-color: #3B82F6; /* Primary color */
+}
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+   // Handle avatar selection styling
+   const avatarOptions = document.querySelectorAll('.avatar-option');
+  
+   avatarOptions.forEach(option => {
+       const radio = option.querySelector('input[type="radio"]');
+      
+       // Set initial selected state
+       if (radio.checked) {
+           option.querySelector('img').classList.add('border-primary-500');
+       }
+
+
+       // Update on click
+       option.addEventListener('click', () => {
+           avatarOptions.forEach(opt => {
+               opt.querySelector('img').classList.remove('border-primary-500');
+           });
+           option.querySelector('img').classList.add('border-primary-500');
+       });
+   });
+});
+</script>
+
+
+<style>
+.avatar-option input[type="radio"] {
+   position: absolute;
+   opacity: 0;
+   pointer-events: none;
+}
+</style>
+
+
+
 {% endblock %}             
