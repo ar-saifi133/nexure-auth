@@ -340,10 +340,10 @@ class ProfileUpdateForm(forms.ModelForm):
        fields = ['full_name', 'username', ]
        widgets = {
          'full_name': forms.TextInput(attrs={
-               'class': 'form-control border-2 border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+               'class': 'form-control border-2 text-[#000000] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
            }),
            'username': forms.TextInput(attrs={
-               'class': 'form-control border-2 border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+               'class': 'form-control text-primary-black focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
            }),
            
        }
@@ -377,7 +377,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class AvatarUpdateForm(forms.ModelForm):
    AVATAR_CHOICES = [
-       (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 8)
+       (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 9)
    ]
 
 

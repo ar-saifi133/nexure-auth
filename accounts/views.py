@@ -158,7 +158,7 @@ def verify_email_view(request, token):
         
         EmailVerificationToken.objects.filter(user=user).delete()
         
-        messages.success(request, 'Email verified successfully! You can now login.')
+        messages.success(request, 'Email verified successfully!')
         return redirect('accounts:login')
         
     except EmailVerificationToken.DoesNotExist:
@@ -370,7 +370,7 @@ def login_view(request):
 
                 return redirect('accounts:resend_verification')
             
-            messages.error(request, 'Invalid email/username or password.')
+            # messages.error(request, 'Invalid email/username or password.')
 
     else:
         form = CustomAuthenticationForm()
@@ -570,7 +570,7 @@ def password_reset_confirm(request, token):
                 reset_token.used = True
                 reset_token.save()
                 
-                messages.success(request, 'Your password has been successfully reset. You can now login with your new password.')
+                messages.success(request, 'Your password has been successfully reset.')
                 return redirect('accounts:login')
         else:
             form = CustomSetPasswordForm(user)
@@ -671,6 +671,30 @@ def password_change_view(request):
     else:
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'accounts/profile/password_change.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 from django.core.mail import send_mail, get_connection

@@ -3,32 +3,31 @@
 
 
 {% block content1 %}
-<div class=" border-2 border-[#33ccff] ">
-   <div class="bg-white rounded-xl shadow-md overflow-hidden h-s border-2 border-[#000000] b ">
-       <div class="border-2 border-[#000000] pt-[10px] pl-[30px] ">
+<div class="  ">
+   <div class="bg-white rounded-xl shadow-md overflow-hidden h-s  b ">
+       <div class=" pt-[10px] pl-[30px] ">
            {% load static %}
-<h2 class="text-[#000000] font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Edit Profile</h2>
+<h2 class="text-[#000000]  font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Edit Profile</h2>
 
 
 {# ────────── details form ────────── #}
 <form method="post"
 novalidate
-     class="space-y-6 pb-8 pl-8 border-2 border-[#000000] max-w-[700px]"
+     class="space-y-4 pb-8 pl-8  max-w-[700px] "
      enctype="multipart/form-data">
    {% csrf_token %}
 
 
    {% for field in profile_form %}
-      <div class="flex flex-row justify-between border-2 border-[#33ccff]">
+      <div class="flex flex-row justify-between  " >
            <label for="{{ field.id_for_label }}"
-                  class="border-2 border-[#000000] w-[105px] flex items-center text-[14px] text-black font-medium">
+                  class=" flex items-center w-[105px] h-[41px] items-center text-[14px] text-black font-medium">
                {{ field.label }}
            </label>
 
 
            <div class=" flex flex-col gap-[5px]">
-               <div class="font-medium text-[14px] leading-[17px] text-[#8C8C8C]
-                           focus:outline-none focus:ring-0 focus:border-transparent">
+               <div class="">
                    {{ field }}
                </div>
                {% if field.errors %}
@@ -50,6 +49,34 @@ novalidate
 
 
    {% endfor %}
+
+   <div class="w-full  flex flex-col gap-[16px]">
+    <div class=" w-full flex flex-row justify-between ">
+        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Email</div>
+        <div class=" font-medium text-sm text-[#8c8c8c] flex  focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+            {{ user.email }}
+        </div>
+       
+    </div>
+   
+    <div class=" w-full flex flex-row justify-between ">
+        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Password</div>
+        <a href="{% url 'accounts:password_change' %}" class=" flex text-[#8c8c8c] font-medium text-sm border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+            <div class="flex flex-row gap-[10px]">
+               
+                <div>
+                    Change password
+                </div>
+                <svg style="margin-top: 3.5px;" width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.99461 10.0637L8.32805 5.73029L6.26975 3.67199L1.93631 8.00543C1.8766 8.06512 1.83421 8.1399 1.81367 8.2218L1.33337 10.6667L3.77778 10.1864C3.85985 10.1658 3.93493 10.1234 3.99461 10.0637ZM9.72698 4.33136C9.90182 4.15647 10 3.91929 10 3.67199C10 3.4247 9.90182 3.18752 9.72698 3.01263L8.98741 2.27306C8.81252 2.09822 8.57535 2 8.32805 2C8.08075 2 7.84358 2.09822 7.66868 2.27306L6.92911 3.01263L8.98741 5.07093L9.72698 4.33136Z" fill="#8C8C8C"/>
+                    </svg>
+                   
+            </div>
+        </a>
+       
+    </div>
+</div>
+
 
 
    <div class="flex justify-end space-x-4">
@@ -130,50 +157,52 @@ novalidate
 
 {# ─────────── Avatar modal ─────────── #}
 <div id="avatarModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40">
   <!-- modal panel -->
   <div class=""></div>
- <div class="bg-white border-2 border-[#000000] shadow-xl w-full max-w-lg p-8 space-y-6
+ <div class="bg-white  shadow-xl w-[430px] h-[514px] rounded-[18px] p-8 space-y-6
              animate-scale-in">
 
 
    <h2 class="text-xl font-semibold text-center">Select an Avatar</h2>
 
 
-   <form method="post" enctype="multipart/form-data" class="space-y-6">
+   <form method="post" enctype="multipart/form-data" class=" border-2 [#33ccff]">
        {% csrf_token %}
 
 
-       <div class="flex flex-wrap gap-6 justify-center">
-           {% for choice in avatar_form.avatar %}
-               <label class="cursor-pointer relative">
-                   {{ choice.tag }}
-                   <img src="{% static 'avatars/'|add:choice.data.value %}"
-                        class="w-20 h-20 rounded-full border-2 transition-all
-                               border-transparent hover:border-primary-500">
-               </label>
-           {% endfor %}
+       <div class="h-[364px] border-2 [#000000] overflow-y-scroll">
+        <div class="flex flex-wrap gap-6 justify-center">
+            {% for choice in avatar_form.avatar %}
+                <label class="cursor-pointer relative">
+                    {{ choice.tag }}
+                    <img src="{% static 'avatars/'|add:choice.data.value %}"
+                         class="w-20 h-20 rounded-full border-2 transition-all
+                                border-transparent hover:border-primary-500">
+                </label>
+            {% endfor %}
+        </div>
+ 
+ 
+        {% if avatar_form.avatar.errors %}
+            <p class="text-center text-sm text-error-500">
+                {{ avatar_form.avatar.errors.0 }}
+            </p>
+        {% endif %}
+ 
        </div>
 
-
-       {% if avatar_form.avatar.errors %}
-           <p class="text-center text-sm text-error-500">
-               {{ avatar_form.avatar.errors.0 }}
-           </p>
-       {% endif %}
-
-
-       <div class="flex justify-end gap-4 pt-4">
+       <div class="flex justify-center gap-4 pt-4">
            <button type="button"
                    onclick="toggleAvatarModal(false)"
-                   class="box-border w-[120px] h-[36px] border
+                   class="box-border w-[179px] h-[36px] border
                           border-[rgba(140,140,140,.3)] rounded-[10px]">
                Cancel
            </button>
 
 
            <button type="submit" name="avatar_submit"
-                   class="box-border w-[120px] h-[36px] bg-[#33CCFF]
+                   class="box-border w-[179px] h-[36px] bg-[#33CCFF]
                           border border-[#03AFDD] rounded-[10px]">
                Save
            </button>
