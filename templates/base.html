@@ -6,6 +6,7 @@
 <head>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link rel="stylesheet" href="{% static 'css/terms.css' %}">
    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,9 @@
        tailwind.config = {
            theme: {
                extend: {
+                   boxShadow: {
+                           'soft': '1px 1px 10px 0px rgba(0, 0, 0, 0.08)',
+                       },
                    keyframes: {
                        slideUp: {
                        '0%': { maxHeight: '0', paddingTop: '0', paddingBottom: '0' },
@@ -104,7 +108,7 @@
   
   
    <main class="container w-full max-w-full min-h-[calc(100vh+60px)]">
-      {% if messages %}
+      {% comment %} {% if messages %}
            <div class="mb-6 msg">
                 {% for message in messages %}
                    <div class=" px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
@@ -122,9 +126,10 @@
                {% endfor %}
            </div>
        {% endif %}
-      
+        {% endcomment %}
        {% block content %}{% endblock %}
    </main>
+  
 
 
    {% block extra_js %}{% endblock %}

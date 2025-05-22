@@ -1,107 +1,264 @@
 {% extends 'accounts/profile/profile_base.html' %}
 {% load static %}
 
+
 {% block content1 %}
-<div class="max-w-4xl mx-auto ">
-    <div class="bg-white rounded-xl shadow-md overflow-hidden p-8">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Update Profile</h2>
-        
-        <form method="post" class="space-y-6" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in form %}
-                {% if field.name == 'avatar' %}
-                    <div class="avatar-selection">
-                        <label class="block text-sm font-medium text-gray-700 mb-4">
-                            {{ field.label }}
-                        </label>
-                        <div class="flex flex-wrap gap-6">
-                            {% for choice in field %}
-                                <label class="avatar-option relative cursor-pointer">
-                                    {{ choice.tag }}
-                                    <img src="{% static 'avatars/'|add:choice.data.value %}" 
-                                         class="w-20 h-20 rounded-full border-2 border-transparent hover:border-primary-500 transition-all">
-                                </label>
-                            {% endfor %}
-                        </div>
-                        {% if field.errors %}
-                            <p class="mt-1 text-sm text-error-500">{{ field.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                {% else %}
-                    <div>
-                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                            {{ field.label }}
-                        </label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <p class="mt-1 text-sm text-error-500">{{ field.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-            
-            <div class="flex justify-end space-x-4">
-                <a href="{% url 'accounts:profile' %}" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-all duration-300">
-                    Cancel
-                </a>
-                <button type="submit" class="bg-primary-500 text-white py-2 px-4 rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-300">
-                    Save Changes
-                </button>
-            </div>
-        </form>
-    </div>
+<div class=" border-2 border-[#33ccff] ">
+   <div class="bg-white rounded-xl shadow-md overflow-hidden h-s border-2 border-[#000000] b ">
+       <div class="border-2 border-[#000000] pt-[10px] pl-[30px] ">
+           {% load static %}
+<h2 class="text-[#000000] font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Edit Profile</h2>
+
+
+{# ────────── details form ────────── #}
+<form method="post"
+novalidate
+     class="space-y-6 pb-8 pl-8 border-2 border-[#000000] max-w-[700px]"
+     enctype="multipart/form-data">
+   {% csrf_token %}
+
+
+   {% for field in profile_form %}
+      <div class="flex flex-row justify-between border-2 border-[#33ccff]">
+           <label for="{{ field.id_for_label }}"
+                  class="border-2 border-[#000000] w-[105px] flex items-center text-[14px] text-black font-medium">
+               {{ field.label }}
+           </label>
+
+
+           <div class=" flex flex-col gap-[5px]">
+               <div class="font-medium text-[14px] leading-[17px] text-[#8C8C8C]
+                           focus:outline-none focus:ring-0 focus:border-transparent">
+                   {{ field }}
+               </div>
+               {% if field.errors %}
+               <p class="mt-1 text-sm text-error-500 flex flex-row gap-[10px] items-center">
+                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <path d="M6.99996 4.08329C7.32079 4.08329 7.58329 4.34579 7.58329 4.66663V6.99996C7.58329 7.32079 7.32079 7.58329 6.99996 7.58329C6.67913 7.58329 6.41663 7.32079 6.41663 6.99996V4.66663C6.41663 4.34579 6.67913 4.08329 6.99996 4.08329ZM6.99413 1.16663C3.77413 1.16663 1.16663 3.77996 1.16663 6.99996C1.16663 10.22 3.77413 12.8333 6.99413 12.8333C10.22 12.8333 12.8333 10.22 12.8333 6.99996C12.8333 3.77996 10.22 1.16663 6.99413 1.16663ZM6.99996 11.6666C4.42163 11.6666 2.33329 9.57829 2.33329 6.99996C2.33329 4.42163 4.42163 2.33329 6.99996 2.33329C9.57829 2.33329 11.6666 4.42163 11.6666 6.99996C11.6666 9.57829 9.57829 11.6666 6.99996 11.6666ZM7.58329 9.91663H6.41663V8.74996H7.58329V9.91663Z" fill="#F44336"/>
+                       </svg>
+                      
+                   {{ field.errors.0 }}
+               </p>
+               {% endif %}
+           </div>
+
+
+          
+       </div>
+
+
+
+
+   {% endfor %}
+
+
+   <div class="flex justify-end space-x-4">
+       <a href="{% url 'accounts:profile' %}"
+          class="box-border flex justify-center items-center w-[149px] h-[36px]
+                 border border-[rgba(140,140,140,0.3)] rounded-[10px]">
+           <span class="font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
+       </a>
+
+
+       {# hidden flag tells the view which form was submitted #}
+       <button type="submit" name="profile_submit"
+               class="box-border flex justify-center items-center w-[149px] h-[36px]
+                      bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
+                      rounded-[10px]">
+           <span class="font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
+       </button>
+   </div>
+</form>
+
+
+<!--
+{# ────────── avatar-only form ────────── #}
+<h2 class="text-[#000000] font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Change Avatar</h2>
+
+
+<form method="post"
+     class="space-y-6 pb-8 pl-8 pr-[622px] border-2 border-[#000000]"
+     enctype="multipart/form-data">
+   {% csrf_token %}
+
+
+   <div class="avatar-selection">
+       <label class="block text-sm font-medium text-gray-700 mb-4">
+           {{ avatar_form.avatar.label }}
+       </label>
+
+
+       <div class="flex flex-wrap gap-6">
+           {% for choice in avatar_form.avatar %}
+               <label class="avatar-option relative cursor-pointer">
+                   {{ choice.tag }}
+                   <img src="{% static 'avatars/'|add:choice.data.value %}"
+                        class="w-20 h-20 rounded-full border-2 border-transparent
+                               hover:border-primary-500 transition-all">
+               </label>
+           {% endfor %}
+       </div>
+
+
+       {% if avatar_form.avatar.errors %}
+           <p class="mt-1 text-sm text-error-500">
+               {{ avatar_form.avatar.errors.0 }}
+           </p>
+       {% endif %}
+   </div>
+
+
+   <div class="flex justify-end">
+       <button type="submit" name="avatar_submit"
+               class="box-border flex justify-center items-center w-[149px] h-[36px]
+                      bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
+                      rounded-[10px]">
+           <span class="font-semibold text-[12px] leading-[15px] text-black">Update&nbsp;Avatar</span>
+       </button>
+   </div>
+</form> -->
+
+
+
+
+       </div>
+   </div>
 </div>
 
 
 
-<style>
-    .avatar-option {
-    transition: transform 0.2s;
+
+{# ─────────── Avatar modal ─────────── #}
+<div id="avatarModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+  <!-- modal panel -->
+  <div class=""></div>
+ <div class="bg-white border-2 border-[#000000] shadow-xl w-full max-w-lg p-8 space-y-6
+             animate-scale-in">
+
+
+   <h2 class="text-xl font-semibold text-center">Select an Avatar</h2>
+
+
+   <form method="post" enctype="multipart/form-data" class="space-y-6">
+       {% csrf_token %}
+
+
+       <div class="flex flex-wrap gap-6 justify-center">
+           {% for choice in avatar_form.avatar %}
+               <label class="cursor-pointer relative">
+                   {{ choice.tag }}
+                   <img src="{% static 'avatars/'|add:choice.data.value %}"
+                        class="w-20 h-20 rounded-full border-2 transition-all
+                               border-transparent hover:border-primary-500">
+               </label>
+           {% endfor %}
+       </div>
+
+
+       {% if avatar_form.avatar.errors %}
+           <p class="text-center text-sm text-error-500">
+               {{ avatar_form.avatar.errors.0 }}
+           </p>
+       {% endif %}
+
+
+       <div class="flex justify-end gap-4 pt-4">
+           <button type="button"
+                   onclick="toggleAvatarModal(false)"
+                   class="box-border w-[120px] h-[36px] border
+                          border-[rgba(140,140,140,.3)] rounded-[10px]">
+               Cancel
+           </button>
+
+
+           <button type="submit" name="avatar_submit"
+                   class="box-border w-[120px] h-[36px] bg-[#33CCFF]
+                          border border-[#03AFDD] rounded-[10px]">
+               Save
+           </button>
+       </div>
+   </form>
+ </div>
+</div>
+<script>
+   // simple helper to show / hide
+   function toggleAvatarModal(show) {
+       const modal = document.getElementById('avatarModal');
+       if (show) {
+           modal.classList.remove('hidden');
+       } else {
+           modal.classList.add('hidden');
+       }
+   }
+    // close when clicking outside the panel
+   document.getElementById('avatarModal').addEventListener('click', (e) => {
+       if (e.target.id === 'avatarModal') toggleAvatarModal(false);
+   });
+ </script>
+  <!-- optional Tailwind "scale-in" animation (add once in your CSS) -->
+ <style>
+ @keyframes scale-in {
+     0%   {transform: scale(.95); opacity: 0;}
+     100% {transform: scale(1);   opacity: 1;}
+ }
+ .animate-scale-in {animation: scale-in .15s ease-out;}
+ </style>
+ <style>
+   .avatar-option {
+   transition: transform 0.2s;
 }
+
 
 .avatar-option:hover {
-    transform: scale(1.05);
+   transform: scale(1.05);
 }
+
 
 .avatar-option img {
-    border: 2px solid transparent;
+   border: 2px solid transparent;
 }
 
+
 .avatar-option input:checked + img {
-    border-color: #3B82F6; /* Primary color */
+   border-color: #3B82F6; /* Primary color */
 }
 </style>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle avatar selection styling
-    const avatarOptions = document.querySelectorAll('.avatar-option');
-    
-    avatarOptions.forEach(option => {
-        const radio = option.querySelector('input[type="radio"]');
-        
-        // Set initial selected state
-        if (radio.checked) {
-            option.querySelector('img').classList.add('border-primary-500');
-        }
+   // Handle avatar selection styling
+   const avatarOptions = document.querySelectorAll('.avatar-option');
+  
+   avatarOptions.forEach(option => {
+       const radio = option.querySelector('input[type="radio"]');
+      
+       // Set initial selected state
+       if (radio.checked) {
+           option.querySelector('img').classList.add('border-primary-500');
+       }
 
-        // Update on click
-        option.addEventListener('click', () => {
-            avatarOptions.forEach(opt => {
-                opt.querySelector('img').classList.remove('border-primary-500');
-            });
-            option.querySelector('img').classList.add('border-primary-500');
-        });
-    });
+
+       // Update on click
+       option.addEventListener('click', () => {
+           avatarOptions.forEach(opt => {
+               opt.querySelector('img').classList.remove('border-primary-500');
+           });
+           option.querySelector('img').classList.add('border-primary-500');
+       });
+   });
 });
 </script>
 
+
 <style>
 .avatar-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+   position: absolute;
+   opacity: 0;
+   pointer-events: none;
 }
 </style>
 {% endblock %}
+
+

@@ -1,4 +1,39 @@
+{%  load static %}
+<style>
+    .custom-checkbox {
+  /* Remove default styles */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
+  width: 14px;
+  height: 14px;
+  border: 1px solid #000;
+  border-radius: 1.5px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+.custom-checkbox:checked {
+  background-color: #33CCFF; /* #3CF */
+  border-color: #33CCFF;
+}
+.custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 1px 1px 0;
+  transform: rotate(45deg);
+}
+</style>
 <div class='text-primary-black'>
     <h2 class="text-[16px] font-semibold mb-[14px]">Delete Account</h2>
     <p class='text-[14px] font-medium'>Permanently delete my account</p>
@@ -18,24 +53,27 @@
             </div>
         </div>
     </div>
-    <div>
+   <div class="flex gap-[14px] flex-col ">
+    
+     <div>
         <label class="flex items-center">
             {{ form.confirm }}
-            <span class="ml-2">{{ form.confirm.label }}</span>
+            <span class="ml-4 mt-[1px] text-[14px] font-medium h-full ">{{ form.confirm.label }}</span>
         </label>
         {% if form.confirm.errors %}
-            <p class="mt-1 text-sm text-error-500">{{ form.confirm.errors.0 }}</p>
+            <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.confirm.errors.0 }}</p>
         {% endif %}
     </div>
     <div>
         <label class="flex items-center">
             {{ form.confirm2 }}
-            <span class="ml-2">{{ form.confirm2.label }}</span>
+            <span class="ml-4 mt-[1px] text-[14px] font-medium h-full ">{{ form.confirm2.label }}</span>
         </label>
         {% if form.confirm2.errors %}
-            <p class="mt-1 text-sm text-error-500">{{ form.confirm2.errors.0 }}</p>
+            <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.confirm2.errors.0 }}</p>
         {% endif %}
     </div>
+   </div>
     <div class="mb-5 mt-[28px]">
         <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium mb-[10px]">
             {% comment %} {{ form.password.label }} {% endcomment %}
@@ -43,7 +81,9 @@
         </label>
         {{ form.password }}
         {% if form.password.errors %}
-            <p class="mt-1 text-sm text-error-500">{{ form.password.errors.0 }}</p>
+            <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.password.errors.0 }}</p>
+            
+            {% comment %} <p class="mt-1 text-sm text-error-500">{{ form.password.errors.0 }}</p> {% endcomment %}
         {% endif %}
     </div>
     <div class="flex justify-end space-x-4">

@@ -3,13 +3,28 @@
 {% block title %}Sign Up - Ensight Plus{% endblock %}
 
 {% block content %}
-<div class="w-full h-full flex">
+<div class="w-full min-h-[calc(100vh+60px)] flex">
     <div class=" absolute top-[30px] left-[54px] z-10">
                 <img src="{% static 'img/ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px]">                
             </div> 
     <div class="w-[46%] bg-primary-black min-h-full max-h-full flex overflow-hidden items-center justify-center">
         <div class="flex items-center justify-center h-full px-[86px]  relative w-full">
-            <img src="{% static 'img/auth-bg.png' %}" alt="Signup Image" class="w-[100%] h-[100%] min-w-[490px] object-cover">
+            
+            {% comment %} <img src="{% static 'img/auth-bg.png' %}" alt="Signup Image" class="w-[100%] h-[100%] min-w-[490px] object-cover"> {% endcomment %}
+            <img  id="lqip"
+        src="{% static 'img/auth-low.webp' %}" 
+        alt="Blurred Placeholder" 
+        class="w-full h-full object-cover filter absolute px-[90px] transition-opacity duration-500 ease-in-out"
+        aria-hidden="true"
+      /> 
+
+    <!-- High-res image -->
+    <img 
+      src="{% static 'img/auth-bg.png' %}" 
+      alt="Signup Image" 
+      class="w-full h-full min-w-[490px] object-cover z-1 relative transition-opacity duration-700 opacity-0" 
+      onload="this.style.opacity='1'; document.getElementById('lqip').style.display='none';"
+    />
             <div class="absolute top-0 left-0  w-full h-screen text-primary-white text-2xl font-semibold flex items-center justify-center p-[60px] ">
                 <div class='overflow-hidden  max-h-0 animate-slide-up min-h-[0px] [animation-delay:2s] duration-700'>
                     <span class='max-w-[550px] block'>Empowering The Future With Cutting-Edge Arial Technology </span>
@@ -23,7 +38,7 @@
 
     <div class="w-[54%]">
         <div class='w-full h-[60px] pt-[30px] pr-[50px] flex justify-end'>
-            <p class="text-s  text-primary-black font-normal flex items-center gap-[20px]">
+            <p class="text-sm  text-primary-black font-normal flex items-center gap-[20px]">
                     Already have an account?
                     <a href="{% url 'accounts:login' %}" class="h-[28px] w-[100px] gap-[18px] flex items-center rounded-[5px] bg-white shadow-[1.5px_3.5px_9px_0px_rgba(0,0,0,0.15)] justify-center text-primary-black font-medium text-[12px] hover:gap-[20px] transition-all duration-300">
                         Log in <span class=""> <img src='{% static "img/arrow-icon.svg" %} ' >   </span>
@@ -35,9 +50,9 @@
             <div class="p-5 w-[440px]">
                 <h2 class="text-2xl font-bold text-center mb-6"> SIGN UP</h2>
                 {% if messages %}
-            <div class="mb-6 msg">
+            <div class="mb-6 ">
                  {% for message in messages %} 
-                    <div class=" px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
+                    <div class="msg px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
                      {% if message.tags == 'success' %}
                     bg-success-blue/20 text-primary-black border border-success-blue/40
                      {% elif message.tags == 'warning' %}
@@ -55,24 +70,95 @@
                 <form method="post" class="space-y-6" novalidate>
                     {% csrf_token %}
                     
-                    <div>
+                    <div class="relative w-full">
                         
                         {{ form.full_name }}
+                        <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Fullname*
+                               </label>
+
+
+
                         {% if form.full_name.errors %}
                             <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.full_name.errors.0 }}</p>
                         {% endif %}
                     </div>
 
-                    <div>
+                    <div class='relative' >
                         {{ form.username }}
+                         <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Username*
+                               </label>
+
                         {% if form.username.errors %}
                          <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span> {{ form.username.errors.0 }}</p>
                         {% endif %}
                     </div>
                     
-                    <div>
+                    <div class="relative">
                        
                         {{ form.email }}
+                         <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Email*
+                               </label>
+
                         {% if form.email.errors %}
                             <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span> {{ form.email.errors.0 }}</p>
                         {% endif %}
@@ -81,6 +167,29 @@
                     <div class="relative">
                         
                         {{ form.password1 }}
+                         <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Password*
+                               </label>
+
                         <button
                             type="button"
                             class="absolute top-4 right-5 flex items-center "
@@ -89,14 +198,14 @@
                         >
                             <!-- two SVGs, one for “eye” and one for “eye-off” -->
                             <svg  data-show-icon class='hidden' xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="0 0 15 11" fill="none">
-  <path d="M9.33337 5.6665C9.33337 6.19694 9.12266 6.70565 8.74759 7.08072C8.37252 7.45579 7.86381 7.6665 7.33337 7.6665C6.80294 7.6665 6.29423 7.45579 5.91916 7.08072C5.54409 6.70565 5.33337 6.19694 5.33337 5.6665C5.33337 5.13607 5.54409 4.62736 5.91916 4.25229C6.29423 3.87722 6.80294 3.6665 7.33337 3.6665C7.86381 3.6665 8.37252 3.87722 8.74759 4.25229C9.12266 4.62736 9.33337 5.13607 9.33337 5.6665Z" stroke="black" stroke-opacity="0.61" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M0.666687 5.66667C1.73335 2.93533 4.22402 1 7.33335 1C10.4427 1 12.9334 2.93533 14 5.66667C12.9334 8.398 10.4427 10.3333 7.33335 10.3333C4.22402 10.3333 1.73335 8.398 0.666687 5.66667Z" stroke="black" stroke-opacity="0.61" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-                            <svg  data-hide-icon class='block mt-[-2px]' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-<path d="M2.84998 2.15012C2.75568 2.05904 2.62938 2.00865 2.49828 2.00978C2.36718 2.01092 2.24178 2.06351 2.14907 2.15621C2.05637 2.24892 2.00378 2.37432 2.00264 2.50542C2.0015 2.63652 2.0519 2.76282 2.14298 2.85712L13.143 13.8571C13.2373 13.9482 13.3636 13.9986 13.4947 13.9975C13.6258 13.9963 13.7512 13.9437 13.8439 13.851C13.9366 13.7583 13.9892 13.6329 13.9903 13.5018C13.9915 13.3707 13.9411 13.2444 13.85 13.1501L2.84998 2.15012ZM15 8.88012C14.566 9.47412 14.115 10.0001 13.65 10.4701L12.943 9.76312C13.3723 9.33379 13.789 8.84379 14.193 8.29312C14.2463 8.22014 14.2788 8.13409 14.287 8.04411C14.2953 7.95413 14.279 7.8636 14.24 7.78212L14.195 7.70712C12.445 5.30712 10.475 4.08712 8.26498 4.00712L8.00898 4.00212C7.74588 4.00085 7.48298 4.01688 7.22198 4.05012L6.35998 3.18812C6.90108 3.06323 7.45466 3.00049 8.00998 3.00112C10.67 3.00112 13.01 4.39112 15 7.12112C15.1877 7.37802 15.2889 7.68795 15.2889 8.00612C15.2889 8.32429 15.1877 8.63423 15 8.89112V8.88012Z" fill="black" fill-opacity="0.6"/>
-<path d="M11 7.83C10.9578 7.0932 10.6461 6.39766 10.1242 5.8758C9.60236 5.35395 8.90682 5.04223 8.17001 5L11 7.83ZM1.22001 6.83C1.58735 6.35 1.96735 5.91667 2.36001 5.53L3.06701 6.237C2.63768 6.66633 2.22101 7.15633 1.81701 7.707L1.77001 7.786C1.73772 7.85343 1.72095 7.92724 1.72095 8.002C1.72095 8.07676 1.73772 8.15057 1.77001 8.218L1.81401 8.292C3.56401 10.692 5.53401 11.912 7.74401 11.992L8.00001 11.997C8.26601 11.997 8.52835 11.981 8.78701 11.949L9.64801 12.809C9.10695 12.9342 8.55337 12.9973 7.99801 12.997C5.33801 12.997 2.99801 11.607 1.00801 8.877L0.926013 8.752C0.777719 8.4997 0.706468 8.20953 0.721038 7.91724C0.735608 7.62495 0.835363 7.3433 1.00801 7.107L1.22301 6.82L1.22001 6.83Z" fill="black" fill-opacity="0.6"/>
-<path d="M7.83 10.9999C7.0932 10.9577 6.39766 10.646 5.8758 10.1241C5.35395 9.60227 5.04223 8.90672 5 8.16992L7.83 10.9999Z" fill="black" fill-opacity="0.6"/>
-</svg>
+                            <path d="M9.33337 5.6665C9.33337 6.19694 9.12266 6.70565 8.74759 7.08072C8.37252 7.45579 7.86381 7.6665 7.33337 7.6665C6.80294 7.6665 6.29423 7.45579 5.91916 7.08072C5.54409 6.70565 5.33337 6.19694 5.33337 5.6665C5.33337 5.13607 5.54409 4.62736 5.91916 4.25229C6.29423 3.87722 6.80294 3.6665 7.33337 3.6665C7.86381 3.6665 8.37252 3.87722 8.74759 4.25229C9.12266 4.62736 9.33337 5.13607 9.33337 5.6665Z" stroke="black" stroke-opacity="0.61" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M0.666687 5.66667C1.73335 2.93533 4.22402 1 7.33335 1C10.4427 1 12.9334 2.93533 14 5.66667C12.9334 8.398 10.4427 10.3333 7.33335 10.3333C4.22402 10.3333 1.73335 8.398 0.666687 5.66667Z" stroke="black" stroke-opacity="0.61" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                                                        <svg  data-hide-icon class='block mt-[-2px]' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2.84998 2.15012C2.75568 2.05904 2.62938 2.00865 2.49828 2.00978C2.36718 2.01092 2.24178 2.06351 2.14907 2.15621C2.05637 2.24892 2.00378 2.37432 2.00264 2.50542C2.0015 2.63652 2.0519 2.76282 2.14298 2.85712L13.143 13.8571C13.2373 13.9482 13.3636 13.9986 13.4947 13.9975C13.6258 13.9963 13.7512 13.9437 13.8439 13.851C13.9366 13.7583 13.9892 13.6329 13.9903 13.5018C13.9915 13.3707 13.9411 13.2444 13.85 13.1501L2.84998 2.15012ZM15 8.88012C14.566 9.47412 14.115 10.0001 13.65 10.4701L12.943 9.76312C13.3723 9.33379 13.789 8.84379 14.193 8.29312C14.2463 8.22014 14.2788 8.13409 14.287 8.04411C14.2953 7.95413 14.279 7.8636 14.24 7.78212L14.195 7.70712C12.445 5.30712 10.475 4.08712 8.26498 4.00712L8.00898 4.00212C7.74588 4.00085 7.48298 4.01688 7.22198 4.05012L6.35998 3.18812C6.90108 3.06323 7.45466 3.00049 8.00998 3.00112C10.67 3.00112 13.01 4.39112 15 7.12112C15.1877 7.37802 15.2889 7.68795 15.2889 8.00612C15.2889 8.32429 15.1877 8.63423 15 8.89112V8.88012Z" fill="black" fill-opacity="0.6"/>
+                            <path d="M11 7.83C10.9578 7.0932 10.6461 6.39766 10.1242 5.8758C9.60236 5.35395 8.90682 5.04223 8.17001 5L11 7.83ZM1.22001 6.83C1.58735 6.35 1.96735 5.91667 2.36001 5.53L3.06701 6.237C2.63768 6.66633 2.22101 7.15633 1.81701 7.707L1.77001 7.786C1.73772 7.85343 1.72095 7.92724 1.72095 8.002C1.72095 8.07676 1.73772 8.15057 1.77001 8.218L1.81401 8.292C3.56401 10.692 5.53401 11.912 7.74401 11.992L8.00001 11.997C8.26601 11.997 8.52835 11.981 8.78701 11.949L9.64801 12.809C9.10695 12.9342 8.55337 12.9973 7.99801 12.997C5.33801 12.997 2.99801 11.607 1.00801 8.877L0.926013 8.752C0.777719 8.4997 0.706468 8.20953 0.721038 7.91724C0.735608 7.62495 0.835363 7.3433 1.00801 7.107L1.22301 6.82L1.22001 6.83Z" fill="black" fill-opacity="0.6"/>
+                            <path d="M7.83 10.9999C7.0932 10.9577 6.39766 10.646 5.8758 10.1241C5.35395 9.60227 5.04223 8.90672 5 8.16992L7.83 10.9999Z" fill="black" fill-opacity="0.6"/>
+                            </svg>
                         </button>
                         {% if form.password1.errors %}
                             <p class="mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.password1.errors.0 }}</p>
@@ -106,6 +215,29 @@
                     <div class="relative">
                         
                         {{ form.password2 }}
+                         <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Confirm Password*
+                               </label>
+
                       <button
                             type="button"
                             class="absolute top-4 right-5 flex items-center "

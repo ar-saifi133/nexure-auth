@@ -10,6 +10,8 @@ import re
 from django.db import models 
 from django.contrib.auth import authenticate
 from django.db.models import Q
+from django.contrib.auth.forms import PasswordResetForm
+
 
 
 User = get_user_model()
@@ -69,7 +71,7 @@ class CustomUserCreationForm(UserCreationForm):
 
         # Base input class
         base_input_class = (
-            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] px-5 "
+            "  peer block bg-transparent  placeholder-transparent transition-colors duration-200 form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] px-5 "
             "focus:ring-0 focus:outline-none focus:border-accent-grey "
             "text-[12px] font-medium placeholder:text-[12px] placeholder:font-light"
         )
@@ -103,7 +105,7 @@ class CustomUserCreationForm(UserCreationForm):
     full_name = forms.CharField(
         label=_("Full Name"),
         max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Full Name*'}),
+        widget=forms.TextInput(attrs={'class': 'form-control  w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': ''}),
         validators=[
             RegexValidator(
                 regex=r'^[A-Za-z ]+$',
@@ -161,20 +163,30 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
+# forms.py  (excerpt)
+
 class CustomPasswordResetForm(PasswordResetForm):
-    """
-    A form for generating a password reset token for a user.
-    """
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+        widget=forms.EmailInput(
+            attrs={
+                "id": "reset-email",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",          # <-- literally one space
+            }
+        ),
     )
-
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
 
         # Base input class
         base_input_class = (
@@ -183,9 +195,11 @@ class CustomAuthenticationForm(AuthenticationForm):
             "text-[12px] font-medium placeholder:text-[12px ] placeholder:font-light"
         )
 
+
         # Apply default classes and keep placeholders
         for field_name, field in self.fields.items():
             widget = field.widget
+
 
             # Skip if it's a checkbox or other non-text input
             if isinstance(widget, (forms.TextInput, forms.EmailInput, forms.PasswordInput)):
@@ -199,24 +213,27 @@ class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         label=_("Email or Username"),
         widget=forms.TextInput(attrs={
-            'class': 'form-control', 
-            'placeholder': 'Email/Username'
+            'class': 'form-control',
+            'placeholder': 'Email/Username*'
         })
     )
-    
+   
     password = forms.CharField(
         label=_("Password"),
         strip=False,
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control', 
+            "id": "id_password1",
+            'class': 'form-control',
             'placeholder': 'Password* '
         })
     )
+
 
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         self.unverified_email = None  # Add this line
+
 
         if username and password:
             # First try standard authentication
@@ -260,20 +277,46 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 
 
+
+
+
+
 class CustomSetPasswordForm(SetPasswordForm):
     """
     A form for setting a new password for a user.
     """
     new_password1 = forms.CharField(
         label=_("New password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter new password'}),
+        widget=forms.PasswordInput(
+        attrs={
+        "id": "first-password",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",
+        }
+        ),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     
     new_password2 = forms.CharField(
         label=_("Confirm new password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm new password'})
+        widget=forms.PasswordInput(
+        attrs={
+            "id": "second-password",
+                "class": (
+                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
+                    "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
+                    "transition-colors duration-200"
+                ),
+                "placeholder": " ",
+        }
+        )
     )
 
     def clean_new_password1(self):
@@ -290,59 +333,88 @@ class CustomSetPasswordForm(SetPasswordForm):
 
 class ProfileUpdateForm(forms.ModelForm):
 
-    AVATAR_CHOICES = [
-        (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 8)  # Adjust range for number of avatars
-    ]
 
-    avatar = forms.ChoiceField(
-        choices=AVATAR_CHOICES,
-        widget=forms.RadioSelect(attrs={'class': 'hidden'}),
-        required=True,
-        label="Profile Picture"
-    )
 
-    class Meta:
-        model = User
-        fields = ['avatar', 'full_name', 'username', 'email']
-        widgets = {
-            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-        }
+   class Meta:
+       model = User
+       fields = ['full_name', 'username', ]
+       widgets = {
+         'full_name': forms.TextInput(attrs={
+               'class': 'form-control border-2 border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+           }),
+           'username': forms.TextInput(attrs={
+               'class': 'form-control border-2 border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+           }),
+           
+       }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Initialize avatar selection with current avatar
-        self.fields['avatar'].initial = self.instance.avatar
 
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-            raise ValidationError(_("This email is already in use."))
-        return email
 
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
-            raise ValidationError(_("This username is already in use."))
-        return username
+
+
+
+
+   # def __init__(self, *args, **kwargs):
+   #     super().__init__(*args, **kwargs)
+   #     # Initialize avatar selection with current avatar
+   #     self.fields['avatar'].initial = self.instance.avatar
+
+
+   def clean_email(self):
+       email = self.cleaned_data.get('email')
+       if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+           raise ValidationError(_("This email is already in use."))
+       return email
+
+
+   def clean_username(self):
+       username = self.cleaned_data.get('username')
+       if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+           raise ValidationError(_("This username is already in use."))
+       return username
+
+
+
+class AvatarUpdateForm(forms.ModelForm):
+   AVATAR_CHOICES = [
+       (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 8)
+   ]
+
+
+   avatar = forms.ChoiceField(
+       choices=AVATAR_CHOICES,
+       widget=forms.RadioSelect(attrs={'class': 'hidden'}),
+       required=True,
+       label="Profile Picture"
+   )
+
+
+   class Meta:
+       model = User
+       fields = ['avatar']
+
+
+   def __init__(self, *args, **kwargs):
+       super().__init__(*args, **kwargs)
+       self.fields['avatar'].initial = self.instance.avatar
+
 
 
 class DeleteAccountForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
         label="All data associated with this account will be deleted",
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={'class': 'custom-checkbox'})
     )
     confirm2 = forms.BooleanField(
         required=True,
         label="I agree to this action, knowing it cannot be undone",
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        widget=forms.CheckboxInput(attrs={'class': 'custom-checkbox'})
     )
     password = forms.CharField(
         label="Current Password",
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control border border-accent-grey/30 h-[40px] px-5 w-full rounded-[10px] placeholder:text-[14px] placeholder:font-medium', 'placeholder':'Password*'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control focus:ring-0 focus:outline-none focus:border-accent-grey border border-accent-grey/30 h-[40px] px-5 w-full rounded-[10px] placeholder:text-[14px] placeholder:font-medium', 'placeholder':'Password*'}),
         required=True
     )
 
@@ -362,17 +434,17 @@ class CustomPasswordChangeForm(forms.Form):
     old_password = forms.CharField(
         label=_("Current Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter current password'})
+        widget=forms.PasswordInput(attrs={'class': ' focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal', 'placeholder': 'Current Password*'})
     )
     new_password1 = forms.CharField(
         label=_("New Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter new password'}),
+        widget=forms.PasswordInput(attrs={'class': " focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'New Password*'}),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     new_password2 = forms.CharField(
         label=_("Confirm New Password"),
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm new password'})
+        widget=forms.PasswordInput(attrs={'class': " focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'Confirm Password*'})
     )
 
     def __init__(self, *args, user=None, **kwargs):

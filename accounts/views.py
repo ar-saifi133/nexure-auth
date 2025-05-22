@@ -28,6 +28,7 @@ from .forms import (
     CustomSetPasswordForm,
     ProfileUpdateForm,
     DeleteAccountForm,
+    AvatarUpdateForm,
     CustomPasswordChangeForm
 )
 from .models import PasswordResetToken, EmailVerificationToken
@@ -424,7 +425,7 @@ def logout_view(request):
     logout(request)
 
     # 2. Success message (optional)
-    messages.success(request, 'You have been logged out successfully from all applications.')
+    messages.success(request, 'You have been logged out successfully.')
 
     # 3. Determine where to send them next:
     #    - honor a ?next=... param if it’s on the allow-list
@@ -583,40 +584,80 @@ def password_reset_confirm(request, token):
 
 
 
+
+
+
 @login_required
 def profile_update_view(request):
-    if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('accounts:profile')
-    else:
-        form = ProfileUpdateForm(instance=request.user)
-    
-    return render(request, 'accounts/profile/profile_update.html', {'form': form})
+
+   user = request.user
+
+
+
+   # ――― determine which form was posted ―――
+   if request.method == "POST":
+       if "profile_submit" in request.POST:
+           # username / email / full-name
+           profile_form = ProfileUpdateForm(request.POST, instance=user)
+           avatar_form  = AvatarUpdateForm(instance=user)  # blank copy
+           if profile_form.is_valid():
+               profile_form.save()
+               messages.success(request, "Profile updated successfully!")
+               return redirect("accounts:profile")
+
+
+       elif "avatar_submit" in request.POST:
+           # avatar only
+           avatar_form  = AvatarUpdateForm(request.POST, instance=user)
+           profile_form = ProfileUpdateForm(instance=user)  # blank copy
+           if avatar_form.is_valid():
+               avatar_form.save()
+               messages.success(request, "Avatar updated successfully!")
+               return redirect("accounts:profile")
+
+
+   else:   # ── GET ──
+       profile_form = ProfileUpdateForm(instance=user)
+       avatar_form  = AvatarUpdateForm(instance=user)
+
+
+   return render(
+       request,
+       "accounts/profile/profile_update.html",
+       {
+           "profile_form": profile_form,
+           "avatar_form":  avatar_form,
+       },
+   )
+
+
 
 @login_required
 def delete_account_view(request):
-    if request.method == 'POST':
-        form = DeleteAccountForm(request.POST, user=request.user)
-        if form.is_valid():
-            # Capture user instance before logout
-            user = request.user
-            # Logout the user to clear the session
-            logout(request)
-            # Now delete the user
-            user.delete()
-            messages.success(request, 'Your account has been deleted successfully.')
-            return redirect('accounts:login')
-    else:
-        form = DeleteAccountForm(user=request.user)
-    
-    return render(request, 'accounts/delete_account.html', {'form': form})
-
-
-
-
+    try:
+        # Log request headers for debugging
+        print("Request headers:", request.headers)
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        
+        if request.method == 'POST':
+            form = DeleteAccountForm(request.POST, user=request.user)
+            if form.is_valid():
+                user = request.user
+                logout(request)
+                user.delete()
+                messages.success(request, 'Your account has been deleted successfully.')
+                return redirect('accounts:login')
+            else:
+                # Always use partial template for AJAX, full template for non-AJAX
+                template = 'accounts/profile/delete_account_form.html' if is_ajax else 'accounts/profile/delete_account.html'
+                return render(request, template, {'form': form})
+        else:
+            form = DeleteAccountForm(user=request.user)
+            template = 'accounts/profile/delete_account_form.html' if is_ajax else 'accounts/profile/delete_account.html'
+            return render(request, template, {'form': form})
+    except Exception as e:
+        print(f"Error in delete_account_view: {str(e)}")
+        raise
 
 @login_required
 def password_change_view(request):
@@ -629,8 +670,7 @@ def password_change_view(request):
             return redirect('accounts:profile')
     else:
         form = CustomPasswordChangeForm(user=request.user)
-    return render(request, 'accounts/password_change.html', {'form': form})
-
+    return render(request, 'accounts/profile/password_change.html', {'form': form})
 
 
 from django.core.mail import send_mail, get_connection
@@ -642,3 +682,10 @@ try:
     connection.close()
 except Exception as e:
     print("❌ SMTP connection failed:", e)
+
+
+def terms_view(request):
+ 
+    return render(request, 'accounts/terms.html')
+
+

@@ -1,0 +1,154 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif; /* Default font */
+  color: #000; /* Default text color */
+  width: 100%;
+  /* height: 100%; */
+   
+   
+}
+
+
+.terms-page-container {
+  width: 100%;
+ 
+  height: 100%;
+}
+
+
+.terms-header {
+  height: 64px;
+  padding-left: 80px;
+  padding-top: 19px; /* This aims to vertically center the 26px logo in a 64px header */
+  background-color: #fff;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
+  /* For more robust vertical centering, consider display: flex; align-items: center; padding: 0 80px; */
+}
+
+
+.terms-logo {
+  width: 120px;
+  height: 26px;
+}
+
+
+.terms-main-content {
+  width: 100%;
+}
+
+
+.terms-content-wrapper {
+  /* max-width: 100%;  */
+   
+ margin-top: 40px;
+ margin-left: 80px;
+ margin-right: 80px;
+ 
+
+
+}
+
+
+.terms-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 48px; /* As per your h-[48px] */
+  margin-bottom: 24px; /* This was from mt-[24px] on the next section */
+ 
+}
+
+
+.terms-main-title {
+  font-size: 20px;
+  font-weight: 700; /* bold */
+  line-height: 20px;
+  margin: 0; /* Reset default h1 margin */
+}
+
+
+.terms-effective-date {
+  font-size: 12px;
+  font-weight: 500; /* medium */
+  line-height: 20px;
+  letter-spacing: 0.18px;
+  margin: 0; /* Reset default p margin */
+}
+
+
+.terms-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px; /* Default margin for sections */
+}
+
+
+.terms-section:first-of-type { /* For the "Introduction" section */
+    margin-top: 24px; /* Overrides the default 16px, was mt-[24px] */
+}
+
+
+
+
+.terms-section-heading {
+  font-size: 18px;
+  font-weight: 700; /* bold */
+  line-height: 20px;
+  margin: 0; /* Reset default h2 margin */
+}
+
+
+.section-heading-padded {
+  padding-top: 8px; /* For headings that had pt-[8px] */
+}
+
+
+.terms-paragraph {
+  font-size: 14px;
+  font-weight: 400; /* normal */
+  line-height: 20px;
+  letter-spacing: 0.14px;
+  margin: 0;
+  width: 100%;
+   max-width: 75ch;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+
+.terms-subsection-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Gap between heading and paragraph, and between subsections */
+}
+
+
+.terms-subsection-heading {
+  font-size: 16px;
+  font-weight: 600; /* semibold */
+  line-height: 20px;
+  margin: 0; /* Reset default h3 margin */
+}
+
+
+/* Optional: Improve readability for longer paragraphs */
+.terms-paragraph {
+  max-width: 100%; /* Limits line length for better readability */
+}
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+.terms-footer{
+    height: 88px;
+}
+
+
+
+
+
+
