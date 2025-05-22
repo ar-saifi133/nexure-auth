@@ -55,6 +55,7 @@ User = get_user_model()
 from django.core.mail import send_mail, EmailMessage  # Added EmailMessage import
 from django.conf import settings
 import logging
+from django.utils.html import escape
 
 logger = logging.getLogger(__name__)
 
@@ -125,8 +126,6 @@ def signup_view(request):
         form = CustomUserCreationForm()
     
     return render(request, 'accounts/signup.html', {'form': form})
-
-
 
 
 

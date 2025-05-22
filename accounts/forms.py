@@ -219,29 +219,43 @@ class CustomAuthenticationForm(AuthenticationForm):
         self.unverified_email = None  # Add this line
 
         if username and password:
+            # First try standard authentication
             user = authenticate(
                 request=self.request,
                 username=username,
                 password=password
             )
 
+            # If authentication failed, check username/email manually
             if user is None:
                 try:
-                    user = User.objects.get(Q(email__iexact=username) | Q(username=username))
-                    if user.check_password(password):
-                        if not user.is_active or not user.email_verified:
-                            self.unverified_email = user.email  # Store email
-                            raise ValidationError(_("Account not verified. Please check your email."))
+                    user = User.objects.get(
+                        Q(email__iexact=username) | Q(username=username)
+                    )
                 except User.DoesNotExist:
-                    pass
+                    user = None
 
-                raise ValidationError(_("Invalid email/username or password."))
+                # Validate password if user exists
+                if user and not user.check_password(password):
+                    user = None
+
+            # If we have a valid user at this point
+            if user:
+                self.user_cache = user  # Critical: Set user_cache
+                
+                # Check if user is allowed to login
+                self.confirm_login_allowed(user)  # Handles is_active check
+                
+                # Custom email verification check
+                if not user.email_verified:
+                    self.unverified_email = user.email
+                    raise ValidationError("Account not verified. Please check your email.")
             else:
-                if not user.is_active or not user.email_verified:
-                    self.unverified_email = user.email  # Store email
-                    raise ValidationError(_("Account not verified. Please check your email."))
+                raise ValidationError("Invalid email/username or password.")
 
             return self.cleaned_data
+
+        raise ValidationError("Both username and password are required.")
 
 
 
