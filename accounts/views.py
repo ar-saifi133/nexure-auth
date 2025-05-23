@@ -70,8 +70,8 @@ def signup_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
-            user.avatar = f'avatar{random.randint(1, 6)}.png'
+            user.is_active = True
+            user.avatar = f'avatar{random.randint(1, 31)}.webp'  # Random avatar assignment
             
             try:
                 user.save()
@@ -305,7 +305,83 @@ def resend_verification_view(request):
 
 
 
-# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# # @ratelimit(key='ip', rate='5/h', method='POST', block=True)
+# def login_view(request):
+#     """View for authenticating users with rate limiting"""
+#     redirect_uri = request.GET.get('redirect_uri')
+    
+#     # Validate redirect_uri
+#     allowed_domains = settings.ALLOWED_REDIRECT_DOMAINS
+#     if redirect_uri:
+#         domain = urlparse(redirect_uri).netloc.split(':')[0]
+#         if domain not in allowed_domains:
+#             logger.error(f"Invalid redirect_uri: {redirect_uri}")
+#             return HttpResponse("Invalid redirect URI", status=400)
+    
+#     if request.user.is_authenticated:
+#         if redirect_uri:
+#             # Generate tokens and send via POST
+#             serializer = CustomTokenObtainPairSerializer()
+#             token_data = serializer.get_token(request.user)
+#             access_token = str(token_data.access_token)
+#             refresh_token = str(token_data)
+#             return render(request, 'accounts/token_redirect.html', {
+#                 'redirect_uri': redirect_uri,
+#                 'access_token': access_token,
+#                 'refresh_token': refresh_token,
+#                 'user_id': request.user.id
+#             })
+#         else:
+#             return redirect('accounts:profile')
+        
+#     if request.method == 'POST':
+#         form = CustomAuthenticationForm(request, data=request.POST)
+        
+#         if form.is_valid():
+#             user = form.get_user()
+#             login(request, user)
+            
+#             # Additional check (safeguard)
+#             if not user.is_superuser and not user.email_verified:
+#                 logout(request)
+#                 request.session['verification_email'] = user.email
+#                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
+#                 return redirect('accounts:email_sent') 
+
+                  
+#             if redirect_uri:
+#                 # Generate tokens and send via POST
+#                 serializer = CustomTokenObtainPairSerializer()
+#                 token_data = serializer.get_token(user)
+#                 access_token = str(token_data.access_token)
+#                 refresh_token = str(token_data)
+#                 return render(request, 'accounts/token_redirect.html', {
+#                     'redirect_uri': redirect_uri,
+#                     'access_token': access_token,
+#                     'refresh_token': refresh_token,
+#                     'user_id': user.id
+#                 })
+#             else:
+#                 messages.success(request, 'Login successful!')
+#                 return redirect('accounts:profile')
+#         else:
+#             if hasattr(form, 'unverified_email') and form.unverified_email:
+#                 request.session['verification_email'] = form.unverified_email
+#                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
+
+#                 return redirect('accounts:resend_verification')
+            
+#             # messages.error(request, 'Invalid email/username or password.')
+
+#     else:
+#         form = CustomAuthenticationForm()
+    
+#     return render(request, 'accounts/login.html', {'form': form, 'redirect_uri': redirect_uri})
+
+
+
+
+
 def login_view(request):
     """View for authenticating users with rate limiting"""
     redirect_uri = request.GET.get('redirect_uri')
@@ -341,12 +417,13 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             
+            # Check if the user is not a superuser and their email is not verified
             if not user.is_superuser and not user.email_verified:
                 logout(request)
                 # Store email in session and redirect
                 request.session['verification_email'] = user.email
                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
-                return redirect('accounts:email_sent')  
+                return redirect('accounts:resend_verification')  # Redirect to resend verification page
                   
             if redirect_uri:
                 # Generate tokens and send via POST
@@ -367,7 +444,6 @@ def login_view(request):
             if hasattr(form, 'unverified_email') and form.unverified_email:
                 request.session['verification_email'] = form.unverified_email
                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
-
                 return redirect('accounts:resend_verification')
             
             # messages.error(request, 'Invalid email/username or password.')
@@ -376,6 +452,7 @@ def login_view(request):
         form = CustomAuthenticationForm()
     
     return render(request, 'accounts/login.html', {'form': form, 'redirect_uri': redirect_uri})
+
 
 
 
