@@ -82,8 +82,30 @@
    
                     <div class=" flex flex-col gap-[24px]  ">
                         {# Label is effectively the placeholder set in forms.py #}
-                       <div>
+                       <div class='relative w-full'>
                         {{ form.username }}
+                         <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Username/Email*
+                               </label>
                         
                         {% if form.username.errors %}
                       <div class="flex gap-[10px]">  <span class="mt-[10px] "><img src="{% static 'img/error.svg' %}"/>  </span>
@@ -91,9 +113,31 @@
                         not-italic font-medium leading-none flex items-center">{{ form.username.errors.0 }}</p></div>
                         {% endif %}
                        </div>
-                       <div class="relative">
+                       <div class="relative w-full">
                        
                         {{ form.password }}
+                        <label for=""
+                                      class="pointer-events-none absolute left-5 -top-2 bg-primary-white px-1 text-xs
+                                             text-gray-300 transition-all duration-200
+                          
+                                             /* when input is empty (placeholder shown) */
+                                             peer-placeholder-shown:top-3.5
+                                             peer-placeholder-shown:text-[12PX]
+                                             peer-placeholder-shown:text-[#8C8C8C]
+                                             peer-placeholder-shown:bg-transparent
+                          
+                                             /* when input is focused                              */
+                                             peer-focus:-top-2
+                                             peer-focus:text-xs
+                                             peer-focus:text-[#8c8c8c]
+                                             peer-focus:bg-[#fff]
+                          
+                                             /* when input already has content (not placeholder)   */
+                                             peer-[&:not(:placeholder-shown)]:-top-2
+                                             peer-[&:not(:placeholder-shown)]:text-xs
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                   Password*
+                               </label>
                         <button
                             type="button"
                             class="absolute top-4 right-5 text-primary-black flex items-center z-10"
@@ -148,11 +192,11 @@
 
         <!-- Section 3: Bottom Footer Links -->
      <div class="flex justify-center whitespace-normal  h-[60px] ">
-           <div><a href="#" class="mr-[11px] text-[color:var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-none ">Privacy Policy</a></div>
-            <div><a href="#" class="mr-[11px] text-[var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-normal">Terms of Use</a></div>
+           <div><a href="{% url 'accounts:terms' %}" class="mr-[11px] text-[color:var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-none ">Privacy Policy</a></div>
+            <div><a href="{% url 'accounts:terms' %}" class="mr-[11px] text-[var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-normal">Terms of Use</a></div>
            
            
-            <div><a href="#" class="text-[var(--text-selected-state,#000)] text-center font-montserrat text-[12px] not-italic font-light leading-normal">© 2025 All rights reserved to Enord Pvt. Ltd.</a></div>
+            <div><a href="{% url 'accounts:terms' %}" class="text-[var(--text-selected-state,#000)] text-center font-montserrat text-[12px] not-italic font-light leading-normal">© 2025 All rights reserved to Enord Pvt. Ltd.</a></div>
         </div>
     </div>
 

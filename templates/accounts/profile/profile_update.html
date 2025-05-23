@@ -82,7 +82,7 @@ novalidate
    <div class="flex justify-end space-x-4">
        <a href="{% url 'accounts:profile' %}"
           class="box-border flex justify-center items-center w-[149px] h-[36px]
-                 border border-[rgba(140,140,140,0.3)] rounded-[10px]">
+                 border border-[rgba(140,140,140,0.3)] rounded-[10px]  hover:bg-accent-grey/10 transition-all duration-200">
            <span class="font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
        </a>
 
@@ -91,7 +91,7 @@ novalidate
        <button type="submit" name="profile_submit"
                class="box-border flex justify-center items-center w-[149px] h-[36px]
                       bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
-                      rounded-[10px]">
+                      rounded-[10px] hover:bg-[#03afdd]" >
            <span class="font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
        </button>
    </div>
@@ -173,12 +173,15 @@ novalidate
 
        <div class="flex flex-wrap gap-[10px] justify-center border-none">
            {% for choice in avatar_form.avatar %}
-               <label class="cursor-pointer relative border-2 border-[#000000] rounded-[999px]">
-                   {{ choice.tag }}
-                   <img src="{% static 'avatars/'|add:choice.data.value %}"
-                        class="w-20 h-20 rounded-full border-2 transition-all
-                               border-transparent hover:border-primary-500">
-               </label>
+               <label class="cursor-pointer relative rounded-[100px]">
+                   <input type="radio" name="avatar" value="{{ choice.data.value }}" class="hidden peer" />
+                
+                   <div class="rounded-[999px] border border-[#000000] peer-checked:border-2 peer-checked:border-[#33ccff] transition-all">
+                     {{ choice.tag }}
+                     <img src="{% static 'avatars/'|add:choice.data.value %}"
+                          class="w-20 h-20 rounded-full border-2 border-transparent hover:border-primary-500 transition-all">
+                   </div>
+                 </label>
            {% endfor %}
        </div>
 
@@ -195,16 +198,14 @@ novalidate
            <button type="button"
                    onclick="toggleAvatarModal(false)"
                    class="box-border w-[179px] h-[36px] border
-                   class="box-border w-[179px] h-[36px] border
-                          border-[rgba(140,140,140,.3)] rounded-[10px]">
+                          border-[rgba(140,140,140,.3)] rounded-[10px] font-semibold text-[12px] hover:bg-accent-grey/10">
                Cancel
            </button>
 
 
            <button type="submit" name="avatar_submit"
                    class="box-border w-[179px] h-[36px] bg-[#33CCFF]
-                   class="box-border w-[179px] h-[36px] bg-[#33CCFF]
-                          border border-[#03AFDD] rounded-[10px]">
+                          border border-[#03AFDD] rounded-[10px] text-[12px] font-semibold hover:bg-[#03afdd]">
                Save
            </button>
        </div>

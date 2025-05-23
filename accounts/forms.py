@@ -190,7 +190,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         # Base input class
         base_input_class = (
-            "form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
+            "  peer block bg-transparent  placeholder-transparent transition-colors duration-200 form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
             "focus:ring-0 focus:outline-none focus:border-accent-grey "
             "text-[12px] font-medium placeholder:text-[12px ] placeholder:font-light"
         )
@@ -214,7 +214,7 @@ class CustomAuthenticationForm(AuthenticationForm):
         label=_("Email or Username"),
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Email/Username*'
+            'placeholder': ''
         })
     )
    
@@ -340,10 +340,10 @@ class ProfileUpdateForm(forms.ModelForm):
        fields = ['full_name', 'username', ]
        widgets = {
          'full_name': forms.TextInput(attrs={
-               'class': 'form-control border-2 text-[#000000] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+               'class': ' text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
            }),
            'username': forms.TextInput(attrs={
-               'class': 'form-control text-primary-black focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+               'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
            }),
            
        }
@@ -383,7 +383,7 @@ class AvatarUpdateForm(forms.ModelForm):
 
    avatar = forms.ChoiceField(
        choices=AVATAR_CHOICES,
-       widget=forms.RadioSelect(attrs={'class': 'hidden'}),
+       widget=forms.RadioSelect(attrs={'class': 'hidden group'}),
        required=True,
        label="Profile Picture"
    )
