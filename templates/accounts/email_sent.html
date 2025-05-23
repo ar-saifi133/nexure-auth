@@ -102,50 +102,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Resend handler
   btn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch("{% url 'accounts:resend_verification' %}", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': csrftoken,
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `email=${encodeURIComponent("{{ email }}")}`,
-        credentials: 'same-origin'
-      });
+  e.preventDefault();
 
-      if (response.redirected) {
-        window.location.href = response.url;
-        return;
-      }
+  // Disable the button immediately
+  btn.disabled = true;
+  btn.classList.add('opacity-50', 'cursor-not-allowed');
 
-      const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('lastResend', Date.now());
-        remaining = TOTAL;
-        btn.classList.add('hidden');
-        countdownEl.classList.remove('hidden');
-        timerEl.textContent = formatTime(remaining);
-        clearInterval(intervalId);
-        intervalId = setInterval(tick, 1000);
-        
-        // Show temporary success message
-        const tempMsg = document.createElement('div');
-        tempMsg.className = 'bg-success-blue/20 text-primary-white border border-success-blue/40 px-6 py-3 rounded-[10px] mb-5 text-[14px] font-medium';
-        tempMsg.textContent = 'New verification email sent!';
-        document.querySelector('.msg').prepend(tempMsg);
-        setTimeout(() => tempMsg.remove(), 5000);
-      } else {
-        alert(data.error || 'Failed to resend email');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again.');
+  try {
+    const response = await fetch("{% url 'accounts:resend_verification' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': csrftoken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: `email=${encodeURIComponent("{{ email }}")}`,
+      credentials: 'same-origin'
+    });
+
+    if (response.redirected) {
+      window.location.href = response.url;
+      return;
     }
-  });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem('lastResend', Date.now());
+      remaining = TOTAL;
+
+      // UI updates
+      btn.classList.add('hidden');
+      countdownEl.classList.remove('hidden');
+      timerEl.textContent = formatTime(remaining);
+      clearInterval(intervalId);
+      intervalId = setInterval(tick, 1000);
+
+      // Success message
+      const tempMsg = document.createElement('div');
+      tempMsg.className = 'bg-success-blue/20 text-primary-white border border-success-blue/40 px-6 py-3 rounded-[10px] mb-5 text-[14px] font-medium';
+      tempMsg.textContent = 'New verification email sent!';
+      document.querySelector('.msg').prepend(tempMsg);
+      setTimeout(() => tempMsg.remove(), 5000);
+    } else {
+      alert(data.error || 'Failed to resend email');
+      // Re-enable on failure
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred. Please try again.');
+    // Re-enable on error
+    btn.disabled = false;
+    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+  }
+});
+
 
   // Background image upgrade
   const bgContainer = document.getElementById('background-container');
