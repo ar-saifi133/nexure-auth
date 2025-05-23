@@ -130,23 +130,23 @@ novalidate
 
 {# ─────────── Avatar modal ─────────── #}
 <div id="avatarModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40">
   <!-- modal panel -->
-  <div class=""></div>
- <div class="bg-white border-2 border-[#000000] shadow-xl w-full max-w-lg p-8 space-y-6
-             animate-scale-in">
+  <div class="bg-white  shadow-xl w-[460px] h-[514px] rounded-[18px] p-8 space-y-6
+             animate-scale-in ">
 
 
-   <h2 class="text-xl font-semibold text-center">Select an Avatar</h2>
+   <h2 class="text-xl font-semibold text-center ">Select an Avatar</h2>
 
 
-   <form method="post" enctype="multipart/form-data" class="space-y-6">
-       {% csrf_token %}
+   <form method="post" enctype="multipart/form-data" class="  ">
+       <div class="h-[364px]  overflow-y-scroll custom-scrollbar ">
+           {% csrf_token %}
 
 
-       <div class="flex flex-wrap gap-6 justify-center">
+       <div class="flex flex-wrap gap-[10px] justify-center border-none">
            {% for choice in avatar_form.avatar %}
-               <label class="cursor-pointer relative">
+               <label class="cursor-pointer relative border-2 border-[#000000] rounded-[999px]">
                    {{ choice.tag }}
                    <img src="{% static 'avatars/'|add:choice.data.value %}"
                         class="w-20 h-20 rounded-full border-2 transition-all
@@ -163,17 +163,18 @@ novalidate
        {% endif %}
 
 
-       <div class="flex justify-end gap-4 pt-4">
+       </div>
+       <div class="flex justify-center gap-4 pt-4">
            <button type="button"
                    onclick="toggleAvatarModal(false)"
-                   class="box-border w-[120px] h-[36px] border
+                   class="box-border w-[179px] h-[36px] border
                           border-[rgba(140,140,140,.3)] rounded-[10px]">
                Cancel
            </button>
 
 
            <button type="submit" name="avatar_submit"
-                   class="box-border w-[120px] h-[36px] bg-[#33CCFF]
+                   class="box-border w-[179px] h-[36px] bg-[#33CCFF]
                           border border-[#03AFDD] rounded-[10px]">
                Save
            </button>
@@ -181,6 +182,9 @@ novalidate
    </form>
  </div>
 </div>
+
+
+
 <script>
    // simple helper to show / hide
    function toggleAvatarModal(show) {
@@ -258,6 +262,21 @@ document.addEventListener('DOMContentLoaded', function() {
    opacity: 0;
    pointer-events: none;
 }
+   /* Custom scrollbar styles */
+   .custom-scrollbar::-webkit-scrollbar {
+     width: 5px;
+     height: 50px; /* Only used for horizontal scrollbar */
+   }
+  
+   .custom-scrollbar::-webkit-scrollbar-thumb {
+     background-color: #8c8c8c;
+     border-radius: 4px;
+   }
+  
+   .custom-scrollbar::-webkit-scrollbar-track {
+     background: transparent;
+   }
+
 </style>
 {% endblock %}
 
