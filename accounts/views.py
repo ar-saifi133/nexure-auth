@@ -441,6 +441,14 @@ def login_view(request):
                 messages.success(request, 'Login successful!')
                 return redirect('accounts:profile')
         else:
+            user = form.get_user()
+            if user and user.is_superuser:
+                # If the user is a superuser, allow login even if email is not verified
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                return redirect('accounts:profile')
+
+
             if hasattr(form, 'unverified_email') and form.unverified_email:
                 request.session['verification_email'] = form.unverified_email
                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
