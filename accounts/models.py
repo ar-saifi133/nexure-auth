@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)  # Changed to False for email verification
     date_joined = models.DateTimeField(default=timezone.now)
     email_verified = models.BooleanField(default=False)
-    avatar = models.CharField(max_length=20, default='avatar1.png') 
+    avatar = models.CharField(max_length=20, default='avatar1.webp') 
     
     objects = UserManager()
     

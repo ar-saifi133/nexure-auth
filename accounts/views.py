@@ -71,7 +71,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
-            user.avatar = f'avatar{random.randint(1, 6)}.png'
+            user.avatar = f'avatar{random.randint(1, 30)}.webp'
             
             try:
                 user.save()
@@ -612,7 +612,7 @@ def profile_update_view(request):
            profile_form = ProfileUpdateForm(instance=user)  # blank copy
            if avatar_form.is_valid():
                avatar_form.save()
-               messages.success(request, "Avatar updated successfully!")
+               messages.success(request, "Changes saved successfully!")
                return redirect("accounts:profile")
 
 
