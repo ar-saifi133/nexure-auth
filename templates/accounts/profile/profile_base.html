@@ -9,7 +9,7 @@
 {% if messages %}
             <div class="mb-6  absolute top-[84px] left-[50%] z-10 translate-x-[-50%] w-[620px]">
                  {% for message in messages %} 
-                    <div class="msg px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between text-[14px] font-medium text-primary-black
+                    <div class="msg px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between  text-[14px] font-medium text-primary-black
                      {% if message.tags == 'success' %}
                     bg-success-blue/20 text-primary-black border border-success-blue/40
                      {% elif message.tags == 'warning' %}
@@ -28,14 +28,17 @@
     <div class='w-full h-[64px] bg-primary-white shadow-soft '>
         <div class="bg-primary-white fixed top-0 text-primary-black  w-full h-[64px] flex items-center justify-between px-[80px] shadow-[0 0 10px 0 rgba(0, 0, 0, 0.15]">
             <div class="  z-10">
-                <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px]">
+                <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px]  h-[36px]">
             </div>
-            <div class="flex gap-[14px] items-center"> 
+            <div class="flex gap-[14px] items-center "> 
             
-                <div class="bg-primary-white rounded-full h-8 w-8 flex items-center justify-center border-primary-black border ">
-                    <img loading='lazy' class='w-8 h-8 object-cover bg-center ' src="{% static 'avatars/'|add:user.avatar %}" class="w-20 h-20 rounded-full" alt="Avatar">
-                    
+                <div class="bg-white rounded-full h-8 w-8 flex items-center justify-center overflow-hidden">
+                    <img loading="lazy" 
+                        class="w-8 h-8 object-cover bg-center rounded-full" 
+                        src="{% static 'avatars/'|add:user.avatar %}" 
+                        alt="Avatar">
                 </div>
+
                 <div>
                     <div class='text-[14px] font-medium' >
                         {{user.full_name}}   

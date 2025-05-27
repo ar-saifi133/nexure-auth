@@ -377,7 +377,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class AvatarUpdateForm(forms.ModelForm):
    AVATAR_CHOICES = [
-       (f'avatar{i}.png', f'Avatar {i}') for i in range(1, 9)
+       (f'avatar{i}.webp', f'Avatar {i}') for i in range(1, 31)
    ]
 
 
