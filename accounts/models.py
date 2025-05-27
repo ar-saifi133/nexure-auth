@@ -63,6 +63,20 @@ class EmailVerificationToken(models.Model):
         return self.expires_at > timezone.now()
 
 
+class EmailChangeRequest(models.Model):   # New model for email change requests after verification
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    new_email = models.EmailField()
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def is_valid(self):
+        return self.expires_at > timezone.now()
+
+
+        
+
+
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reset_tokens')
     token = models.CharField(max_length=100, unique=True)

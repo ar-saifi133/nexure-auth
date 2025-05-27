@@ -1,5 +1,5 @@
-
-
+import datetime
+from django.utils import timezone
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth import get_user_model
@@ -11,6 +11,13 @@ from django.db import models
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import send_mail
+from .models import EmailChangeRequest
+from django.conf import settings
+from django.urls import reverse
+from django.template.loader import render_to_string
+from django.contrib import messages
+import uuid
 
 
 
@@ -334,19 +341,29 @@ class CustomSetPasswordForm(SetPasswordForm):
 class ProfileUpdateForm(forms.ModelForm):
 
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
 
-   class Meta:
-       model = User
-       fields = ['full_name', 'username', ]
-       widgets = {
-         'full_name': forms.TextInput(attrs={
-               'class': 'form-control border-2 text-[#000000] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
-           }),
-           'username': forms.TextInput(attrs={
-               'class': 'form-control text-primary-black focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
-           }),
-           
-       }
+
+
+
+    class Meta:
+        model = User
+        fields = ['full_name', 'username', 'email']
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'class': 'form-control border-2 text-[#000000] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control text-primary-black focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+            }),
+
+            'email': forms.EmailInput(attrs={ 
+                'class': 'form-control text-primary-black focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+            }),
+            
+        }
 
 
 
@@ -360,18 +377,69 @@ class ProfileUpdateForm(forms.ModelForm):
    #     self.fields['avatar'].initial = self.instance.avatar
 
 
-   def clean_email(self):
-       email = self.cleaned_data.get('email')
-       if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-           raise ValidationError(_("This email is already in use."))
-       return email
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError(_("This email is already in use."))
+        return email
 
 
-   def clean_username(self):
-       username = self.cleaned_data.get('username')
-       if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
-           raise ValidationError(_("This username is already in use."))
-       return username
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
+            raise ValidationError(_("This username is already in use."))
+        return username
+
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        new_email = self.cleaned_data.get('email')
+        
+        # Get ORIGINAL email from database, not form data
+        current_email = User.objects.get(pk=user.pk).email  # Critical fix
+        
+        if new_email != current_email:
+            # Delete previous requests
+            EmailChangeRequest.objects.filter(user=user).delete()
+            
+            # Create new request
+            token = uuid.uuid4()
+            expires_at = timezone.now() + datetime.timedelta(hours=24)
+            EmailChangeRequest.objects.create(
+                user=user,
+                new_email=new_email,
+                token=token,
+                expires_at=expires_at
+            )
+            
+            # Build verification URL
+            verification_url = self.request.build_absolute_uri(
+                reverse('accounts:verify_email_change', args=[str(token)])
+            )
+            
+            # Send email
+            subject = 'Verify Your New Email Address'
+            html_message = render_to_string('accounts/profile/email_change_verification.html', {
+                'user': user,
+                'verification_url': verification_url,
+                'expiry_time': '24 hours'
+            })
+            send_mail(
+                subject,
+                '',
+                settings.DEFAULT_FROM_EMAIL,
+                [new_email],
+                html_message=html_message,
+                fail_silently=False
+            )
+            messages.success(self.request, 'Verification link sent to your new email. Please check your inbox. After verification, you can log in with the new email.')
+            
+            # Revert to original email
+            user.email = current_email  # Now correctly uses original email
+
+        if commit:
+            user.save()
+        return user
 
 
 

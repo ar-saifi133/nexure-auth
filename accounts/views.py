@@ -31,7 +31,7 @@ from .forms import (
     AvatarUpdateForm,
     CustomPasswordChangeForm
 )
-from .models import PasswordResetToken, EmailVerificationToken
+from .models import PasswordResetToken, EmailVerificationToken, EmailChangeRequest
 from .serializers import CustomTokenObtainPairSerializer
 import logging
 from django.views.decorators.csrf import csrf_exempt
@@ -681,14 +681,24 @@ def profile_update_view(request):
 
    # ――― determine which form was posted ―――
    if request.method == "POST":
+       original_email = user.email  # Store the original email for comparison
+
        if "profile_submit" in request.POST:
            # username / email / full-name
-           profile_form = ProfileUpdateForm(request.POST, instance=user)
+           profile_form = ProfileUpdateForm(request.POST, instance=user, request=request)
            avatar_form  = AvatarUpdateForm(instance=user)  # blank copy
            if profile_form.is_valid():
+            #    profile_form.save()
+            #    messages.success(request, "Profile updated successfully!")
+            #    return redirect("accounts:profile")
+
+               submitted_email = profile_form.cleaned_data.get('email')
                profile_form.save()
-               messages.success(request, "Profile updated successfully!")
+               if submitted_email == original_email and profile_form.has_changed():
+                  messages.success(request, "Profile updated successfully!")
+                
                return redirect("accounts:profile")
+
 
 
        elif "avatar_submit" in request.POST:
@@ -761,8 +771,33 @@ def password_change_view(request):
 
 
 
+def verify_email_change(request, token):
+    try:
+        email_change = EmailChangeRequest.objects.get(token=token)
+        
+        if not email_change.is_valid():
+            messages.error(request, "Verification link has expired.")
+            return redirect('accounts:profile_update')
 
+        if User.objects.filter(email=email_change.new_email).exists():
+            messages.error(request, "This email is already in use.")
+            return redirect('accounts:profile_update')
 
+        # Update email and mark as verified
+        user = email_change.user
+        user.email = email_change.new_email
+        user.email_verified = True  # Add this line
+        user.save()
+        
+        # Cleanup
+        email_change.delete()
+        
+        messages.success(request, "Email updated successfully!")
+        return redirect('accounts:profile_update')
+
+    except EmailChangeRequest.DoesNotExist:
+        messages.error(request, "Invalid verification link.")
+        return redirect('accounts:profile_update')
 
 
 

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Change Verification</title>
+</head>
+<body>
+    <p>Hello {{ user.full_name }},</p>
+    <p>Please click the link below to verify your new email address:</p>
+    <p><a href="{{ verification_url }}">Verify Email</a></p>
+    <p>This link expires in {{ expiry_time }}.</p>
+</body>
+</html>

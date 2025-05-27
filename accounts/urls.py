@@ -20,6 +20,7 @@ urlpatterns = [
     # Email verification
     path('email-sent/', views.email_sent_view, name='email_sent'),
     path('verify-email/<uuid:token>/', views.verify_email_view, name='verify_email'),
+    path('verify-email-change/<uuid:token>/', views.verify_email_change, name='verify_email_change'),
     path('resend-verification/', views.resend_verification_view, name='resend_verification'),
     
     # Password reset
