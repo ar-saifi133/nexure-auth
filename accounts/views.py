@@ -1,66 +1,63 @@
+# Standard library imports
 import datetime
-import time
-from django.http import JsonResponse
-import uuid
+import logging
 import random
+import time
+import uuid
+from urllib.parse import urlparse
+
+# Django core imports
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout, get_user_model
+from django.contrib.auth import (
+    get_user_model, login, logout, update_session_auth_hash
+)
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail import EmailMessage, get_connection, send_mail
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
+# Third-party imports
+from django_ratelimit.decorators import ratelimit
 from rest_framework import status
-import logging
-from django.conf import settings
-from urllib.parse import urlparse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+# Local application imports
 from .forms import (
-    CustomUserCreationForm,
     CustomAuthenticationForm,
+    CustomPasswordChangeForm,
     CustomPasswordResetForm,
     CustomSetPasswordForm,
-    ProfileUpdateForm,
+    CustomUserCreationForm,
     DeleteAccountForm,
+    ProfileUpdateForm,
     AvatarUpdateForm,
-    CustomPasswordChangeForm
 )
-from .models import PasswordResetToken, EmailVerificationToken, EmailChangeRequest
+from .models import (
+    EmailChangeRequest,
+    EmailVerificationToken,
+    PasswordResetToken,
+)
 from .serializers import CustomTokenObtainPairSerializer
-import logging
-from django.views.decorators.csrf import csrf_exempt
-
-
-from django_ratelimit.decorators import ratelimit
-from django_ratelimit.core import is_ratelimited
-from django.contrib.auth import update_session_auth_hash
-
-
-
 
 logger = logging.getLogger(__name__)
-
 User = get_user_model()
 
 
 
 
-# @ratelimit(key='ip', rate='5/h', method='POST', block=True)
-# accounts/views.py
-from django.core.mail import send_mail, EmailMessage  # Added EmailMessage import
-from django.conf import settings
-import logging
-from django.utils.html import escape
 
-logger = logging.getLogger(__name__)
+
 
 @csrf_exempt
+@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def signup_view(request):
     """View for user registration with proper error handling"""
     if request.user.is_authenticated:
@@ -167,60 +164,8 @@ def verify_email_view(request, token):
 
 
 
-#@ratelimit(key='ip', rate='2/h', method='POST', block=True)
-# def resend_verification_view(request):
-#     """View to resend verification email"""
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-        
-#         try:
-#             user = User.objects.get(email=email)
-            
-#             if user.email_verified:
-#                 messages.info(request, 'Email is already verified. You can login now.')
-#                 return redirect('accounts:login')
-                
-#             # Delete any existing tokens
-#             EmailVerificationToken.objects.filter(user=user).delete()
-            
-#             # Create new token
-#             token = EmailVerificationToken.objects.create(
-#                 user=user,
-#                 expires_at=timezone.now() + datetime.timedelta(hours=24)
-#             )
-            
-#             # Build verification URL
-#             verification_url = request.build_absolute_uri(
-#                 reverse('accounts:verify_email', kwargs={'token': str(token.token)})
-#             )
 
-#             # Render the email content
-#             subject = 'Verify Your Email Address'
-#             message = render_to_string('accounts/email_verification.html', {
-#                 'user': user,
-#                 'verification_url': verification_url, 
-#                 'expiry_time': '24 hours'
-#             })
-            
-#             # Send verification email
-#             send_mail(
-#                 subject=subject,
-#                 message='',  # Empty message since we're using HTML
-#                 html_message=message,
-#                 from_email=settings.DEFAULT_FROM_EMAIL,
-#                 recipient_list=[user.email],
-#                 fail_silently=False
-#             )
-
-#             messages.success(request, 'Verification email has been resent. Please check your inbox.')
-#             return render(request, 'accounts/email_sent.html', {'email': user.email})
-            
-#         except User.DoesNotExist:
-#             messages.error(request, 'No account found with this email address.')
-    
-#     return render(request, 'accounts/resend_verification.html')
-
-
+@ratelimit(key='ip', rate='3/h', method='POST', block=True)
 def resend_verification_view(request):
     """View to resend verification email"""
     initial = {}
@@ -305,83 +250,9 @@ def resend_verification_view(request):
 
 
 
-# # @ratelimit(key='ip', rate='5/h', method='POST', block=True)
-# def login_view(request):
-#     """View for authenticating users with rate limiting"""
-#     redirect_uri = request.GET.get('redirect_uri')
-    
-#     # Validate redirect_uri
-#     allowed_domains = settings.ALLOWED_REDIRECT_DOMAINS
-#     if redirect_uri:
-#         domain = urlparse(redirect_uri).netloc.split(':')[0]
-#         if domain not in allowed_domains:
-#             logger.error(f"Invalid redirect_uri: {redirect_uri}")
-#             return HttpResponse("Invalid redirect URI", status=400)
-    
-#     if request.user.is_authenticated:
-#         if redirect_uri:
-#             # Generate tokens and send via POST
-#             serializer = CustomTokenObtainPairSerializer()
-#             token_data = serializer.get_token(request.user)
-#             access_token = str(token_data.access_token)
-#             refresh_token = str(token_data)
-#             return render(request, 'accounts/token_redirect.html', {
-#                 'redirect_uri': redirect_uri,
-#                 'access_token': access_token,
-#                 'refresh_token': refresh_token,
-#                 'user_id': request.user.id
-#             })
-#         else:
-#             return redirect('accounts:profile')
-        
-#     if request.method == 'POST':
-#         form = CustomAuthenticationForm(request, data=request.POST)
-        
-#         if form.is_valid():
-#             user = form.get_user()
-#             login(request, user)
-            
-#             # Additional check (safeguard)
-#             if not user.is_superuser and not user.email_verified:
-#                 logout(request)
-#                 request.session['verification_email'] = user.email
-#                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
-#                 return redirect('accounts:email_sent') 
-
-                  
-#             if redirect_uri:
-#                 # Generate tokens and send via POST
-#                 serializer = CustomTokenObtainPairSerializer()
-#                 token_data = serializer.get_token(user)
-#                 access_token = str(token_data.access_token)
-#                 refresh_token = str(token_data)
-#                 return render(request, 'accounts/token_redirect.html', {
-#                     'redirect_uri': redirect_uri,
-#                     'access_token': access_token,
-#                     'refresh_token': refresh_token,
-#                     'user_id': user.id
-#                 })
-#             else:
-#                 messages.success(request, 'Login successful!')
-#                 return redirect('accounts:profile')
-#         else:
-#             if hasattr(form, 'unverified_email') and form.unverified_email:
-#                 request.session['verification_email'] = form.unverified_email
-#                 messages.error(request, 'Email not verified. Please check your email or resend the verification link.')
-
-#                 return redirect('accounts:resend_verification')
-            
-#             # messages.error(request, 'Invalid email/username or password.')
-
-#     else:
-#         form = CustomAuthenticationForm()
-    
-#     return render(request, 'accounts/login.html', {'form': form, 'redirect_uri': redirect_uri})
 
 
-
-
-
+@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def login_view(request):
     """View for authenticating users with rate limiting"""
     redirect_uri = request.GET.get('redirect_uri')
@@ -494,15 +365,6 @@ def password_reset_email_sent_view(request):
 
 
 
-from django.contrib.auth import logout
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.utils.http import url_has_allowed_host_and_scheme
-from urllib.parse import urlencode
-import logging
-
-logger = logging.getLogger(__name__)
-
 @login_required
 def logout_view(request):
     """Centralized auth-server logout supporting multiple clients."""
@@ -577,7 +439,7 @@ def profile_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-# @ratelimit(key='ip', rate='2/h', method='POST', block=True)
+@ratelimit(key='ip', rate='3/h', method='POST', block=True)
 def password_reset_request(request):
     """View to request a password reset"""
     if request.method == 'POST':
@@ -677,8 +539,6 @@ def profile_update_view(request):
 
    user = request.user
 
-
-
    # ――― determine which form was posted ―――
    if request.method == "POST":
        original_email = user.email  # Store the original email for comparison
@@ -754,13 +614,15 @@ def delete_account_view(request):
         print(f"Error in delete_account_view: {str(e)}")
         raise
 
+
+
 @login_required
 def password_change_view(request):
     if request.method == 'POST':
         form = CustomPasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.user)  # Keep user logged in
+            update_session_auth_hash(request, form.user) 
             messages.success(request, 'Password updated successfully!')
             return redirect('accounts:profile')
     else:
@@ -803,22 +665,6 @@ def verify_email_change(request, token):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from django.core.mail import send_mail, get_connection
-
 try:
     connection = get_connection()
     connection.open()
@@ -831,5 +677,3 @@ except Exception as e:
 def terms_view(request):
  
     return render(request, 'accounts/terms.html')
-
-

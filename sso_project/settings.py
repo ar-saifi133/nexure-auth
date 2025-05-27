@@ -7,18 +7,6 @@ load_dotenv()
 
 
 
-
-# # CORS settings
-# # CORS settings
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:3000',
-#     'http://127.0.0.1:3000',
-#     'http://localhost:8005',  # Added client app
-#     'http://127.0.0.1:8005',
-# ]
-# CORS_ALLOW_CREDENTIALS = True
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -13,20 +13,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     Custom User model with email as the unique identifier
     """
     username = models.CharField(
-        _('username'),
-        max_length=30,
-        unique=True,
-        help_text=_('Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[
-            RegexValidator(
-                regex=r'^[\w.@+-]+$',
-                message=_('Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.')
-            )
-        ],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        }
-    )
+            _('username'),
+            max_length=30,
+            unique=True,
+            help_text=_('Required. 30 characters or fewer. Letters, digits and ./+/-/_ only.'),
+            validators=[
+                RegexValidator(
+                    regex=r'^[\w.+-]+$', 
+                    message=_('Enter a valid username. This value may contain only letters, numbers, and ./+/-/_ characters.')
+                )
+            ],
+            error_messages={
+                'unique': _("A user with that username already exists."),
+            }
+        )
     email = models.EmailField(_('email address'), unique=True)
     full_name = models.CharField(_('full name'), max_length=150)
     is_staff = models.BooleanField(default=False)
@@ -63,7 +63,7 @@ class EmailVerificationToken(models.Model):
         return self.expires_at > timezone.now()
 
 
-class EmailChangeRequest(models.Model):   # New model for email change requests after verification
+class EmailChangeRequest(models.Model):  
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     new_email = models.EmailField()
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
