@@ -70,3 +70,15 @@ class UserAPIView(generics.RetrieveUpdateAPIView):
     
     def get_object(self):
         return self.request.user
+
+    
+# class AvatarImageView(APIView):
+#     permission_classes = [IsAuthenticated]
+#     authentication_classes = [JWTAuthentication]
+
+#     def get(self, request):
+#         user = request.user
+#         avatar_path = os.path.join(settings.STATIC_ROOT, 'avatars', user.avatar)
+#         if os.path.exists(avatar_path):
+#             return FileResponse(open(avatar_path, 'rb'), content_type='image/webp')
+#         return HttpResponseNotFound('Avatar not found')
