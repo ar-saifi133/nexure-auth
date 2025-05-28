@@ -677,3 +677,14 @@ except Exception as e:
 def terms_view(request):
  
     return render(request, 'accounts/terms.html')
+
+
+
+
+# from django.core.exceptions import SuspiciousOperation
+
+# def trigger_400(request):
+#     raise SuspiciousOperation("Intentional Bad Request")
+
+# def trigger_500(request):
+#     raise Exception("Intentional Server Error")
