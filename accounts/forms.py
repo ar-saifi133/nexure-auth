@@ -369,13 +369,6 @@ class ProfileUpdateForm(forms.ModelForm):
 
 
 
-
-   # def __init__(self, *args, **kwargs):
-   #     super().__init__(*args, **kwargs)
-   #     # Initialize avatar selection with current avatar
-   #     self.fields['avatar'].initial = self.instance.avatar
-
-
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
