@@ -358,6 +358,9 @@ class ProfileUpdateForm(forms.ModelForm):
            'username': forms.TextInput(attrs={
                'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
            }),
+           'email': forms.EmailInput(attrs={
+               'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+           }),
            
        }
 
