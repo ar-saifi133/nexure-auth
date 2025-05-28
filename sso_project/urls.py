@@ -22,7 +22,8 @@ urlpatterns = [
 
 
 
-
+# Code for handling errors # This code handles custom error pages for 404, 403, and 500 errors.
+# Custom error handlers
 
 from django.conf.urls import handler404, handler500, handler403
 from django.shortcuts import render
