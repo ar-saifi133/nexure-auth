@@ -4,7 +4,7 @@ import logging
 import random
 import time
 import uuid
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 
 # Django core imports
 from django.conf import settings
