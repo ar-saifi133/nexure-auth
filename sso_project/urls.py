@@ -10,3 +10,32 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.conf.urls import handler404, handler500, handler403
+from django.shortcuts import render
+
+def custom_404_view(request, exception):
+    return render(request, 'errors/404.html', status=404)
+
+def custom_403_view(request, exception):
+    return render(request, 'errors/403.html', status=403)
+
+def custom_500_view(request):
+    return render(request, 'errors/500.html', status=500)
+
+handler404 = custom_404_view
+handler403 = custom_403_view
+handler500 = custom_500_view
