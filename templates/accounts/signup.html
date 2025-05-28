@@ -262,7 +262,7 @@
                     
                     <div class='flex flex-col gap-[16px]'>
                         <div class=' text-[12px]  font-medium'>
-                            By singing up, your consent to EnsightPlus <a href="#" class="font-semibold underline">Terms of Use</a> and <a href="#" class=" underline font-semibold">Privacy Policy</a>.
+                            By singing up, your consent to EnsightPlus <a href="{% url 'accounts:terms' %}" class="font-semibold underline">Terms of Use</a> and <a href="{% url 'accounts:terms' %}" class=" underline font-semibold">Privacy Policy</a>.
                         </div>
                         <button type="submit" class="w-full bg-primary-black text-[16px] font-medium text-white  rounded-[13px] hover:bg-primary-black/80 hover:shadow-none focus:outline-none h-[52px] transition-all duration-300  shadow-[0px_6px_10px_0px_rgba(0,0,0,0.20)]">
                             Create Account
@@ -273,9 +273,9 @@
             
         </div>
         <div class='w-full h-[60px] flex justify-center  gap-[12px] font-light text-[12px]' >
-            <div>Privacy Policy</div>
-            <div>Terms of Use</div>
-            <div> &#169; 2025 All right reserved to Enord Pvt. Ltd.</div>
+            <a href="{% url 'accounts:terms' %}">Privacy Policy</a>
+            <a href="{% url 'accounts:terms' %}">Terms of Use</a>
+            <a href="{% url 'accounts:terms' %}"> &#169; 2025 All right reserved to Enord Pvt. Ltd.</a>
 
         </div>
 
