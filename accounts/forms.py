@@ -348,21 +348,21 @@ class ProfileUpdateForm(forms.ModelForm):
 
 
 
-   class Meta:
-       model = User
-       fields = ['full_name', 'username', ]
-       widgets = {
-         'full_name': forms.TextInput(attrs={
-               'class': ' text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
-           }),
-           'username': forms.TextInput(attrs={
-               'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
-           }),
-           'email': forms.EmailInput(attrs={
-               'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
-           }),
-           
-       }
+    class Meta:
+        model = User
+        fields = ['full_name', 'username', ]
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'class': ' text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
+            }),
+            'username': forms.TextInput(attrs={
+                'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+            }),
+            
+        }
 
 
 

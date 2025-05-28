@@ -2,92 +2,119 @@
 {% load static %}
 
 
+
+
 {% block content1 %}
 <div class="  ">
-   <div class="bg-white rounded-xl shadow-md overflow-hidden h-s  b ">
-       <div class=" pt-[10px] pl-[30px] ">
-           {% load static %}
+  <div class="bg-white rounded-xl shadow-md overflow-hidden h-s  b ">
+      <div class=" pt-[10px] pl-[30px] ">
+          {% load static %}
 <h2 class="text-[#000000]  font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Edit Profile</h2>
+
+
 
 
 {# ────────── details form ────────── #}
 <form method="post"
 novalidate
-     class="space-y-4 pb-8 pl-8  max-w-[700px] "
-     enctype="multipart/form-data">
-   {% csrf_token %}
+    class="space-y-4 pb-8 pl-8  max-w-[700px] "
+    enctype="multipart/form-data">
+  {% csrf_token %}
 
 
-   {% for field in profile_form %}
-      <div class="flex flex-row justify-between  " >
-           <label for="{{ field.id_for_label }}"
-                  class=" flex items-center w-[105px] h-[41px] items-center text-[14px] text-black font-medium">
-               {{ field.label }}
-           </label>
 
 
-           <div class=" flex flex-col gap-[5px]">
-               <div class="">
-                   {{ field }}
-               </div>
-               {% if field.errors %}
-               <p class="mt-1 text-sm text-error-500 flex flex-row gap-[10px] items-center">
-                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                       <path d="M6.99996 4.08329C7.32079 4.08329 7.58329 4.34579 7.58329 4.66663V6.99996C7.58329 7.32079 7.32079 7.58329 6.99996 7.58329C6.67913 7.58329 6.41663 7.32079 6.41663 6.99996V4.66663C6.41663 4.34579 6.67913 4.08329 6.99996 4.08329ZM6.99413 1.16663C3.77413 1.16663 1.16663 3.77996 1.16663 6.99996C1.16663 10.22 3.77413 12.8333 6.99413 12.8333C10.22 12.8333 12.8333 10.22 12.8333 6.99996C12.8333 3.77996 10.22 1.16663 6.99413 1.16663ZM6.99996 11.6666C4.42163 11.6666 2.33329 9.57829 2.33329 6.99996C2.33329 4.42163 4.42163 2.33329 6.99996 2.33329C9.57829 2.33329 11.6666 4.42163 11.6666 6.99996C11.6666 9.57829 9.57829 11.6666 6.99996 11.6666ZM7.58329 9.91663H6.41663V8.74996H7.58329V9.91663Z" fill="#F44336"/>
-                       </svg>
-                      
-                   {{ field.errors.0 }}
-               </p>
-               {% endif %}
-           </div>  
+  {% for field in profile_form %}
+     <div class="flex flex-row justify-between  " >
+          <label for="{{ field.id_for_label }}"
+                 class=" flex items-center w-[105px] h-[41px] items-center text-[14px] text-black font-medium">
+              {{ field.label }}
+          </label>
+
+
+
+
+          <div class=" flex flex-col gap-[5px]">
+              <div class="">
+                  {{ field }}
+              </div>
+              {% if field.errors %}
+              <p class="mt-1 text-sm text-error-500 flex flex-row gap-[10px] items-center">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.99996 4.08329C7.32079 4.08329 7.58329 4.34579 7.58329 4.66663V6.99996C7.58329 7.32079 7.32079 7.58329 6.99996 7.58329C6.67913 7.58329 6.41663 7.32079 6.41663 6.99996V4.66663C6.41663 4.34579 6.67913 4.08329 6.99996 4.08329ZM6.99413 1.16663C3.77413 1.16663 1.16663 3.77996 1.16663 6.99996C1.16663 10.22 3.77413 12.8333 6.99413 12.8333C10.22 12.8333 12.8333 10.22 12.8333 6.99996C12.8333 3.77996 10.22 1.16663 6.99413 1.16663ZM6.99996 11.6666C4.42163 11.6666 2.33329 9.57829 2.33329 6.99996C2.33329 4.42163 4.42163 2.33329 6.99996 2.33329C9.57829 2.33329 11.6666 4.42163 11.6666 6.99996C11.6666 9.57829 9.57829 11.6666 6.99996 11.6666ZM7.58329 9.91663H6.41663V8.74996H7.58329V9.91663Z" fill="#F44336"/>
+                      </svg>
+                    
+                  {{ field.errors.0 }}
+              </p>
+              {% endif %}
+          </div>
+
+
+
+
+        
+      </div>
+
+
+
+
+
+
+
+
+  {% endfor %}
+
+
+  <div class="w-full  flex flex-col gap-[16px]">
+   <div class=" w-full flex flex-row justify-between ">
+       <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Email</div>
+       <div class=" font-medium text-sm text-[#8c8c8c] flex  focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+           {{ user.email }}
        </div>
-   {% endfor %}
-
-   <div class="w-full  flex flex-col gap-[16px]">
-    <div class=" w-full flex flex-row justify-between ">
-        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Email</div>
-        <div class=" font-medium text-sm text-[#8c8c8c] flex  focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
-            {{ user.email }}
-        </div>
-       
-    </div>
-   
-    <div class=" w-full flex flex-row justify-between ">
-        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Password</div>
-        <a href="{% url 'accounts:password_change' %}" class=" flex text-[#8c8c8c] font-medium text-sm border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
-            <div class="flex flex-row gap-[10px]">
-               
-                <div>
-                    Change password
-                </div>
-                <svg style="margin-top: 3.5px;" width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.99461 10.0637L8.32805 5.73029L6.26975 3.67199L1.93631 8.00543C1.8766 8.06512 1.83421 8.1399 1.81367 8.2218L1.33337 10.6667L3.77778 10.1864C3.85985 10.1658 3.93493 10.1234 3.99461 10.0637ZM9.72698 4.33136C9.90182 4.15647 10 3.91929 10 3.67199C10 3.4247 9.90182 3.18752 9.72698 3.01263L8.98741 2.27306C8.81252 2.09822 8.57535 2 8.32805 2C8.08075 2 7.84358 2.09822 7.66868 2.27306L6.92911 3.01263L8.98741 5.07093L9.72698 4.33136Z" fill="#8C8C8C"/>
-                    </svg>
-                   
-            </div>
-        </a>
-       
-    </div>
+     
+   </div>
+ 
+   <div class=" w-full flex flex-row justify-between ">
+       <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Password</div>
+       <a href="{% url 'accounts:password_change' %}" class=" flex text-[#8c8c8c] font-medium text-sm border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+           <div class="flex flex-row gap-[10px]">
+             
+               <div>
+                   Change password
+               </div>
+               <svg style="margin-top: 3.5px;" width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M3.99461 10.0637L8.32805 5.73029L6.26975 3.67199L1.93631 8.00543C1.8766 8.06512 1.83421 8.1399 1.81367 8.2218L1.33337 10.6667L3.77778 10.1864C3.85985 10.1658 3.93493 10.1234 3.99461 10.0637ZM9.72698 4.33136C9.90182 4.15647 10 3.91929 10 3.67199C10 3.4247 9.90182 3.18752 9.72698 3.01263L8.98741 2.27306C8.81252 2.09822 8.57535 2 8.32805 2C8.08075 2 7.84358 2.09822 7.66868 2.27306L6.92911 3.01263L8.98741 5.07093L9.72698 4.33136Z" fill="#8C8C8C"/>
+                   </svg>
+                 
+           </div>
+       </a>
+     
+   </div>
 </div>
 
 
 
-   <div class="flex justify-end space-x-4">
-       <a href="{% url 'accounts:profile' %}"
-          class="box-border flex justify-center items-center w-[149px] h-[36px]
-                 border border-[rgba(140,140,140,0.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
-           <span class="font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
-       </a>
 
 
-       {# hidden flag tells the view which form was submitted #}
-       <button type="submit" name="profile_submit"
-               class="box-border flex justify-center items-center w-[149px] h-[36px]
-                      bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
-                      rounded-[10px]">
-           <span class="font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
-       </button>
-   </div>
+
+  <div class="flex justify-end space-x-4">
+      <a href="{% url 'accounts:profile' %}"
+         class="box-border flex justify-center items-center w-[149px] h-[36px]
+                border border-[rgba(140,140,140,0.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
+          <span class="font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
+      </a>
+
+
+
+
+      {# hidden flag tells the view which form was submitted #}
+      <button type="submit" name="profile_submit"
+              class="box-border flex justify-center items-center w-[149px] h-[36px]
+                     bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
+                     rounded-[10px]">
+          <span class="font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
+      </button>
+  </div>
 </form>
 
 
@@ -96,214 +123,263 @@ novalidate
 <h2 class="text-[#000000] font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Change Avatar</h2>
 
 
+
+
 <form method="post"
-     class="space-y-6 pb-8 pl-8 pr-[622px] border-2 border-[#000000]"
-     enctype="multipart/form-data">
-   {% csrf_token %}
+    class="space-y-6 pb-8 pl-8 pr-[622px] border-2 border-[#000000]"
+    enctype="multipart/form-data">
+  {% csrf_token %}
 
 
-   <div class="avatar-selection">
-       <label class="block text-sm font-medium text-gray-700 mb-4">
-           {{ avatar_form.avatar.label }}
-       </label>
 
 
-       <div class="flex flex-wrap gap-6">
-           {% for choice in avatar_form.avatar %}
-               <label class="avatar-option relative cursor-pointer">
-                   {{ choice.tag }}
-                   <img src="{% static 'avatars/'|add:choice.data.value %}"
-                        class="w-20 h-20 rounded-full border-2 border-transparent
-                               hover:border-primary-500 transition-all">
-               </label>
-           {% endfor %}
-       </div>
+  <div class="avatar-selection">
+      <label class="block text-sm font-medium text-gray-700 mb-4">
+          {{ avatar_form.avatar.label }}
+      </label>
 
 
-       {% if avatar_form.avatar.errors %}
-           <p class="mt-1 text-sm text-error-500">
-               {{ avatar_form.avatar.errors.0 }}
-           </p>
-       {% endif %}
-   </div>
 
 
-   <div class="flex justify-end">
-       <button type="submit" name="avatar_submit"
-               class="box-border flex justify-center items-center w-[149px] h-[36px]
-                      bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
-                      rounded-[10px]">
-           <span class="font-semibold text-[12px] leading-[15px] text-black">Update&nbsp;Avatar</span>
-       </button>
-   </div>
+      <div class="flex flex-wrap gap-6">
+          {% for choice in avatar_form.avatar %}
+              <label class="avatar-option relative cursor-pointer">
+                  {{ choice.tag }}
+                  <img src="{% static 'avatars/'|add:choice.data.value %}"
+                       class="w-20 h-20 rounded-full border-2 border-transparent
+                              hover:border-primary-500 transition-all">
+              </label>
+          {% endfor %}
+      </div>
+
+
+
+
+      {% if avatar_form.avatar.errors %}
+          <p class="mt-1 text-sm text-error-500">
+              {{ avatar_form.avatar.errors.0 }}
+          </p>
+      {% endif %}
+  </div>
+
+
+
+
+  <div class="flex justify-end">
+      <button type="submit" name="avatar_submit"
+              class="box-border flex justify-center items-center w-[149px] h-[36px]
+                     bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
+                     rounded-[10px]">
+          <span class="font-semibold text-[12px] leading-[15px] text-black">Update&nbsp;Avatar</span>
+      </button>
+  </div>
 </form> -->
 
 
 
 
-       </div>
-   </div>
+
+
+
+
+      </div>
+  </div>
 </div>
+
+
+
+
 
 
 
 
 {# ─────────── Avatar modal ─────────── #}
 <div id="avatarModal"
-    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 ">
-  <!-- modal panel -->
-  <div class="bg-white  shadow-xl w-[460px] h-[514px] rounded-[18px] p-8 space-y-6
-             animate-scale-in ">
-
-
-   <h2 class="text-xl font-semibold text-center ">Select an Avatar</h2>
-
-
-   <form method="post" enctype="multipart/form-data" class="  ">
-       <div class="h-[364px]  overflow-y-scroll custom-scrollbar ">
-           {% csrf_token %}
-
-
-       <div class="flex flex-wrap gap-[10px] justify-center border-none">
-           {% for choice in avatar_form.avatar %}
-              <label class="cursor-pointer relative rounded-[999px]">
-                   <input type="radio" name="avatar" value="{{ choice.data.value }}" class="hidden peer" />
-                
-                   <div class="rounded-[999px] border border-[#000000] peer-checked:border-1 peer-checked:border-[#33ccff] transition-all">
-                     {{ choice.tag }}
-                     <img src="{% static 'avatars/'|add:choice.data.value %}"
-                          class="w-20 h-20 rounded-full border-1 border-transparent hover:border-primary-500 transition-all">
-                   </div>
-                 </label>
+   class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 ">
+ <!-- modal panel -->
+ <div class="bg-white  shadow-xl w-[460px] h-[514px] rounded-[18px] p-8 space-y-6
+            animate-scale-in ">
 
 
 
-           {% endfor %}
-       </div>
+
+  <h2 class="text-xl font-semibold text-center ">Select an Avatar</h2>
 
 
-       {% if avatar_form.avatar.errors %}
-           <p class="text-center text-sm text-error-500 ">
-               {{ avatar_form.avatar.errors.0 }}
-           </p>
-       {% endif %}
 
 
-       </div>
-       <div class="flex justify-center gap-4 pt-4">
-           <button type="button"
-                   onclick="toggleAvatarModal(false)"
-                   class="box-border w-[179px] h-[36px] border
-                          border-[rgba(140,140,140,.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
-               Cancel
-           </button>
+  <form method="post" enctype="multipart/form-data" class="  ">
+      <div class="h-[364px]  overflow-y-scroll custom-scrollbar ">
+          {% csrf_token %}
 
 
-           <button type="submit" name="avatar_submit"
-                    class="box-border w-[179px] h-[36px] bg-[#33CCFF] border border-[#03AFDD] rounded-[10px] hover:bg-[#03AFDD] transition-all duration-300 ">
-               Save
-           </button>
-       </div>
-   </form>
- </div>
+
+
+      <div class="flex flex-wrap gap-[10px] justify-center border-none">
+          {% for choice in avatar_form.avatar %}
+             <label class="cursor-pointer relative rounded-[999px]">
+                  <input type="radio" name="avatar" value="{{ choice.data.value }}" class="hidden peer" />
+              
+                  <div class="rounded-[999px] border border-[#000000] peer-checked:border-1 peer-checked:border-[#33ccff] transition-all">
+                    {{ choice.tag }}
+                    <img src="{% static 'avatars/'|add:choice.data.value %}"
+                         class="w-20 h-20 rounded-full border-1 border-transparent hover:border-primary-500 transition-all">
+                  </div>
+                </label>
+
+
+
+
+
+
+          {% endfor %}
+      </div>
+
+
+
+
+      {% if avatar_form.avatar.errors %}
+          <p class="text-center text-sm text-error-500 ">
+              {{ avatar_form.avatar.errors.0 }}
+          </p>
+      {% endif %}
+
+
+
+
+      </div>
+      <div class="flex justify-center gap-4 pt-4">
+          <button type="button"
+                  onclick="toggleAvatarModal(false)"
+                  class="box-border w-[179px] h-[36px] border
+                         border-[rgba(140,140,140,.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
+              Cancel
+          </button>
+
+
+
+
+          <button type="submit" name="avatar_submit"
+                   class="box-border w-[179px] h-[36px] bg-[#33CCFF] border border-[#03AFDD] rounded-[10px] hover:bg-[#03AFDD] transition-all duration-300 ">
+              Save
+          </button>
+      </div>
+  </form>
+</div>
 </div>
 
 
 
+
+
+
 <script>
-   // simple helper to show / hide
-   function toggleAvatarModal(show) {
-       const modal = document.getElementById('avatarModal');
-       if (show) {
-           modal.classList.remove('hidden');
-       } else {
-           modal.classList.add('hidden');
-       }
-   }
-    // close when clicking outside the panel
-   document.getElementById('avatarModal').addEventListener('click', (e) => {
-       if (e.target.id === 'avatarModal') toggleAvatarModal(false);
-   });
- </script>
-  <!-- optional Tailwind "scale-in" animation (add once in your CSS) -->
- <style>
- @keyframes scale-in {
-     0%   {transform: scale(.95); opacity: 0;}
-     100% {transform: scale(1);   opacity: 1;}
- }
- .animate-scale-in {animation: scale-in .15s ease-out;}
- </style>
- <style>
-   .avatar-option {
-   transition: transform 0.2s !important;
+  // simple helper to show / hide
+  function toggleAvatarModal(show) {
+      const modal = document.getElementById('avatarModal');
+      if (show) {
+          modal.classList.remove('hidden');
+      } else {
+          modal.classList.add('hidden');
+      }
+  }
+   // close when clicking outside the panel
+  document.getElementById('avatarModal').addEventListener('click', (e) => {
+      if (e.target.id === 'avatarModal') toggleAvatarModal(false);
+  });
+</script>
+ <!-- optional Tailwind "scale-in" animation (add once in your CSS) -->
+<style>
+@keyframes scale-in {
+    0%   {transform: scale(.95); opacity: 0;}
+    100% {transform: scale(1);   opacity: 1;}
+}
+.animate-scale-in {animation: scale-in .15s ease-out;}
+</style>
+<style>
+  .avatar-option {
+  transition: transform 0.2s !important;
 }
 
 
-    .avatar-option:hover {
-    transform: scale(1.00) !important;
-    }
+
+
+   .avatar-option:hover {
+   transform: scale(1.00) !important;
+   }
+
+
 
 
 .avatar-option img {
-   border: 2px solid transparent !important;
-   
+  border: 2px solid transparent !important;
+ 
 }
+
+
 
 
 .avatar-option input:checked + img {
-   border-color: #33ccff !important;
+  border-color: #33ccff !important;
   
-   
 }
 </style>
+
+
 
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-   // Handle avatar selection styling
-   const avatarOptions = document.querySelectorAll('.avatar-option');
-  
+  // Handle avatar selection styling
+  const avatarOptions = document.querySelectorAll('.avatar-option');
    avatarOptions.forEach(option => {
-       const radio = option.querySelector('input[type="radio"]');
-      
-       // Set initial selected state
-       if (radio.checked) {
-           option.querySelector('img').classList.add('border-primary-500');
-       }
+      const radio = option.querySelector('input[type="radio"]');
+    
+      // Set initial selected state
+      if (radio.checked) {
+          option.querySelector('img').classList.add('border-primary-500');
+      }
 
 
-       // Update on click
-       option.addEventListener('click', () => {
-           avatarOptions.forEach(opt => {
-               opt.querySelector('img').classList.remove('border-primary-500');
-           });
-           option.querySelector('img').classList.add('border-primary-500');
-       });
-   });
+
+
+      // Update on click
+      option.addEventListener('click', () => {
+          avatarOptions.forEach(opt => {
+              opt.querySelector('img').classList.remove('border-primary-500');
+          });
+          option.querySelector('img').classList.add('border-primary-500');
+      });
+  });
 });
 </script>
 
 
+
+
 <style>
 .avatar-option input[type="radio"] {
-   position: absolute;
-   opacity: 0;
-   pointer-events: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
-   /* Custom scrollbar styles */
-   .custom-scrollbar::-webkit-scrollbar {
-     width: 5px;
-     height: 50px; /* Only used for horizontal scrollbar */
-   }
-  
+  /* Custom scrollbar styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 50px; /* Only used for horizontal scrollbar */
+  }
    .custom-scrollbar::-webkit-scrollbar-thumb {
-     background-color: #8c8c8c;
-     border-radius: 4px;
-   }
-  
+    background-color: #8c8c8c;
+    border-radius: 4px;
+  }
    .custom-scrollbar::-webkit-scrollbar-track {
-     background: transparent;
-   }
+    background: transparent;
+  }
+
 
 </style>
 {% endblock %}
+
+
+
+
