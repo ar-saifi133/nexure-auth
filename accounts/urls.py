@@ -30,6 +30,7 @@ urlpatterns = [
     path('password-change/', views.password_change_view, name='password_change'),
     
     # API endpoints
+    path('api/avatar/image/', api_views.AvatarImageView.as_view(), name='user-avatar-image'),
     path('api/register/', api_views.RegisterAPIView.as_view(), name='api_register'),
     path('api/token/', api_views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

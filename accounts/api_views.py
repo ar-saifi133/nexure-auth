@@ -4,6 +4,11 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+import os
+from django.conf import settings
+from django.http import FileResponse, HttpResponseNotFound
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .serializers import (
     UserSerializer,
@@ -70,3 +75,15 @@ class UserAPIView(generics.RetrieveUpdateAPIView):
     
     def get_object(self):
         return self.request.user
+
+    
+class AvatarImageView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request):
+        user = request.user
+        avatar_path = os.path.join(settings.STATIC_ROOT, 'avatars', user.avatar)
+        if os.path.exists(avatar_path):
+            return FileResponse(open(avatar_path, 'rb'), content_type='image/webp')
+        return HttpResponseNotFound('Avatar not found')
