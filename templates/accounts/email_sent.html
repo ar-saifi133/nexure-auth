@@ -8,14 +8,14 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
 
   <div class="absolute top-[30px] left-[54px] z-10">
-    <img src="{% static 'img/ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px]">
+    <img src="{% static 'img/ensight.svg' %}" alt="Logo" class="max-[900px]:w-[80px] max-[900px]:h-[19px] w-[160px] h-[36px]">
   </div> 
   
   <div class='w-full h-screen flex flex-col items-center justify-center'>
     {% if messages %}
-      <div class="msg w-[620px]">
+      <div class="msg w-[620px] max-[825px]:w-[368px] max-[450px]:w-[288px] ">
         {% for message in messages %} 
-          <div class="min-h-[68px] px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
+          <div class=" max-[825px]:text-[11px] min-h-[68px] px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
             {% if message.tags == 'success' %}
               bg-success-blue/20 text-primary-white border border-success-blue/40
             {% elif message.tags == 'error' %}
@@ -33,10 +33,10 @@
       </div>
     {% endif %}
 
-    <div class='w-[620px] px-[60px] py-[60px] bg-primary-grey/60 border border-primary-white/40 rounded-[16px] flex flex-col items-center justify-center gap-[28px]'>
+    <div class='max-[700px]:w-[400px] max-[500px]:w-[320px] max-[500px]:px-[40px] w-[620px] px-[60px] py-[60px] bg-primary-grey/60 border border-primary-white/40 rounded-[16px] flex flex-col items-center justify-center gap-[28px]'>
       <div class='w-full flex flex-col items-center justify-center gap-[24px]'>
-        <h2 class='text-accent-blue text-[24px] font-semibold w-full text-center'>Verify Your Account</h2>
-        <p class='text-primary-white text-[16px] font-medium w-full text-center'>
+        <h2 class='max-[500px]:text-[18px] text-accent-blue text-[24px] font-semibold w-full text-center'>Verify Your Account</h2>
+        <p class='max-[500px]:text-[12px] text-primary-white text-[16px] font-medium w-full text-center'>
           We’ve sent an email to
           <strong><a class='underline' href="mailto:{{ email }}">{{ email }}</a></strong>
           with a link to verify your email. If not, check your spam folder or request a new verification email.
@@ -44,18 +44,18 @@
       </div>
       
       <div id="resend-container" class="text-center">
-        <p id="countdown" class="text-[12px] font-medium text-primary-white">
+        <p id="countdown" class="max-[500px]:text-[10px] text-[12px] font-medium text-primary-white">
           Resend in <span id="timer" class="font-medium text-[12px] text-accent-blue">02:00</span>
         </p>
         <button id="resend-button"
-           class="hidden bg-accent-blue rounded-[18px] h-[48px] w-[300px] text-[16px] font-semibold flex justify-center items-center no-underline text-primary-black">
+           class="max-[700px]:w-[290px] max-[500px]:w-[240px] max-[500px]:text-[13px] hidden bg-accent-blue rounded-[18px] h-[48px] w-[300px] text-[16px] font-semibold flex justify-center items-center no-underline text-primary-black">
           Resend Mail
         </button>
       </div>
     </div> 
   </div>
 
-  <div class='w-full h-[60px] flex justify-center gap-[12px] font-light text-[12px] text-primary-white'>
+  <div class='max-[550px]:h-[100px] max-[550px]:py-5 max-[550px]:block max-[550px]:text-[12px] max-[550px]:justify-center w-full h-[60px] flex justify-center gap-[12px] font-light text-[12px] text-primary-white'>
     <a href="{% url 'accounts:terms' %}">Privacy Policy</a>
     <a href="{% url 'accounts:terms' %}">Terms of Use</a>
     <a href="{% url 'accounts:terms' %}">© 2025 All rights reserved to Enord Pvt. Ltd.</a>

@@ -5,7 +5,7 @@
 {% block content1 %}
 <div class="  ">
    <div class="bg-white rounded-xl shadow-md overflow-hidden h-s  b ">
-       <div class=" pt-[10px] pl-[30px] ">
+       <div class="max-[600px]:pl-[1px] max-[1200px]:pr-[20px] max-[600px]:pr-[10px] pt-[10px] pl-[30px] ">
            {% load static %}
 <h2 class="text-[#000000]  font-semibold text-[16px] mb-6 pt-8 pl-[28px]">Edit Profile</h2>
 
@@ -13,7 +13,7 @@
 {# ────────── details form ────────── #}
 <form method="post"
 novalidate
-     class="space-y-4 pb-8 pl-8  max-w-[700px] "
+     class="max-[500px]:pb-3 max-[500px]:pl-3 space-y-4 pb-8 pl-8  max-w-[700px] "
      enctype="multipart/form-data">
    {% csrf_token %}
 
@@ -21,7 +21,7 @@ novalidate
    {% for field in profile_form %}
       <div class="flex flex-row justify-between  " >
            <label for="{{ field.id_for_label }}"
-                  class=" flex items-center w-[105px] h-[41px] items-center text-[14px] text-black font-medium">
+                  class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] flex items-center w-[105px] h-[41px] items-center text-[14px] text-black font-medium">
                {{ field.label }}
            </label>
 
@@ -52,16 +52,16 @@ novalidate
 
    <div class="w-full  flex flex-col gap-[16px]">
     <div class=" w-full flex flex-row justify-between ">
-        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Email</div>
-        <div class=" font-medium text-sm text-[#8c8c8c] flex  focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+        <div class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Email</div>
+        <div class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] max-[600px]:text-[12px] font-medium text-sm text-[#8c8c8c] flex  focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
             {{ user.email }}
         </div>
        
     </div>
    
     <div class=" w-full flex flex-row justify-between ">
-        <div class=" w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Password</div>
-        <a href="{% url 'accounts:password_change' %}" class=" flex text-[#8c8c8c] font-medium text-sm border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
+        <div class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] w-[105px] h-[41px] flex items-center text-[14px] text-black font-medium">Password</div>
+        <a href="{% url 'accounts:password_change' %}" class="max-[500px]:text-[12px] max-[400px]:text-[10px]  max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] max-[600px]:text-[12px] flex text-[#8c8c8c] font-medium text-sm border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 items-center">
             <div class="flex flex-row gap-[10px]">
                
                 <div>
@@ -79,11 +79,11 @@ novalidate
 
 
 
-   <div class="flex justify-end space-x-4">
+   <div class="max-[800px]:justify-center flex justify-end space-x-4">
        <a href="{% url 'accounts:profile' %}"
-          class="box-border flex justify-center items-center w-[149px] h-[36px]
+          class="flex justify-center items-center w-[149px] h-[36px]
                  border border-[rgba(140,140,140,0.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
-           <span class="font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
+           <span class="max-[500px]:text-[10px] font-semibold text-[12px] leading-[15px] text-black">Cancel</span>
        </a>
 
 
@@ -92,7 +92,7 @@ novalidate
                class="box-border flex justify-center items-center w-[149px] h-[36px]
                       bg-[#33CCFF] border border-[#03AFDD] shadow-[0px_3px_5px_rgba(0,0,0,0.1)]
                       rounded-[10px]">
-           <span class="font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
+           <span class="max-[500px]:text-[10px] font-semibold text-[12px] leading-[15px] text-black">Save&nbsp;Changes</span>
        </button>
    </div>
 </form>
@@ -159,11 +159,11 @@ novalidate
 <div id="avatarModal"
     class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 ">
   <!-- modal panel -->
-  <div class="bg-white  shadow-xl w-[460px] h-[514px] rounded-[18px] p-8 space-y-6
+  <div class="max-[600px]:w-[350px] max-[600px]:h-[500px] max-[500px]:w-[320px] max-[500px]:h-[500px] bg-white  shadow-xl w-[460px] h-[514px] rounded-[18px] p-8 space-y-6
              animate-scale-in ">
 
 
-   <h2 class="text-xl font-semibold text-center ">Select an Avatar</h2>
+   <h2 class=" max-[600px]:text-[14px] text-xl font-semibold text-center ">Select an Avatar</h2>
 
 
    <form method="post" enctype="multipart/form-data" class="  ">
@@ -200,14 +200,14 @@ novalidate
        <div class="flex justify-center gap-4 pt-4">
            <button type="button"
                    onclick="toggleAvatarModal(false)"
-                   class="box-border w-[179px] h-[36px] border
+                   class="max-[600px]:text-[12px] max-[600px]:h-[30px] box-border w-[179px] h-[36px] border
                           border-[rgba(140,140,140,.3)] rounded-[10px] hover:bg-accent-grey/10  transition-all duration-300">
                Cancel
            </button>
 
 
            <button type="submit" name="avatar_submit"
-                    class="box-border w-[179px] h-[36px] bg-[#33CCFF] border border-[#03AFDD] rounded-[10px] hover:bg-[#03AFDD] transition-all duration-300 ">
+                    class="max-[600px]:h-[30px] max-[600px]:text-[12px] box-border w-[179px] h-[36px] bg-[#33CCFF] border border-[#03AFDD] rounded-[10px] hover:bg-[#03AFDD] transition-all duration-300 ">
                Save
            </button>
        </div>

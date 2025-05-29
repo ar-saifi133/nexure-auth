@@ -7,23 +7,26 @@
 
 
 {% block content %}
-<div class="flex min-h-[calc(100vh+60px)]  h-full w-full ">
+<div class="flex min-h-[calc(100vh+60px)]  h-full w-full max-[725px]:justify-center">
     <!-- Left Column: Form -->
-    <div class="w-[54%] flex  bg-[#FFFFFF] font-montserrat items-center flex-col  ">
+    <div class=" max-[725px]:w-full max-[500px]:top-[20px]  w-[54%] flex  bg-[#FFFFFF] font-montserrat items-center flex-col  ">
         <!-- Section 1: Top "Sign Up" Link -->
-        <div class="flex flex-row justify-end  h-[60px] w-full">
-            <div class="h-[28px] mt-[30px] mr-[66px] gap-[21px] flex  ">
+        <div class=" flex flex-row justify-end  h-[60px] w-full">
+            <div class="max-[725px]:block  hidden max-[500px]:top-[20px]  absolute top-[30px] left-[54px] z-10 max-[725px]:left-[24px]">
+                <img src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px] h-[36px] max-[725px]:w-[80px] max-[725px]:h-[19px]">                
+            </div>
+            <div class="h-[28px] max-[500px]:mt-[20px] mt-[30px] mr-[66px] gap-[21px] flex max-[725px]:mr-[20px] max-[450px]:mr-[10px] max-[500px]:gap-[10px] ">
                
-                    <span class=" text-black text-center flex items-center
+                    <span class="max-[500px]:text-[10px]   text-black text-center flex items-center
                      font-inter text-[14px] text-[var(--Typeface-size-body-1,14px)]
                      not-italic font-normal leading-none">Don't have an account?
                     </span>
-                    <a href="{% url 'accounts:signup' %}" class="rounded-[5px] bg-white
+                    <a href="{% url 'accounts:signup' %}" class="ax-[500px]:text-[10px] max-[500px]:w-[80px] max-[500px]:h-[24px]  rounded-[5px] bg-white
                      shadow-[1.5px_3.5px_9px_0px_rgba(0,0,0,0.15)] text-center text-[var(--text-selected-state,#000)]
                       font-inter text-[var(--Typeface-size-body-2,12px)]
                       font-medium not-italic leading-none w-[100px] flex justify-center items-center flex gap-[8px] hover:gap-[11px]
                       transition-all duration-300 ">
-                        <span class="text-[12px]">Sign Up</span> <span class="w-[10px] h-[8px] "><img src="{% static 'img/arrow-icon.svg' %}"/>  </span>
+                        <span class="max-[500px]:text-[10px] max-[12px]">Sign Up</span> <span class="w-[10px] h-[8px] "><img src="{% static 'img/arrow-icon.svg' %}"/>  </span>
                     </a>
                
             </div>
@@ -35,18 +38,18 @@
 
 
         <!-- Section 2: Central Login Form Block -->
-        <div class="w-[440px] h-[calc(100%-120px)] p-[20px]">
+        <div class="w-[440px] h-[calc(100%-120px)] p-[20px] ">
             <div class="w-full h-full flex justify-center items-center flex-col">
                 <div class="mb-[24px] mt-[20px] w-[400px] text-center"> <!-- Margin bottom for "LOG IN" title: 32px -->
-                    <h2 class="text-black text-center font-montserrat text-[24px] not-italic font-bold leading-normal capitalize  ">
+                    <h2 class="max-[500px]:text-[16px] text-black text-center font-montserrat text-[24px] not-italic font-bold leading-normal capitalize  ">
                         LOG IN</h2>
                         
                 </div>
 
                 {% if messages %}
-            <div class="mb-2 w-full">
+            <div class="mb-2 w-full max-[825px]:flex max-[825px]:justify-center">
                  {% for message in messages %} 
-                    <div class="msg px-6 py-3 rounded-[10px] flex items-center justify-between text-[14px] font-medium text-primary-black
+                    <div class="max-[825px]:w-[368px] max-[450px]:w-[288px] max-[825px]:text-[11px] px-6 py-3 rounded-[10px] flex items-center justify-between text-[14px] font-medium text-primary-black
                      {% if message.tags == 'success' %}
                     bg-success-blue/20 text-primary-black border border-success-blue/40
                     {% elif message.tags == 'warning' %}
@@ -56,7 +59,7 @@
                     bg-primary-white text-primary-800
                     {% endif %}
                     ">
-                        <span class='flex justify-center w-[calc(100%-25px)] ' >{{ message }} </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
+                        <span class=' flex justify-center w-[calc(100%-25px)] ' >{{ message }} </span> <span class="cursor-pointer" onclick="this.closest('.msg').remove()" > <img src='{% static "img/close-icon.svg" %}' /></span>
                     </div>
                 {% endfor %}
             </div>
@@ -65,14 +68,14 @@
 
                
    
-                <form method="post" class="w-full  " novalidate> <!-- Space between form groups: 16px -->
+                <form method="post" class="w-full max-[825px]:px-4 max-[450px]:px-14 " novalidate> <!-- Space between form groups: 16px -->
                     {% csrf_token %}
    
                     {% if form.non_field_errors %}
-                        <div class="msg flex w-[400px] h-[44px] justify-center items-center gap-[10px] mb-[20px] rounded-[10px]
+                        <div class="max-[825px]:w-[368px] max-[450px]:w-[288px] msg flex w-[400px] h-[44px] justify-center items-center gap-[10px] mb-[20px] rounded-[10px]
                         border border-[rgba(244,67,54,0.4)] bg-[rgba(244,67,54,0.2)]" role="alert">
                             {% for error in form.non_field_errors %}
-                                <p class=" w-full  h-[44px]  flex justify-center items-center text-black text-center
+                                <p class="max-[825px]:text-[11px] w-full  h-[44px]  flex justify-center items-center text-black text-center
                                 font-montserrat text-[14px]
                                 font-medium not-italic leading-normal">{{ error }} <div class="mr-[14px]"><span class="cursor-pointer"
                                     onclick="this.closest('.msg').remove()" ><img  src='{% static "img/close-icon.svg" %}' /></span></div></p>
@@ -80,7 +83,7 @@
                         </div>
                     {% endif %}
    
-                    <div class=" flex flex-col gap-[24px]  ">
+                    <div class=" flex flex-col gap-[24px] max-[500px]:gap-[14px] ">
                         {# Label is effectively the placeholder set in forms.py #}
                        <div class='relative w-full'>
                         {{ form.username }}
@@ -103,12 +106,13 @@
                                              /* when input already has content (not placeholder)   */
                                              peer-[&:not(:placeholder-shown)]:-top-2
                                              peer-[&:not(:placeholder-shown)]:text-xs
-                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]
+                                             peer-[&:not(:placeholder-shown)]:text-[#4A4A4A]">
                                    Username/Email*
                                </label>
                         
                         {% if form.username.errors %}
-                      <div class="flex gap-[10px]">  <span class="mt-[10px] "><img src="{% static 'img/error.svg' %}"/>  </span>
+                      <div class=" flex gap-[10px]">  <span class="mt-[10px] "><img src="{% static 'img/error.svg' %}"/>  </span>
                         <p class="text-[#F44336] text-left mt-[10px] font-[Montserrat] text-[10px]
                         not-italic font-medium leading-none flex items-center">{{ form.username.errors.0 }}</p></div>
                         {% endif %}
@@ -135,9 +139,12 @@
                                              /* when input already has content (not placeholder)   */
                                              peer-[&:not(:placeholder-shown)]:-top-2
                                              peer-[&:not(:placeholder-shown)]:text-xs
-                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]">
+                                             peer-[&:not(:placeholder-shown)]:bg-[#fff]
+                                             peer-[&:not(:placeholder-shown)]:text-[#4A4A4A]
+                                             ">
                                    Password*
                                </label>
+                               
                         <button
                             type="button"
                             class="absolute top-4 right-5 text-primary-black flex items-center z-10"
@@ -169,7 +176,7 @@
                         {% endif %}
                        </div>
                     </div>
-                    <div class="text-right mt-[2px] mb-[12px]"> <!-- Margin top for "Forgot Password?": 8px -->
+                    <div class=" text-right mt-[2px] mb-[12px]"> <!-- Margin top for "Forgot Password?": 8px -->
                         <a href="{% url 'accounts:password_reset_request' %}" class="text-[rgba(0,0,0,0.5)] text-center
                         font-montserrat text-[12px] not-italic font-medium  tracking-[0.24px]">
                             Forgot Password?
@@ -178,7 +185,7 @@
    
                     <div>
                         <button type="submit"
-                            class="w-full h-[52px] bg-black text-white py-0 px-5 rounded-[13px]  font-medium flex items-center justify-center">
+                            class="max-[500px]:text-[12px]  w-full h-[52px] bg-black text-white py-0 px-5 rounded-[13px]  font-medium flex items-center justify-center">
                             {# Explicit h-[44px], py-0 because height is fixed. flex items-center justify-center to center text #}
                             Log in to your account
                         </button>
@@ -191,7 +198,7 @@
 
 
         <!-- Section 3: Bottom Footer Links -->
-     <div class="flex justify-center whitespace-normal  h-[60px] ">
+     <div class="flex justify-center whitespace-normal  h-[60px] max-[450px]:h-[100px] max[450px]:block max-[450px]:flex max-[450px]:flex-col max-[500px]:items-center">
            <div><a href="{% url 'accounts:terms' %}" class="mr-[11px] text-[color:var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-none ">Privacy Policy</a></div>
             <div><a href="{% url 'accounts:terms' %}" class="mr-[11px] text-[var(--text-selected-state,#000)] font-montserrat text-[12px] not-italic font-light leading-normal">Terms of Use</a></div>
            
@@ -213,7 +220,7 @@
 
 
     <!-- Right Column: Branding (MODIFIED SECTION) -->
-    <div class="w-[46%]   bg-black relative overflow-hidden">
+    <div class="max-[725px]:hidden w-[46%]   bg-black relative overflow-hidden">
        
 
 
@@ -279,7 +286,3 @@
   });
 </script>
 {% endblock %}
-
-
-
-

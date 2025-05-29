@@ -5,29 +5,29 @@
 {% block title %}Your Profile - Auth Ensight Plus{% endblock %}
 
 {% block content1 %}
-<div class="max-w-full h-full">
-    <div class="bg-white  shadow-soft rounded-[12px] overflow-hidden">
-        <div class="md:flex w-full">
+<div class="max-w-full h-full ">
+    <div class="bg-white  shadow-soft rounded-[12px] overflow-hidden ">
+        <div class="md:flex w-full ">
             
-            <div class=" py-10  px-[60px] w-full">
+            <div class="max-[600px]:px-[20px] max-[600px]:px-[10px]  py-10  px-[60px] w-full " >
                 <h2 class="text-[16px] font-semibold mb-7">Personal Details</h2>
                 
                 <div class="space-y-7 w-full max-w-[700px]">
                    
                         <div class="w-full flex flex-col space-y-4 gap-4">
                             <div class="flex items-center h-10 justify-between max-w-[700px] w-full " >
-                                <p class="text-[14px] font-medium overflow-hidden  ">Full Name</p>
-                                <p class="font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.full_name }}</p>
+                                <p class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] text-[14px] font-medium overflow-hidden  ">Full Name</p>
+                                <p class=" max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.full_name }}</p>
                             </div>
 
                             <div class='flex items-center h-10 justify-between max-w-[700px] w-full'>
-                                <p class="text-[14px] font-medium">Username</p>
-                                <p class="font-medium text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.username }}</p>
+                                <p class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] text-[14px] font-medium">Username</p>
+                                <p class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] font-medium text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.username }}</p>
                             </div>
 
                             <div class='flex items-center h-10 justify-between max-w-[700px] w-full'>
-                                <p class="text-[14px] font-medium">Email Address</p>
-                                <p class="font-medium text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.email }}</p>
+                                <p class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] text-[14px] font-medium">Email Address</p>
+                                <p class="max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] text-[14px] border overflow-hidden border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center">{{ user.email }}</p>
                             </div>
                         </div>
                    
@@ -35,12 +35,12 @@
                     
                     
                     
-                    <div class="flex justify-end space-x-4 ">
+                    <div class="max-[800px]:justify-center flex justify-end space-x-4 ">
                         
-                        <button onclick="openDeleteModal()" class=" font-semibold text-[12px] w-[150px] justify-center border h-9  border-error-red flex items-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0   transition-all duration-300">
+                        <button onclick="openDeleteModal()" class="  max-[500px]:text-[10px] font-semibold text-[12px] w-[150px] justify-center border h-9  border-error-red flex items-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0   transition-all duration-300">
                             Delete Account
                         </button>
-                        <div class="font-semibold text-[12px] border h-9  border-accent-grey/30 hover:bg-accent-grey/10 w-[150px] justify-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0  transition-all duration-300 flex items-center">  
+                        <div class="max-[500px]:text-[10px] font-semibold text-[12px] border h-9  border-accent-grey/30 hover:bg-accent-grey/10 w-[150px] justify-center bg-primary-white text-error-red  px-4 rounded-[10px] focus:outline-none focus:ring-0  transition-all duration-300 flex items-center">  
                             <a href="{% url 'accounts:logout' %}" class="flex text-primary-black items-center">
                                 Logout
                             </a>
@@ -52,8 +52,8 @@
         </div>
     </div>
 </div>
-<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden ">
-  <div class="bg-white rounded-[16px]  px-[36px] py-[40px] max-w-[680px] w-full" id="modalContent">
+<div id="deleteModal" class=" fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center px-4 justify-center hidden ">
+  <div class="  bg-white rounded-[16px] max-[680px]:p-3 px-[36px] py-[40px] max-w-[680px] w-full " id="modalContent">
     <!-- Form will be loaded here -->
   </div>
 </div>

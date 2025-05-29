@@ -109,9 +109,9 @@
   
    <main class="container w-full max-w-full min-h-[calc(100vh+60px)]">
       {% comment %} {% if messages %}
-           <div class="mb-6 msg">
+           <div class="max-[900px]:w-[368px] max-[450px]:w-[288px] mb-6 msg">
                 {% for message in messages %}
-                   <div class=" px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
+                   <div class=" max-[900px]:text-[11px] px-6 py-3 rounded-[10px] mb-5 flex items-center justify-between text-[14px] font-medium text-primary-black
                     {% if message.tags == 'success' %}
                    bg-success-blue/20 text-primary-black border border-success-blue/40
                     {% elif message.tags == 'warning' %}

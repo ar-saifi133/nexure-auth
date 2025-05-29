@@ -7,9 +7,9 @@
 
 {% block content %}
 {% if messages %}
-            <div class="mb-6  absolute top-[84px] left-[50%] z-10 translate-x-[-50%] w-[620px]">
+            <div class=" max-[900px]:w-[368px] max-[450px]:w-[288px] mb-6  absolute top-[84px] left-[50%] z-10 translate-x-[-50%] w-[620px]">
                  {% for message in messages %} 
-                    <div class="msg px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between  text-[14px] font-medium text-primary-black
+                    <div class="max-[900px]:text-[11px] msg px-6 py-3 rounded-[10px] mb-5 flex text-center items-center justify-between  text-[14px] font-medium text-primary-black
                      {% if message.tags == 'success' %}
                     bg-success-blue/20 text-primary-black border border-success-blue/40
                      {% elif message.tags == 'warning' %}
@@ -24,11 +24,11 @@
                 {% endfor %}
             </div>
         {% endif %}
-<div class='w-full h-full bg-secondary-white min-h-[calc(100vh+60px)] max-h-full' >
-    <div class='w-full h-[64px] bg-primary-white shadow-soft '>
-        <div class="bg-primary-white fixed top-0 text-primary-black  w-full h-[64px] flex items-center justify-between px-[80px] shadow-[0 0 10px 0 rgba(0, 0, 0, 0.15]">
+<div class='w-full h-full bg-secondary-white min-h-[calc(100vh+60px)] max-h-full ' >
+    <div class=' w-full h-[64px] bg-primary-white shadow-soft  '>
+        <div class="  [700px]:px-[30px] max-[800px]:px-[30px]  max-[400px]:px-[10px] bg-primary-white fixed top-0 text-primary-black  w-full h-[64px] flex items-center justify-between px-[80px] shadow-[0 0 10px 0 rgba(0, 0, 0, 0.15]">
             <div class="  z-10">
-                <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class="w-[160px]  h-[36px]">
+                <img loading='lazy' src="{% static 'img/black-ensight.svg' %}" alt="Logo" class=" max-[900px]:w-[80px] max-[600px]:h-[19px] w-[160px]  h-[36px]">
             </div>
             <div class="flex gap-[14px] items-center "> 
             
@@ -40,10 +40,10 @@
                 </div>
 
                 <div>
-                    <div class='text-[14px] font-medium' >
+                    <div class='max-[600px]:text-[10px] text-[14px] font-medium' >
                         {{user.full_name}}   
                     </div>
-                    <div class='text-[12px] font-normal'>
+                    <div class='max-[500px]:text-[10px] text-[12px] font-normal'>
                         {{user.username}}
                     </div>
                 </div>
@@ -51,104 +51,106 @@
         </div>
     </div>
     
-    <div class='text-primary-black px-[80px] py-[40px] h-[calc(100% - 64px)] min-h-full  max-h-full flex '>
-        <div class=' w-[310px] h-full '>
-            <ul class='flex flex-col gap-[40px] fixed pt-[60px] '>
+    <div class=' max-[800px]:px-[30px] max-[600px]:px-[30px] max-[500px]:px-[20px] max-[400px]:px-[5px] text-primary-black px-[80px] py-[40px] h-[calc(100% - 64px)] min-h-full  max-h-full flex  max-[900px]:block'>
+        <div class=' w-[310px] h-full   max-[900px]:w-full '>
+            <ul class=' flex flex-col gap-[40px] fixed pt-[60px] max-[900px]:flex-row max-[900px]:flex max-[900px]:-mt-[90px] max-[800px]:overflow-x-auto whitespace-nowrap w-full gap-[20px]  max-[800px]:pr-[50px] '>
                 
-                <li class="w-fit">
-                    <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile' %}">
-                        <img loading='lazy' src="{% static 'img/profile.svg' %}" alt="icon">
-
-                <span class="relative inline-block">
-                    Personal Details
+                <div class="flex flex-col gap-[40px] fixed max-[900px]:bg-[#ffffff] max-[900px]:rounded-[12px] max-[900px]:px-4 max-[900px]:py-2 max-[900px]:flex-row max-[900px]:flex max-[800px]:overflow-x-auto whitespace-nowrap w-full gap-[20px]   max-[800px]:pr-[50px]">
+                    <li class="w-fit ">
+                        <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile' %}">
+                            <img loading='lazy' src="{% static 'img/profile.svg' %}" alt="icon">
+    
+                    <span class="relative inline-block max-[900px]:text-[12px] ">
+                        Personal Details
+                        <!-- Base underline -->
+                    <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
+                               
+        {% if request.path == '/accounts/profile/' %}
+         <!-- we’re on the profile page: full-width, no transition -->
+         <span
+         class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+         ></span>
+         {% else %}
+          <!-- not active: zero-width until hover -->
+          <span
+            class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+          ></span>
+        {% endif %}
+    </span>
+            </a>
+        </li>
+        <li class="w-fit ">
+            <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile_update' %}">
+                <img loading='lazy' src="{% static 'img/edit.svg' %}" alt="icon">
+                
+                <span class="relative inline-block max-[900px]:text-[12px] ">
+                    Edit Profile
+                    {{ profile_update_url }}  
                     <!-- Base underline -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                           
-    {% if request.path == '/accounts/profile/' %}
-     <!-- we’re on the profile page: full-width, no transition -->
-     <span
-     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
-     ></span>
-     {% else %}
-      <!-- not active: zero-width until hover -->
-      <span
-        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
-      ></span>
-    {% endif %}
-</span>
-        </a>
-    </li>
-    <li class="w-fit">
-        <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile_update' %}">
-            <img loading='lazy' src="{% static 'img/edit.svg' %}" alt="icon">
-            
-            <span class="relative inline-block">
-                Edit Profile
-                {{ profile_update_url }}  
-                <!-- Base underline -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                <!-- Hover underline (color transition left to right) -->
-                
-    {% if request.path == '/accounts/profile/update/' %}
-     <!-- we’re on the profile page: full-width, no transition -->
-     <span
-     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
-     ></span>
-     {% else %}
-      <!-- not active: zero-width until hover -->
-      <span
-        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
-      ></span>
-    {% endif %}
-                {% comment %} <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span></span> {% endcomment %}
-            </a>
-        </li>
-        <li class="w-fit">
-            <a class="flex gap-[10px] items-center group" href="{% url 'accounts:password_change' %}">
-                <img loading='lazy' src="{% static 'img/password-icon.svg' %}" alt="icon">
-
-                <span class="relative inline-block">
-                Change Password
-                <!-- Base underline -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                           
-    {% if request.path == '/accounts/password-change/' %}
-     <!-- we’re on the profile page: full-width, no transition -->
-     <span
-     class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
-     ></span>
-     {% else %}
-      <!-- not active: zero-width until hover -->
-      <span
-        class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
-      ></span>
-    {% endif %}
-</span>
-            </a>
-        </li>
-        <li class="w-fit">
-            <a class="flex gap-[10px] items-center group" href="{% url 'accounts:terms' %}">
-                <img loading='lazy' src="{% static 'img/security-icon.svg' %}" alt="icon">
-
-                <span class="relative inline-block">
-                Terms & Policy
-                <!-- Base underline -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
-                <!-- Hover underline (color transition left to right) -->
-                <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span>
-                </span>
-            </a>
-        </li>
+                    <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
+                    <!-- Hover underline (color transition left to right) -->
+                    
+        {% if request.path == '/accounts/profile/update/' %}
+         <!-- we’re on the profile page: full-width, no transition -->
+         <span
+         class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+         ></span>
+         {% else %}
+          <!-- not active: zero-width until hover -->
+          <span
+            class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+          ></span>
+        {% endif %}
+                    {% comment %} <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span></span> {% endcomment %}
+                </a>
+            </li>
+            <li class="w-fit ">
+                <a class="flex gap-[10px] items-center group" href="{% url 'accounts:password_change' %}">
+                    <img loading='lazy' src="{% static 'img/password-icon.svg' %}" alt="icon">
+    
+                    <span class="relative inline-block max-[900px]:text-[12px] ">
+                    Change Password
+                    <!-- Base underline -->
+                    <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
+                               
+        {% if request.path == '/accounts/password-change/' %}
+         <!-- we’re on the profile page: full-width, no transition -->
+         <span
+         class="absolute bottom-0 left-0 h-[2px] w-full bg-accent-blue transition-none z-10"
+         ></span>
+         {% else %}
+          <!-- not active: zero-width until hover -->
+          <span
+            class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue group-hover:w-full transition-all duration-500 z-10"
+          ></span>
+        {% endif %}
+    </span>
+                </a>
+            </li>
+            <li class="w-fit ">
+                <a class="flex gap-[10px] items-center group" href="{% url 'accounts:terms' %}">
+                    <img loading='lazy' src="{% static 'img/security-icon.svg' %}" alt="icon">
+    
+                    <span class="relative inline-block max-[900px]:text-[12px] ">
+                    Terms & Policy
+                    <!-- Base underline -->
+                    <span class="absolute bottom-0 left-0 h-[2px] w-full bg-primary-black/5"></span>
+                    <!-- Hover underline (color transition left to right) -->
+                    <span class="absolute bottom-0 left-0 h-[2px] w-0 bg-accent-blue transition-all duration-500 group-hover:w-full z-10"></span>
+                    </span>
+                </a>
+            </li>
+                </div>
 
 
             </ul>
 
         </div>
-        <div class='w-[calc(100%-310px)] flex flex-col gap-[12px]'>
+        <div class='max-[900px]:pt-[20px] w-[calc(100%-310px)] flex flex-col gap-[12px] max-[900px]:w-full '>
             <div class='w-full shadow-soft rounded-[12px] px-10 h-[128px] flex justify-start items-center bg-primary-white '>
                 <div class='flex gap-[60px]' >
-                <div class='h-[80px] w-[80px] rounded-[50%] border border-primary-black'>
-                     <img loading='lazy' src="{% static 'avatars/'|add:user.avatar %}" class="w-20 h-20 rounded-full" alt="Avatar">
+                <div class=' h-[80px] w-[80px] rounded-[50%] border border-primary-black'>
+                     <img loading='lazy' src="{% static 'avatars/'|add:user.avatar %}" class=" w-20 h-20 rounded-full" alt="Avatar">
                      {% if request.path == '/accounts/profile/update/' %}
                     <!--   the button that opens the modal   -->
                     <button type="button"
@@ -163,8 +165,8 @@
                     </button>
                     {% endif %}
                 </div>
-                <div class='flex flex-col justify-center'>
-                    <div class='text-[20px] font-semibold'> 
+                <div class='flex flex-col justify-center '>
+                    <div class='max-[450px]:text-[14px] max-[600px]:text-[16px] text-[20px] font-semibold'> 
                         {{user.full_name}}
                      </div>
                      <div class='text-[12px] font-normal'>
