@@ -99,7 +99,7 @@ class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
         label=_("Username"),
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Username*'}),
+        widget=forms.TextInput(attrs={'class': ' form-control w-full h-11 rounded-[10px] border border-[color: #8C8C8C] pl-5', 'placeholder': 'Username*'}),
         validators=[
             RegexValidator(
                 regex=r'^[\w.@+-]+$',
@@ -125,13 +125,13 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={  'class': 'form-control text-sm font-medium w-full h-11 rounded-[10px] border border-accent-grey pl-5  focus:ring-0 focus:outline-none focus:border-accent-grey placeholder:text-sm placeholder:font-light', 'placeholder': 'Email*'}),
+        widget=forms.EmailInput(attrs={  'class': ' form-control text-sm font-medium w-full h-11 rounded-[10px] border border-accent-grey pl-5  focus:ring-0 focus:outline-none focus:border-accent-grey placeholder:text-sm placeholder:font-light', 'placeholder': 'Email*'}),
         validators=[validate_temp_email]
     )
     
     password1 = forms.CharField(
         label=_("Password"),
-        widget=forms.PasswordInput(attrs={ "id": "id_password1", 'class': ' form-control pr-10', 'placeholder': 'Password*'}),
+        widget=forms.PasswordInput(attrs={ "id": "id_password1", 'class': '  form-control pr-10', 'placeholder': 'Password*'}),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
@@ -180,7 +180,7 @@ class CustomPasswordResetForm(PasswordResetForm):
             attrs={
                 "id": "reset-email",
                 "class": (
-                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "peer block max-[700px]:w-[290px] max-[500px]:w-[240px] w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
                     "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
                     "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
                     "transition-colors duration-200"
@@ -197,7 +197,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 
         # Base input class
         base_input_class = (
-            "  peer block bg-transparent  placeholder-transparent transition-colors duration-200 form-control w-full h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
+            "  peer block bg-transparent   placeholder-transparent transition-colors duration-200 form-control w-full  h-11 rounded-[10px] border border-[color:#8C8C8C] pl-5 "
             "focus:ring-0 focus:outline-none focus:border-accent-grey "
             "text-[12px] font-medium placeholder:text-[12px ] placeholder:font-light"
         )
@@ -298,7 +298,7 @@ class CustomSetPasswordForm(SetPasswordForm):
         attrs={
         "id": "first-password",
                 "class": (
-                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "peer block max-[700px]:w-[290px] max-[500px]:w-[240px] w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
                     "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
                     "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
                     "transition-colors duration-200"
@@ -316,7 +316,7 @@ class CustomSetPasswordForm(SetPasswordForm):
         attrs={
             "id": "second-password",
                 "class": (
-                    "peer block w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
+                    "peer block max-[700px]:w-[290px] max-[500px]:w-[240px] w-[470px] h-[44px] rounded-[10px] border-[1px] border-gray-400 "
                     "bg-transparent px-7 pt-1.5 pb-2 text-[12px] text-[#FFFFFF] "
                     "placeholder-transparent focus:border-[#8c8c8c] focus:outline-none "
                     "transition-colors duration-200"
@@ -353,15 +353,16 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['full_name', 'username', 'email']
         widgets = {
             'full_name': forms.TextInput(attrs={
-                'class': ' text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
+              'class': 'max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
             }),
             'username': forms.TextInput(attrs={
-                'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
+              'class': 'max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
             }),
             'email': forms.EmailInput(attrs={
-                'class': ' text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
-            }),
-            
+             'class': 'text-primary-black text-[14px] focus:outline-none focus:ring-0 box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] h-[40px] px-5 py-3 '
+             'w-[441px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] '
+             'max-[600px]:text-[12px] max-[500px]:text-[12px] max-[400px]:text-[10px]'
+}),
         }
 
 
@@ -494,17 +495,17 @@ class CustomPasswordChangeForm(forms.Form):
     old_password = forms.CharField(
         label=_("Current Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={'class': ' focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal', 'placeholder': 'Current Password*'})
+        widget=forms.PasswordInput(attrs={'class': 'max-[500px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal', 'placeholder': 'Current Password*'})
     )
     new_password1 = forms.CharField(
         label=_("New Password"),
-        widget=forms.PasswordInput(attrs={'class': " focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'New Password*'}),
+        widget=forms.PasswordInput(attrs={'class': "max-[500px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px]  focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'New Password*'}),
         help_text=_("Password must be at least 8 characters with uppercase, lowercase, numbers and symbols."),
         validators=[validate_password_complexity]
     )
     new_password2 = forms.CharField(
         label=_("Confirm New Password"),
-        widget=forms.PasswordInput(attrs={'class': " focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'Confirm Password*'})
+        widget=forms.PasswordInput(attrs={'class': "max-[500px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px]  focus:outline-none font-medium text-[14px] overflow-hidden border border-accent-grey/30 rounded-[10px] w-[400px] px-[20px] h-10 flex items-center placeholder:text-[12px] placeholder:font-normal", 'placeholder': 'Confirm Password*'})
     )
 
     def __init__(self, *args, user=None, **kwargs):

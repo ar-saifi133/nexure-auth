@@ -1,0 +1,18 @@
+DEBUG=True
+SECRET_KEY=django-insecure-test-key-for-development-only
+# DATABASE_URL=postgres://mrgulrez:mrgulrez@localhost:5432/central_auth
+ALLOWED_HOSTS=localhost,127.0.0.1,192.168.161.10,0.0.0.0,192.168.161.10
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:8005,http://127.0.0.1:8005, http://localhost:8000
+
+DB_NAME=sso_db
+DB_USER=krish
+DB_PASSWORD=2003
+DB_HOST=localhost
+DB_PORT=5432
+
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER='enord.ros@gmail.com'
+EMAIL_HOST_PASSWORD='ufxd bjhp finw cvuy'
