@@ -350,19 +350,20 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['full_name', 'username', 'email']
+        fields = ['email', 'full_name', 'username']
         widgets = {
+            'email': forms.EmailInput(attrs={
+             'class': 'text-primary-black text-[14px] focus:outline-none focus:ring-0 box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] h-[40px] px-5 py-3 '
+             'w-[441px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] '
+             'max-[600px]:text-[12px] max-[500px]:text-[12px] max-[400px]:text-[10px]'
+            }),
             'full_name': forms.TextInput(attrs={
               'class': 'max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] text-[#000000] text-[14px] border-[#33ccff] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3 focus:border-[rgba(140,140,140,0.3)]'
             }),
             'username': forms.TextInput(attrs={
               'class': 'max-[500px]:text-[12px] max-[400px]:text-[10px] max-[600px]:text-[12px] max-[400px]:text-[10px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] text-primary-black text-[14px] focus:outline-none focus:ring-0 w-[441px] box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] w-[441px] h-[40px] px-5 py-3'
             }),
-            'email': forms.EmailInput(attrs={
-             'class': 'text-primary-black text-[14px] focus:outline-none focus:ring-0 box-border border border-[rgba(140,140,140,0.3)] rounded-[10px] h-[40px] px-5 py-3 '
-             'w-[441px] max-[1100px]:w-[300px] max-[1000px]:w-[250px] max-[950px]:w-[200px] max-[900px]:w-[400px] max-[800px]:w-[300px] max-[700px]:w-[200px] '
-             'max-[600px]:text-[12px] max-[500px]:text-[12px] max-[400px]:text-[10px]'
-}),
+            
         }
 
 

@@ -58,7 +58,7 @@
         <div class=' w-[310px] h-full   max-[900px]:w-full '>
             <ul class=' flex flex-col gap-[40px] fixed pt-[60px] max-[900px]:flex-row max-[900px]:flex max-[900px]:-mt-[90px] max-[800px]:overflow-x-auto whitespace-nowrap w-full gap-[20px]  max-[800px]:pr-[50px] '>
                 
-                <div class="flex flex-col gap-[40px] fixed max-[900px]:bg-[#ffffff] max-[900px]:rounded-[12px] max-[900px]:px-4 max-[900px]:py-2 max-[900px]:flex-row max-[900px]:flex max-[800px]:overflow-x-auto whitespace-nowrap w-full gap-[20px]   max-[800px]:pr-[50px]">
+                <div class="flex flex-col gap-[40px] fixed max-[900px]:bg-[#ffffff] max-[900px]:rounded-[12px] max-[900px]:px-4 max-[900px]:py-2 max-[900px]:flex-row max-[900px]:flex max-[800px]:overflow-x-auto whitespace-nowrap gap-[20px] max-[600px]:w-full max-[800px]:pr-[50px]">
                     <li class="w-fit ">
                         <a class="flex gap-[10px] items-center group" href="{% url 'accounts:profile' %}">
                             <img loading='lazy' src="{% static 'img/profile.svg' %}" alt="icon">
@@ -154,7 +154,7 @@
         <div class='max-[900px]:pt-[20px] w-[calc(100%-310px)] flex flex-col gap-[12px] max-[900px]:w-full '>
             <div class='w-full shadow-soft rounded-[12px] px-10 h-[128px] flex justify-start items-center bg-primary-white '>
                 <div class='flex gap-[60px]' >
-                <div class=' h-[80px] w-[80px] rounded-[50%] border border-primary-black'>
+                <div class=' h-[82px] w-[80px] rounded-[50%] border border-primary-black '>
                      <img loading='lazy' src="{% static 'avatars/'|add:user.avatar %}" class=" w-20 h-20 rounded-full" alt="Avatar">
                      {% if request.path == '/accounts/profile/update/' %}
                     <!--   the button that opens the modal   -->
