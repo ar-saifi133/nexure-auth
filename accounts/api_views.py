@@ -50,20 +50,50 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
+# class LogoutAPIView(APIView):
+#     """
+#     API endpoint for logging out users
+#     """
+#     permission_classes = [permissions.IsAuthenticated]
+    
+#     def post(self, request):
+#         try:
+#             refresh_token = request.data.get('refresh')
+#             token = RefreshToken(refresh_token)
+#             token.blacklist()
+#             return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+#         except Exception as e:
+#             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 class LogoutAPIView(APIView):
-    """
-    API endpoint for logging out users
-    """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # Change to AllowAny
     
     def post(self, request):
         try:
             refresh_token = request.data.get('refresh')
+            if not refresh_token:
+                return Response({'error': 'Refresh token is required'}, status=400)
+            
+            # Blacklist the token
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
+            
+            # Increment session version for global logout
+            user = token.payload.get('user_id')
+            if user:
+                user = User.objects.get(id=user)
+                user.session_version += 1
+                user.save()
+                logger.debug(f"Session version incremented for user: {user.id}")
+            
+            return Response({'message': 'Global logout successful'}, status=200)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': str(e)}, status=400)
+
+
 
 
 class UserAPIView(generics.RetrieveUpdateAPIView):
@@ -87,3 +117,39 @@ class AvatarImageView(APIView):
         if os.path.exists(avatar_path):
             return FileResponse(open(avatar_path, 'rb'), content_type='image/webp')
         return HttpResponseNotFound('Avatar not found')
+
+
+
+
+
+
+from rest_framework_simplejwt.exceptions import InvalidToken
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        
+        try:
+            serializer.is_valid(raise_exception=True)
+        except InvalidToken as e:
+            # Decode token to check session version
+            try:
+                refresh_token = request.data.get('refresh')
+                payload = jwt.decode(
+                    refresh_token,
+                    settings.SECRET_KEY,
+                    algorithms=["HS256"],
+                    options={"verify_exp": False}
+                )
+                user_id = payload.get('user_id')
+                user = User.objects.get(id=user_id)
+                
+                # Check session version
+                if payload.get('session_version') != user.session_version:
+                    raise InvalidToken("Session expired. Please log in again.")
+                
+            except (jwt.InvalidTokenError, User.DoesNotExist):
+                pass
+            raise e
+        
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)

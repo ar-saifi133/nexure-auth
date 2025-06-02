@@ -34,6 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     email_verified = models.BooleanField(default=False)
     avatar = models.CharField(max_length=20, default='avatar1.webp') 
+    session_version = models.IntegerField(default=0, help_text="Incremented on global logout to invalidate all sessions")
     
     objects = UserManager()
     

@@ -35,13 +35,6 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-# Session Configuration
-SESSION_COOKIE_NAME = 'auth_session'
-SESSION_COOKIE_PATH = '/'
-SESSION_COOKIE_SECURE = False  # Set to True in production
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_AGE = 1209600
-SESSION_SAVE_EVERY_REQUEST = True
 
 # CSRF Configuration
 CSRF_COOKIE_NAME = 'auth_csrftoken'
@@ -144,9 +137,10 @@ REST_FRAMEWORK = {
 }
 
 # JWT Settings
+REFRESH_MINUTES = 2
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=REFRESH_MINUTES),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
@@ -158,7 +152,16 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
     'TOKEN_OBTAIN_PAIR_SERIALIZER': 'accounts.serializers.CustomTokenObtainPairSerializer',
+    'AUTH_TOKEN_BLACKLIST': True,
 }
+
+# Session
+SESSION_COOKIE_AGE = REFRESH_MINUTES * 60  # 2 minutes in seconds
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+
+
 ALLOWED_CLIENT_HOSTS = [
     "localhost:8000",
     "localhost:8005",

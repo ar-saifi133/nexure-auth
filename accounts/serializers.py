@@ -52,20 +52,42 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['date_joined']
 
 
+# class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
+#         token['username'] = user.username
+#         token['full_name'] = user.full_name
+#         token['is_staff'] = user.is_staff
+#         token['is_active'] = user.is_active
+#         token['is_superuser'] = user.is_superuser
+#         return token
+
+#     def validate(self, attrs):
+#         data = super().validate(attrs)
+#         # Add user details to response (for API endpoints)
+#         serializer = UserSerializer(self.user)
+#         data.update(serializer.data)
+#         return data
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        # Add session version to token payload
+        token['session_version'] = user.session_version
         token['username'] = user.username
         token['full_name'] = user.full_name
         token['is_staff'] = user.is_staff
         token['is_active'] = user.is_active
         token['is_superuser'] = user.is_superuser
+        token['user_id'] = user.id # Include user ID for reference
         return token
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        # Add user details to response (for API endpoints)
+        # Add user details to response
         serializer = UserSerializer(self.user)
         data.update(serializer.data)
         return data

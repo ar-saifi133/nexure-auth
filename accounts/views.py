@@ -5,6 +5,7 @@ import random
 import time
 import uuid
 from urllib.parse import urlparse, urlencode
+from django.http import HttpResponseRedirect
 
 # Django core imports
 from django.conf import settings
@@ -252,9 +253,13 @@ def resend_verification_view(request):
 
 
 
-@ratelimit(key='ip', rate='5/h', method='POST', block=True)
+#@ratelimit(key='ip', rate='5/h', method='POST', block=True)
 def login_view(request):
     """View for authenticating users with rate limiting"""
+    expired = request.GET.get('expired')
+    if expired:
+        messages.info(request, 'Your session has expired. Please log in again.')
+
     redirect_uri = request.GET.get('redirect_uri')
     
     # Validate redirect_uri
@@ -369,6 +374,19 @@ def password_reset_email_sent_view(request):
 def logout_view(request):
     """Centralized auth-server logout supporting multiple clients."""
     # 1. Log the user out of Django session
+    response = HttpResponseRedirect(reverse('accounts:login'))
+    response.delete_cookie('access_token')
+    response.delete_cookie('refresh_token')
+    response.delete_cookie(settings.SESSION_COOKIE_NAME)
+    logout(request)
+
+
+    if request.user.is_authenticated:
+        # Global logout
+        user = request.user
+        user.session_version += 1
+        user.save()
+    
     logout(request)
 
     # 2. Success message (optional)
