@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
 }
 
 # JWT Settings
-REFRESH_MINUTES = 2
+REFRESH_MINUTES = 20
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=REFRESH_MINUTES),
@@ -158,6 +158,10 @@ SIMPLE_JWT = {
 # Session
 SESSION_COOKIE_AGE = REFRESH_MINUTES * 60  # 2 minutes in seconds
 SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_NAME = 'auth_session'
+SESSION_COOKIE_PATH = '/'
+SESSION_COOKIE_SECURE = False  # Set to True in production
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 
 
