@@ -50,23 +50,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
-# class LogoutAPIView(APIView):
-#     """
-#     API endpoint for logging out users
-#     """
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def post(self, request):
-#         try:
-#             refresh_token = request.data.get('refresh')
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
-#             return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
-#         except Exception as e:
-#             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 class LogoutAPIView(APIView):
     permission_classes = [permissions.AllowAny]  # Change to AllowAny
@@ -113,7 +96,8 @@ class AvatarImageView(APIView):
 
     def get(self, request):
         user = request.user
-        avatar_path = os.path.join(settings.STATIC_ROOT, 'avatars', user.avatar)
+        #avatar_path = os.path.join(settings.STATIC_ROOT, 'avatars', user.avatar)
+        avatar_path = os.path.join(settings.BASE_DIR, 'static', 'avatars', user.avatar)
         if os.path.exists(avatar_path):
             return FileResponse(open(avatar_path, 'rb'), content_type='image/webp')
         return HttpResponseNotFound('Avatar not found')

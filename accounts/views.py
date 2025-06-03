@@ -58,7 +58,7 @@ User = get_user_model()
 
 
 @csrf_exempt
-@ratelimit(key='ip', rate='5/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/h', method='POST', block=True)
 def signup_view(request):
     """View for user registration with proper error handling"""
     if request.user.is_authenticated:
@@ -166,7 +166,7 @@ def verify_email_view(request, token):
 
 
 
-@ratelimit(key='ip', rate='3/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/h', method='POST', block=True)
 def resend_verification_view(request):
     """View to resend verification email"""
     initial = {}
@@ -253,7 +253,7 @@ def resend_verification_view(request):
 
 
 
-#@ratelimit(key='ip', rate='5/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/h', method='POST', block=True)
 def login_view(request):
     """View for authenticating users with rate limiting"""
     expired = request.GET.get('expired')
@@ -457,7 +457,7 @@ def profile_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
-@ratelimit(key='ip', rate='3/h', method='POST', block=True)
+@ratelimit(key='ip', rate='60/h', method='POST', block=True)
 def password_reset_request(request):
     """View to request a password reset"""
     if request.method == 'POST':

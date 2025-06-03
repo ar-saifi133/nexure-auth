@@ -137,9 +137,9 @@ REST_FRAMEWORK = {
 }
 
 # JWT Settings
-REFRESH_MINUTES = 20
+REFRESH_MINUTES = 10080
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=REFRESH_MINUTES),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -156,7 +156,7 @@ SIMPLE_JWT = {
 }
 
 # Session
-SESSION_COOKIE_AGE = REFRESH_MINUTES * 60  # 2 minutes in seconds
+SESSION_COOKIE_AGE = REFRESH_MINUTES * 60  #  minutes in seconds
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_NAME = 'auth_session'
 SESSION_COOKIE_PATH = '/'
@@ -170,6 +170,7 @@ ALLOWED_CLIENT_HOSTS = [
     "localhost:8000",
     "localhost:8005",
 ]
+
 CLIENT_APPS = [
     { 'name': 'Client 1', 'login_url': 'http://localhost:8000/accounts/login/' },
     { 'name': 'Client 2', 'login_url': 'http://localhost:8005/accounts/login/' },

@@ -23,8 +23,6 @@ urlpatterns = [
 
 
 
-
-
 # ---------------------------------------------
 # Custom Error Handlers for Django Application
 # Supports 400, 403, 404, and 500 error pages
