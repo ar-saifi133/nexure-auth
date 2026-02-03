@@ -1,100 +1,116 @@
-{%  load static %}
+{% load static %}
 <style>
     .custom-checkbox {
-  /* Remove default styles */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+        /* Remove default styles */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
 
-  width: 14px;
-  height: 14px;
-  border: 1px solid #000;
-  border-radius: 1.5px;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: inline-block;
-  vertical-align: middle;
-  position: relative;
-}
+        width: 14px;
+        height: 14px;
+        border: 1px solid #000;
+        border-radius: 1.5px;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+    }
 
-.custom-checkbox:checked {
-  background-color: #33CCFF; /* #3CF */
-  border-color: #33CCFF;
-}
-.custom-checkbox:checked::after {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  width: 4px;
-  height: 8px;
-  border: solid white;
-  border-width: 0 1px 1px 0;
-  transform: rotate(45deg);
-}
+    .custom-checkbox:checked {
+        background-color: #33CCFF;
+        /* #3CF */
+        border-color: #33CCFF;
+    }
+
+    .custom-checkbox:checked::after {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 4px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 1px 1px 0;
+        transform: rotate(45deg);
+    }
 </style>
 <div class='text-primary-black  '>
     <h2 class="text-[16px] font-semibold mb-[14px]">Delete Account</h2>
     <p class='text-[14px] font-medium'>Permanently delete my account</p>
     <form id="deleteForm" method="post" novalidate action="{% url 'accounts:delete_account' %}" class="">
-    {% csrf_token %}
-    <div class=" bg-error-red/20 px-[18px] py-[10px] mb-5 rounded-[18px] mt-[28px] ">
-        <div class="flex gap-[14px] items-center ">
-            <div class="h-full items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
-                <path d="M18.798 15.7069L10.8091 0.870937C10.2429 -0.180938 8.73442 -0.180938 8.1677 0.870937L0.179264 15.7069C0.0563167 15.9352 -0.00532333 16.1916 0.000360326 16.4508C0.00604398 16.7101 0.0788572 16.9635 0.211693 17.1863C0.344528 17.409 0.532848 17.5935 0.758269 17.7217C0.98369 17.85 1.23851 17.9176 1.49786 17.918H17.4771C17.7366 17.918 17.9917 17.8507 18.2175 17.7226C18.4432 17.5945 18.6319 17.4101 18.765 17.1873C18.8981 16.9644 18.9711 16.7109 18.9769 16.4514C18.9827 16.1919 18.9211 15.9354 18.798 15.7069ZM9.48864 15.6211C9.30322 15.6211 9.12196 15.5661 8.96779 15.4631C8.81362 15.3601 8.69346 15.2137 8.6225 15.0424C8.55154 14.8711 8.53298 14.6826 8.56915 14.5007C8.60533 14.3188 8.69461 14.1518 8.82573 14.0207C8.95684 13.8896 9.12388 13.8003 9.30574 13.7641C9.4876 13.7279 9.6761 13.7465 9.8474 13.8175C10.0187 13.8884 10.1651 14.0086 10.2681 14.1627C10.3712 14.3169 10.4261 14.4982 10.4261 14.6836C10.4261 14.9322 10.3274 15.1707 10.1516 15.3465C9.97573 15.5223 9.73728 15.6211 9.48864 15.6211ZM10.5068 6.19219L10.2377 11.9109C10.2377 12.1098 10.1587 12.3006 10.018 12.4413C9.87738 12.5819 9.68661 12.6609 9.4877 12.6609C9.28879 12.6609 9.09802 12.5819 8.95737 12.4413C8.81672 12.3006 8.7377 12.1098 8.7377 11.9109L8.46864 6.19453C8.46259 6.05793 8.48411 5.92151 8.53191 5.79341C8.57971 5.6653 8.65281 5.54813 8.74685 5.44888C8.8409 5.34963 8.95397 5.27033 9.07931 5.2157C9.20466 5.16108 9.33972 5.13225 9.47645 5.13094H9.48629C9.62395 5.13087 9.7602 5.15869 9.88681 5.21272C10.0134 5.26675 10.1278 5.34587 10.223 5.44531C10.3182 5.54475 10.3922 5.66245 10.4407 5.7913C10.4891 5.92015 10.511 6.05748 10.5049 6.195L10.5068 6.19219Z" fill="#F44336"/>
-                </svg>
+        {% csrf_token %}
+        <div class=" bg-error-red/20 px-[18px] py-[10px] mb-5 rounded-[18px] mt-[28px] ">
+            <div class="flex gap-[14px] items-center ">
+                <div class="h-full items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
+                        <path
+                            d="M18.798 15.7069L10.8091 0.870937C10.2429 -0.180938 8.73442 -0.180938 8.1677 0.870937L0.179264 15.7069C0.0563167 15.9352 -0.00532333 16.1916 0.000360326 16.4508C0.00604398 16.7101 0.0788572 16.9635 0.211693 17.1863C0.344528 17.409 0.532848 17.5935 0.758269 17.7217C0.98369 17.85 1.23851 17.9176 1.49786 17.918H17.4771C17.7366 17.918 17.9917 17.8507 18.2175 17.7226C18.4432 17.5945 18.6319 17.4101 18.765 17.1873C18.8981 16.9644 18.9711 16.7109 18.9769 16.4514C18.9827 16.1919 18.9211 15.9354 18.798 15.7069ZM9.48864 15.6211C9.30322 15.6211 9.12196 15.5661 8.96779 15.4631C8.81362 15.3601 8.69346 15.2137 8.6225 15.0424C8.55154 14.8711 8.53298 14.6826 8.56915 14.5007C8.60533 14.3188 8.69461 14.1518 8.82573 14.0207C8.95684 13.8896 9.12388 13.8003 9.30574 13.7641C9.4876 13.7279 9.6761 13.7465 9.8474 13.8175C10.0187 13.8884 10.1651 14.0086 10.2681 14.1627C10.3712 14.3169 10.4261 14.4982 10.4261 14.6836C10.4261 14.9322 10.3274 15.1707 10.1516 15.3465C9.97573 15.5223 9.73728 15.6211 9.48864 15.6211ZM10.5068 6.19219L10.2377 11.9109C10.2377 12.1098 10.1587 12.3006 10.018 12.4413C9.87738 12.5819 9.68661 12.6609 9.4877 12.6609C9.28879 12.6609 9.09802 12.5819 8.95737 12.4413C8.81672 12.3006 8.7377 12.1098 8.7377 11.9109L8.46864 6.19453C8.46259 6.05793 8.48411 5.92151 8.53191 5.79341C8.57971 5.6653 8.65281 5.54813 8.74685 5.44888C8.8409 5.34963 8.95397 5.27033 9.07931 5.2157C9.20466 5.16108 9.33972 5.13225 9.47645 5.13094H9.48629C9.62395 5.13087 9.7602 5.15869 9.88681 5.21272C10.0134 5.26675 10.1278 5.34587 10.223 5.44531C10.3182 5.54475 10.3922 5.66245 10.4407 5.7913C10.4891 5.92015 10.511 6.05748 10.5049 6.195L10.5068 6.19219Z"
+                            fill="#F44336" />
+                    </svg>
+                </div>
+                <div class="">
+                    <p class="max-[600px]:text-[12px] text-[14px] text-primary-black font-medium">
+                        This action <span class='font-semibold'>CANNOT</span> be undone. This will permanently delete
+                        Nexura <span class='font-semibold'> account</span>. Are you sure you want to proceed?
+                    </p>
+                </div>
             </div>
+        </div>
+        <div class="flex gap-[14px] flex-col ">
+
+            <div>
+                <label class="flex items-center">
+                    {{ form.confirm }}
+                    <span class="max-[600px]:text-[12px] ml-4 mt-[1px] text-[14px] font-medium h-full ">{{
+                        form.confirm.label }}</span>
+                </label>
+                {% if form.confirm.errors %}
+                <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">
+                    <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{
+                    form.confirm.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <label class="flex items-center">
+                    {{ form.confirm2 }}
+                    <span class="max-[600px]:text-[12px] ml-4 mt-[1px] text-[14px] font-medium h-full ">{{
+                        form.confirm2.label }}</span>
+                </label>
+                {% if form.confirm2.errors %}
+                <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">
+                    <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{
+                    form.confirm2.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mb-5 mt-[28px]">
+            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium mb-[10px]">
+                {% comment %} {{ form.password.label }} {% endcomment %}
+                <span class="max-[600px]:text-[12px] text-[14px]  font-medium text-primary-black">Please enter your
+                    <span class='font-semibold'> Password</span> to confirm*</span>
+            </label>
             <div class="">
-                <p class="max-[600px]:text-[12px] text-[14px] text-primary-black font-medium">
-                    This action <span class='font-semibold'>CANNOT</span> be undone. This will permanently delete Ensight+ <span class='font-semibold'> account</span>. Are you sure you want to proceed?
-                </p>
+                {{ form.password }}
             </div>
-        </div>
-    </div>
-   <div class="flex gap-[14px] flex-col ">
-    
-     <div>
-        <label class="flex items-center">
-            {{ form.confirm }}
-            <span class="max-[600px]:text-[12px] ml-4 mt-[1px] text-[14px] font-medium h-full ">{{ form.confirm.label }}</span>
-        </label>
-        {% if form.confirm.errors %}
-            <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.confirm.errors.0 }}</p>
-        {% endif %}
-    </div>
-    <div>
-        <label class="flex items-center">
-            {{ form.confirm2 }}
-            <span class="max-[600px]:text-[12px] ml-4 mt-[1px] text-[14px] font-medium h-full ">{{ form.confirm2.label }}</span>
-        </label>
-        {% if form.confirm2.errors %}
-            <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.confirm2.errors.0 }}</p>
-        {% endif %}
-    </div>
-   </div>
-    <div class="mb-5 mt-[28px]">
-        <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium mb-[10px]">
-            {% comment %} {{ form.password.label }} {% endcomment %}
-            <span class="max-[600px]:text-[12px] text-[14px]  font-medium text-primary-black">Please enter your <span class='font-semibold'> Password</span> to confirm*</span>
-        </label>
-        <div class="">
-            {{ form.password }}
-        </div>
-        {% if form.password.errors %}
-            <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500">  <span class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{ form.password.errors.0 }}</p>
-            
+            {% if form.password.errors %}
+            <p class="max-[600px]:text-[10px] mt-[10px] flex gap-[10px] text-[12px] font-medium text-error-500"> <span
+                    class='flex items-center '> <img src="{% static 'img/error.svg' %}" alt="Error Icon"></span>{{
+                form.password.errors.0 }}</p>
+
             {% comment %} <p class="mt-1 text-sm text-error-500">{{ form.password.errors.0 }}</p> {% endcomment %}
-        {% endif %}
-    </div>
-    <div class="flex justify-end space-x-4 max-[900px]:justify-center">
-        <button type="button" onclick="closeModal()" class="  border border-accent-grey/30 text-primary-black text-[12px] w-[150px] h-[36px] font-semibold   rounded-[10px] hover:bg-accent-grey/10 transition-all duration-300">
-            Cancel
-        </button>
-        <button type="submit" class="max-[600px]:text-[10px] bg-error-red text-error-red text-[12px] font-semibold w-[150px] h-[36px] text-primary-white  rounded-[10px] focus:outline-none transition-all duration-300">
-            Delete Account
-        </button>
-    </div>
-</form>
+            {% endif %}
+        </div>
+        <div class="flex justify-end space-x-4 max-[900px]:justify-center">
+            <button type="button" onclick="closeModal()"
+                class="  border border-accent-grey/30 text-primary-black text-[12px] w-[150px] h-[36px] font-semibold   rounded-[10px] hover:bg-accent-grey/10 transition-all duration-300">
+                Cancel
+            </button>
+            <button type="submit"
+                class="max-[600px]:text-[10px] bg-error-red text-error-red text-[12px] font-semibold w-[150px] h-[36px] text-primary-white  rounded-[10px] focus:outline-none transition-all duration-300">
+                Delete Account
+            </button>
+        </div>
+    </form>
 </div>

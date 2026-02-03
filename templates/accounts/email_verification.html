@@ -1,22 +1,25 @@
 {% autoescape off %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Email Verification</title>
 </head>
+
 <body>
     <p>Hello {{ user.full_name }},</p>
-    
-    <p>Verify your email address to complete your registration on Ensight Plus:</p>
-    
+
+    <p>Verify your email address to complete your registration on Nexura:</p>
+
     <p><a href="{{ verification_url }}">Verify Email Address</a></p>
-    
+
     <p>This link will expire in {{ expiry_time }}.</p>
-    
+
     <p>If you didn't request this verification, you can safely ignore this email.</p>
-    
+
     <p>Thanks,<br>
-    Ensight Plus Team</p>
+        Nexura Team</p>
 </body>
+
 </html>
 {% endautoescape %}

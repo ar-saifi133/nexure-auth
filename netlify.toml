@@ -1,0 +1,6 @@
+[build]
+  command = "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+  publish = "staticfiles"
+
+[dev]
+  command = "python manage.py runserver"
